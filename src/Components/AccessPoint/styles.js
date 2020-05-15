@@ -3,8 +3,8 @@ import styled, { css } from "styled-components";
 export const Container = styled.div`
   display: flex;
   position: relative;
-  top: ${(props) => props.posY + "px"};
-  left: ${(props) => props.posX + "px"};
+  top: ${(props) => props.posY + "%"};
+  left: ${(props) => props.posX + "%"};
   width: ${(props) => props.apSize + "px"};
   height: ${(props) => props.apSize + "px"};
   background-color: white;
@@ -14,7 +14,6 @@ export const Container = styled.div`
   justify-content: center;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
   z-index: 100;
-  cursor: grab;
   overflow: visible;
 
   p {
@@ -28,7 +27,6 @@ export const Container = styled.div`
       border: 2px dashed rgba(0, 0, 0, 0.2);
       box-shadow: none;
       background: transparent;
-      cursor: grabbing;
       p,
       svg {
         opacity: 0.5;

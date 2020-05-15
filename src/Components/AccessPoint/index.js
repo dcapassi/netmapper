@@ -13,24 +13,24 @@ function AccessPoint(props) {
     }),
   });
   return (
-    <Container
-      isDragging={isDragging}
-      ref={dragRef}
-      posX={props.posX}
-      posY={props.posY}
-      apSize={props.apSize}
-    >
-      <div className="apMarker">
-        <AiOutlineWifi />
-      </div>
-      {props.label ? (
-        <div>
-          <p>{props.apName}</p>
+      <Container
+        posX={props.posX}
+        posY={props.posY}
+        apSize={props.apSize}
+        isDragging={isDragging}
+        ref={dragRef}
+      >
+        <div className="apMarker">
+          <AiOutlineWifi />
         </div>
-      ) : (
-        <></>
-      )}
-    </Container>
+        {props.label ? (
+          <div>
+            <p>{props.apName}</p>
+          </div>
+        ) : (
+          <></>
+        )}
+      </Container>
   );
 }
 

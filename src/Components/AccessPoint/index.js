@@ -1,36 +1,36 @@
-import React from "react";
-import { useDrag } from "react-dnd";
+import React, { useContext } from "react";
 
 import { Container } from "./styles";
 import { AiOutlineWifi } from "react-icons/ai";
+import { ApContext } from "../AppMap/ApContext";
 
 function AccessPoint(props) {
-  const [{ isDragging, clientOffset }, dragRef] = useDrag({
-    item: { type: "AP" },
-    collect: (monitor) => ({
-      isDragging: monitor.isDragging(),
-      clientOffset: monitor.getClientOffset(),
-    }),
-  });
+  const { apMoveSettings, setApMoveSettings } = useContext(ApContext);
   return (
-      <Container
-        posX={props.posX}
-        posY={props.posY}
-        apSize={props.apSize}
-        isDragging={isDragging}
-        ref={dragRef}
-      >
-        <div className="apMarker">
-          <AiOutlineWifi />
+    <Container
+      posX={props.posX}
+      posY={props.posY}
+      apSize={props.apSize}
+      onMouseDown={(e) => {
+        e.stopPropagation();
+        setApMoveSettings({
+          ...apMoveSettings,
+          posX: apMoveSettings.posX + 1,
+          posY: apMoveSettings.posY + 1,
+        });
+      }}
+    >
+      <div className="apMarker">
+        <AiOutlineWifi />
+      </div>
+      {props.label ? (
+        <div>
+          <p>{props.apName}</p>
         </div>
-        {props.label ? (
-          <div>
-            <p>{props.apName}</p>
-          </div>
-        ) : (
-          <></>
-        )}
-      </Container>
+      ) : (
+        <></>
+      )}
+    </Container>
   );
 }
 

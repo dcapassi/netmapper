@@ -3,6 +3,8 @@ import img from "./img/blueprint.png";
 import AccessPoint from "../AccessPoint";
 import { Container, MapContainer } from "./styles";
 import { ApContext } from "./ApContext";
+import TopMenu from "../TopMenu";
+import SideMenu from "../SideMenu";
 
 export default function AppMap() {
   const [ap, setAp] = useState({
@@ -20,8 +22,8 @@ export default function AppMap() {
     initialPosY: 0,
     initialMouseX: 0,
     initialMousey: 0,
-    posX: 50,
-    posY: 50,
+    posX: 0,
+    posY: 0,
   });
 
   const [apMoveSettings, setApMoveSettings] = useState({
@@ -31,8 +33,8 @@ export default function AppMap() {
     initialPosY: 0,
     initialMouseX: 0,
     initialMousey: 0,
-    posX: 50,
-    posY: 50,
+    posX: 0,
+    posY: 0,
   });
 
   const [arrayAps, setArrayAps] = useState([]);
@@ -54,7 +56,21 @@ export default function AppMap() {
     },
     {
       apName: "AP003",
-      posX: "300",
+      posX: "320",
+      posY: "25",
+      apSize: "30",
+      label: true,
+    },
+    {
+      apName: "AP002",
+      posX: "130",
+      posY: "110",
+      apSize: "30",
+      label: true,
+    },
+    {
+      apName: "AP003",
+      posX: "350",
       posY: "25",
       apSize: "30",
       label: true,
@@ -64,10 +80,13 @@ export default function AppMap() {
   return (
     <ApContext.Provider value={{ apMoveSettings, setApMoveSettings }}>
       <Container>
+        <TopMenu />
+        <SideMenu />
+
         <MapContainer
           onMouseDown={(e) => {
-            console.log("Click no Container");
-            if (mapMoveSettings != true) {
+            e.preventDefault();
+            if (mapMoveSettings !== true) {
               {
                 setMapMoveSettings({
                   ...mapMoveSettings,
@@ -110,7 +129,7 @@ export default function AppMap() {
           MapPosX={mapMoveSettings.posX + "px"}
           MapPosY={mapMoveSettings.posY + "px"}
         >
-          {arrayTestAps.map((entry) => {
+          {/*arrayTestAps.map((entry) => {
             return (
               <AccessPoint
                 apName={entry.apName}
@@ -121,20 +140,23 @@ export default function AppMap() {
                 key={entry.apName}
                 onMouseDown={(e) => {
                   e.stopPropagation();
-                  console.log("AP Clicked!");
                 }}
               />
-            );
-          })}
-          <AccessPoint
-            apName={ap.apName}
-            posX={apMoveSettings.posX}
-            posY={apMoveSettings.posY}
-            apSize={ap.apSize}
-            label={ap.label}
-          />
-
-          <img src={img} draggable="false" />
+            );  
+          })*/}
+          <div>
+            <img src={img} draggable="false" />
+            <div>
+              {console.log("Valor" + apMoveSettings.posX)}
+              <AccessPoint
+                apName={ap.apName}
+                posX={apMoveSettings.posX}
+                posY={apMoveSettings.posY}
+                apSize={ap.apSize}
+                label={ap.label}
+              />
+            </div>
+          </div>
         </MapContainer>
       </Container>
     </ApContext.Provider>

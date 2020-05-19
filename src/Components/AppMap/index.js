@@ -3,6 +3,8 @@ import img from "./img/blueprint.png";
 import AccessPoint from "../AccessPoint";
 import { Container, MapContainer } from "./styles";
 import { ApContext } from "./ApContext";
+import { ControlsContext } from "./ControlsContext";
+
 import TopMenu from "../TopMenu";
 import SideMenu from "../SideMenu";
 
@@ -37,128 +39,123 @@ export default function AppMap() {
     posY: 0,
   });
 
-  const [arrayAps, setArrayAps] = useState([]);
-
-  const arrayTestAps = [
+  const [arrayAps, setArrayAps] = useState([
     {
       apName: "AP001",
-      posX: "30",
-      posY: "30",
-      apSize: "30",
+      posX: 30,
+      posY: 30,
+      apSize: 30,
       label: true,
     },
     {
       apName: "AP002",
-      posX: "100",
-      posY: "110",
-      apSize: "30",
+      posX: 100,
+      posY: 110,
+      apSize: 30,
       label: true,
     },
     {
       apName: "AP003",
-      posX: "320",
-      posY: "25",
-      apSize: "30",
+      posX: 320,
+      posY: 25,
+      apSize: 30,
       label: true,
     },
     {
-      apName: "AP002",
-      posX: "130",
-      posY: "110",
-      apSize: "30",
+      apName: "AP004",
+      posX: 130,
+      posY: 110,
+      apSize: 30,
       label: true,
     },
-    {
-      apName: "AP003",
-      posX: "350",
-      posY: "25",
-      apSize: "30",
-      label: true,
-    },
-  ];
+  ]);
+
+  const [controlsParameters, setControlParameters] = useState({
+    zoomIn: false,
+    zoomOut: false,
+    addAp: false,
+    measureDistance: false,
+    
+  });
 
   return (
-    <ApContext.Provider value={{ apMoveSettings, setApMoveSettings }}>
-      <Container>
-        <TopMenu />
-        <SideMenu />
+    <ControlsContext.Provider
+      value={{ controlsParameters, setControlParameters }}
+    >
+      <ApContext.Provider
+        value={{ apMoveSettings, setApMoveSettings, arrayAps, setArrayAps }}
+      >
+        <Container>
+          <TopMenu />
+          <SideMenu />
 
-        <MapContainer
-          onMouseDown={(e) => {
-            e.preventDefault();
-            if (mapMoveSettings !== true) {
+          <MapContainer
+            onMouseDown={(e) => {
+              e.preventDefault();
+              if (mapMoveSettings !== true) {
+                {
+                  setMapMoveSettings({
+                    ...mapMoveSettings,
+                    isMoving: true,
+                    initialMouseX: e.clientX,
+                    initialMouseY: e.clientY,
+                    initialPosX: mapMoveSettings.posX,
+                    initialPosY: mapMoveSettings.posY,
+                  });
+                }
+              }
+            }}
+            onMouseUp={(e) => {
+              e.stopPropagation();
+              if (mapMoveSettings.isMoving === true) {
+                setMapMoveSettings({
+                  ...mapMoveSettings,
+                  isMoving: false,
+                });
+              }
+            }}
+            onMouseMove={(e) => {
               {
-                setMapMoveSettings({
-                  ...mapMoveSettings,
-                  isMoving: true,
-                  initialMouseX: e.clientX,
-                  initialMouseY: e.clientY,
-                  initialPosX: mapMoveSettings.posX,
-                  initialPosY: mapMoveSettings.posY,
-                });
+                if (mapMoveSettings.isMoving) {
+                  setMapMoveSettings({
+                    ...mapMoveSettings,
+                    isMoving: true,
+                    posX:
+                      mapMoveSettings.initialPosX +
+                      e.clientX -
+                      mapMoveSettings.initialMouseX,
+                    posY:
+                      mapMoveSettings.initialPosY +
+                      e.clientY -
+                      mapMoveSettings.initialMouseY,
+                  });
+                }
               }
-            }
-          }}
-          onMouseUp={(e) => {
-            e.stopPropagation();
-            if (mapMoveSettings.isMoving === true) {
-              setMapMoveSettings({
-                ...mapMoveSettings,
-                isMoving: false,
-              });
-            }
-          }}
-          onMouseMove={(e) => {
-            {
-              if (mapMoveSettings.isMoving) {
-                setMapMoveSettings({
-                  ...mapMoveSettings,
-                  isMoving: true,
-                  posX:
-                    mapMoveSettings.initialPosX +
-                    e.clientX -
-                    mapMoveSettings.initialMouseX,
-                  posY:
-                    mapMoveSettings.initialPosY +
-                    e.clientY -
-                    mapMoveSettings.initialMouseY,
-                });
-              }
-            }
-          }}
-          MapPosX={mapMoveSettings.posX + "px"}
-          MapPosY={mapMoveSettings.posY + "px"}
-        >
-          {/*arrayTestAps.map((entry) => {
-            return (
-              <AccessPoint
-                apName={entry.apName}
-                posX={entry.posX}
-                posY={entry.posY}
-                apSize={entry.apSize}
-                label={entry.label}
-                key={entry.apName}
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                }}
-              />
-            );  
-          })*/}
-          <div>
-            <img src={img} draggable="false" />
+            }}
+            MapPosX={mapMoveSettings.posX + "px"}
+            MapPosY={mapMoveSettings.posY + "px"}
+          >
+            {arrayAps.map((entry) => {
+              return (
+                <AccessPoint
+                  apName={entry.apName}
+                  posX={entry.posX}
+                  posY={entry.posY}
+                  apSize={entry.apSize}
+                  label={entry.label}
+                  key={entry.apName}
+                  onMouseDown={(e) => {
+                    e.stopPropagation();
+                  }}
+                />
+              );
+            })}
             <div>
-              {console.log("Valor" + apMoveSettings.posX)}
-              <AccessPoint
-                apName={ap.apName}
-                posX={apMoveSettings.posX}
-                posY={apMoveSettings.posY}
-                apSize={ap.apSize}
-                label={ap.label}
-              />
+              <img src={img} draggable="false" />
             </div>
-          </div>
-        </MapContainer>
-      </Container>
-    </ApContext.Provider>
+          </MapContainer>
+        </Container>
+      </ApContext.Provider>
+    </ControlsContext.Provider>
   );
 }

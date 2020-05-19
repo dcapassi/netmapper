@@ -4,7 +4,7 @@ export const Container = styled.div`
   position: absolute;
   display: flex;
   top: 50%;
-  left: 11%;
+  left: 5%;
   z-index: 200;
 
   div {

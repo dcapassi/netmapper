@@ -1,5 +1,5 @@
 import React from "react";
-import { FaRulerHorizontal, FaMousePointer, FaWifi } from "react-icons/fa";
+import { FaSearchPlus, FaSearchMinus, FaCompressAlt } from "react-icons/fa";
 import { AiOutlineWifi } from "react-icons/ai";
 import { Container } from "./styles";
 
@@ -8,13 +8,13 @@ function SideMenu() {
     <Container>
       <div>
         <div>
-          <FaMousePointer />
+          <FaCompressAlt />
         </div>
         <div>
-          <FaWifi />
+          <FaSearchPlus />
         </div>
         <div>
-          <FaRulerHorizontal />
+          <FaSearchMinus />
         </div>
       </div>
     </Container>

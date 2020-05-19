@@ -89,7 +89,6 @@ function AccessPoint(props) {
       ) : (
         <></>
       )}
-      <div class="dragIncreaseArea"></div>
     </Container>
   );
 }

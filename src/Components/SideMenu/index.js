@@ -3,17 +3,17 @@ import { FaSearchPlus, FaSearchMinus, FaCompressAlt } from "react-icons/fa";
 import { AiOutlineWifi } from "react-icons/ai";
 import { Container } from "./styles";
 
-function SideMenu() {
+function SideMenu({ menuAction }) {
   return (
     <Container>
       <div>
-        <div>
+        <div onClick={() => menuAction("Fit")}>
           <FaCompressAlt />
         </div>
-        <div>
+        <div onClick={() => menuAction("ZoomIn")}>
           <FaSearchPlus />
         </div>
-        <div>
+        <div onClick={() => menuAction("ZoomOut")}>
           <FaSearchMinus />
         </div>
       </div>

@@ -62,15 +62,26 @@ function AccessPoint(props) {
 
         {
           if (apMoveSettings.isMoving) {
+            let newPosX =
+              apMoveSettings.initialPosX +
+              e.clientX -
+              apMoveSettings.initialMouseX;
+            let newPosY =
+              apMoveSettings.initialPosY +
+              e.clientY -
+              apMoveSettings.initialMouseY;
             try {
-              arrayAps[key].posX =
-                apMoveSettings.initialPosX +
-                e.clientX -
-                apMoveSettings.initialMouseX;
-              arrayAps[key].posY =
-                apMoveSettings.initialPosY +
-                e.clientY -
-                apMoveSettings.initialMouseY;
+              arrayAps[key].posX = newPosX;
+              arrayAps[key].posY = newPosY;
+              setArrayAps([...arrayAps]);
+            } catch (error) {
+              console.log(error);
+            }
+            try {
+              arrayAps[key].initialX =
+                (newPosX * props.initialMapSizeX) / apMoveSettings.currentMapX;
+              arrayAps[key].initialY =
+                (newPosY * props.initialMapSizeY) / apMoveSettings.currentMapY;
               setArrayAps([...arrayAps]);
             } catch (error) {
               console.log(error);

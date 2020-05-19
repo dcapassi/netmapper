@@ -8,6 +8,9 @@ import TopMenu from "../TopMenu";
 import SideMenu from "../SideMenu";
 
 export default function AppMap() {
+  const MAP_HEIGHT = 860;
+  const MAP_WIDTH = 1700;
+
   const [mapMoveSettings, setMapMoveSettings] = useState({
     movingMode: true,
     isMoving: false,
@@ -17,8 +20,8 @@ export default function AppMap() {
     initialMousey: 0,
     posX: 0,
     posY: 0,
-    mapHeigth: 860,
-    mapWidth: 1700,
+    mapHeigth: MAP_HEIGHT,
+    mapWidth: MAP_WIDTH,
   });
 
   const [zoomLevel, setZoomLevel] = useState({
@@ -26,7 +29,9 @@ export default function AppMap() {
   });
 
   const [apMoveSettings, setApMoveSettings] = useState({
-    movingMode: true,
+    movingMode: false,
+    currentMapX: MAP_WIDTH,
+    currentMapY: MAP_HEIGHT,
     isMoving: false,
     initialPosX: 0,
     initialPosY: 0,
@@ -43,6 +48,8 @@ export default function AppMap() {
       posY: 30,
       apSize: 30,
       label: true,
+      initialX: 30,
+      initialY: 30,
     },
     {
       apName: "AP002",
@@ -50,6 +57,8 @@ export default function AppMap() {
       posY: 110,
       apSize: 30,
       label: true,
+      initialX: 100,
+      initialY: 110,
     },
     {
       apName: "AP003",
@@ -57,6 +66,8 @@ export default function AppMap() {
       posY: 25,
       apSize: 30,
       label: true,
+      initialX: 320,
+      initialY: 25,
     },
   ]);
 
@@ -68,37 +79,87 @@ export default function AppMap() {
   });
 
   const handleMenuAction = (type) => {
+    const ZoomInFactor = 1.1;
+    const ZoomOutFactor = 1 / ZoomInFactor;
+
     switch (type) {
       case "ZoomIn":
-        if (zoomLevel.level <= 25) {
+        if (zoomLevel.level <= 10) {
           setZoomLevel({ ...zoomLevel, level: zoomLevel.level + 1 });
+          let mapHeightUpdated = mapMoveSettings.mapHeigth * ZoomInFactor;
+          let mapWidthUpdated = mapMoveSettings.mapWidth * ZoomInFactor;
+
           setMapMoveSettings({
             ...mapMoveSettings,
-            mapHeigth: mapMoveSettings.mapHeigth * 1.1,
-            mapWidth: mapMoveSettings.mapWidth * 1.1,
+            mapHeigth: mapHeightUpdated,
+            mapWidth: mapWidthUpdated,
           });
-        }
-        setArrayAps(
-          arrayAps.map((entry) => {
-            return { ...entry, posX: entry.posX * 1.1, posY: entry.posY * 1.1 };
-          })
-        );
 
+          setApMoveSettings({
+            ...apMoveSettings,
+            currentMapY: mapHeightUpdated,
+            currentMapX: mapWidthUpdated,
+          });
+
+          setArrayAps(
+            arrayAps.map((entry) => {
+              return {
+                ...entry,
+                posX: entry.posX * ZoomInFactor,
+                posY: entry.posY * ZoomInFactor,
+              };
+            })
+          );
+        }
         break;
       case "ZoomOut":
         if (zoomLevel.level > 1) {
+          let mapHeightUpdated = mapMoveSettings.mapHeigth * ZoomOutFactor;
+          let mapWidthUpdated = mapMoveSettings.mapWidth * ZoomOutFactor;
           setZoomLevel({ ...zoomLevel, level: zoomLevel.level - 1 });
           setMapMoveSettings({
-            ...setMapMoveSettings,
-            mapHeigth: mapMoveSettings.mapHeigth * 0.9,
-            mapWidth: mapMoveSettings.mapWidth * 0.9,
+            ...mapMoveSettings,
+            mapHeigth: mapHeightUpdated,
+            mapWidth: mapWidthUpdated,
+          });
+
+          setApMoveSettings({
+            ...apMoveSettings,
+            currentMapY: mapHeightUpdated,
+            currentMapX: mapWidthUpdated,
           });
           setArrayAps(
             arrayAps.map((entry) => {
               return {
                 ...entry,
-                posX: entry.posX * 0.9,
-                posY: entry.posY * 0.9,
+                posX: entry.posX * ZoomOutFactor,
+                posY: entry.posY * ZoomOutFactor,
+              };
+            })
+          );
+        }
+        break;
+      case "Fit":
+        if (zoomLevel.level > 1) {
+          setZoomLevel({ ...zoomLevel, level: 1 });
+          setMapMoveSettings({
+            ...mapMoveSettings,
+            isMoving: false,
+            initialPosX: 0,
+            initialPosY: 0,
+            initialMouseX: 0,
+            initialMousey: 0,
+            posX: 0,
+            posY: 0,
+            mapHeigth: MAP_HEIGHT,
+            mapWidth: MAP_WIDTH,
+          });
+          setArrayAps(
+            arrayAps.map((entry) => {
+              return {
+                ...entry,
+                posX: entry.initialX,
+                posY: entry.initialY,
               };
             })
           );
@@ -174,6 +235,8 @@ export default function AppMap() {
                 apSize={entry.apSize}
                 label={entry.label}
                 key={entry.apName}
+                initialMapSizeY={MAP_HEIGHT}
+                initialMapSizeX={MAP_WIDTH}
                 onMouseDown={(e) => {
                   e.stopPropagation();
                 }}

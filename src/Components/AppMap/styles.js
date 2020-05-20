@@ -9,13 +9,16 @@ export const Container = styled.div`
   top: 0px;
 `;
 
-export const MapContainer = styled.div`
+export const MapContainer = styled.div.attrs((props) => ({
+  style: {
+    top: props.MapPosY,
+    left: props.MapPosX,
+    width: props.MapWidth,
+    height: props.MapHeight,
+  },
+}))`
   position: relative;
-  top: ${(props) => props.MapPosY};
-  left: ${(props) => props.MapPosX};
   border: 1px solid gray;
-  width: ${(props) => props.MapWidth};
-  height: ${(props) => props.MapHeight};
 
   img {
     border: 1px solid black;

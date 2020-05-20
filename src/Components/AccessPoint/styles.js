@@ -17,7 +17,7 @@ export const Container = styled.div.attrs((props) => ({
   align-items: center;
   justify-content: center;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-  z-index: 900;
+  z-index: 150;
   overflow: visible;
   margin: 0px;
 

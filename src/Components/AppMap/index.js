@@ -1,23 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import img from "./img/base.png";
 import AccessPoint from "../AccessPoint";
 import { Container, MapContainer } from "./styles";
-import { ApContext } from "./ApContext";
-
 import TopMenu from "../TopMenu";
 import SideMenu from "../SideMenu";
+import { v4 } from "uuid";
 
 export default function AppMap() {
+  const refMap = useRef(null);
   const MAP_HEIGHT = 860;
   const MAP_WIDTH = 1700;
-
   const [mapMoveSettings, setMapMoveSettings] = useState({
-    movingMode: true,
+    movingMode: false,
     isMoving: false,
     initialPosX: 0,
     initialPosY: 0,
     initialMouseX: 0,
-    initialMousey: 0,
+    initialMouseY: 0,
     posX: 0,
     posY: 0,
     mapHeigth: MAP_HEIGHT,
@@ -36,9 +35,10 @@ export default function AppMap() {
     initialPosX: 0,
     initialPosY: 0,
     initialMouseX: 0,
-    initialMousey: 0,
+    initialMouseY: 0,
     posX: 0,
     posY: 0,
+    movingAp: "",
   });
 
   const [arrayAps, setArrayAps] = useState([
@@ -60,24 +60,35 @@ export default function AppMap() {
       initialX: 100,
       initialY: 110,
     },
-    {
-      apName: "AP003",
-      posX: 320,
-      posY: 25,
-      apSize: 30,
-      label: true,
-      initialX: 320,
-      initialY: 25,
-    },
   ]);
 
-  const [controlsParameters, setControlParameters] = useState({
+  const [mode, setMode] = useState({
     zoomIn: false,
     zoomOut: false,
     addAp: false,
     measureDistance: false,
+    moveMap: false,
+    moveAp: false,
   });
 
+  const apDragAction = (event, ap) => {
+    if (!apMoveSettings.isMoving && mode.moveAp) {
+      console.log("Drag Action: " + ap);
+      setApMoveSettings({
+        ...apMoveSettings,
+        isMoving: true,
+        movingAp: ap,
+        initialMouseX: event.clientX,
+        initialMouseY: event.clientY,
+      });
+    } else {
+      setApMoveSettings({
+        ...apMoveSettings,
+        isMoving: false,
+        movingAp: ap,
+      });
+    }
+  };
   const handleMenuAction = (type) => {
     const ZoomInFactor = 1.1;
     const ZoomOutFactor = 1 / ZoomInFactor;
@@ -165,21 +176,89 @@ export default function AppMap() {
           );
         }
         break;
+      case "Mouse":
+        setMode({
+          ...mode,
+          addAp: false,
+          moveAp: false,
+          moveMap: true,
+          measureDistance: false,
+        });
+        setApMoveSettings({
+          ...apMoveSettings,
+          isMoving: false,
+        });
+        break;
+      case "Move":
+        if (!apMoveSettings.isMoving && !mapMoveSettings.isMoving) {
+          setMode({
+            ...mode,
+            addAp: false,
+            moveAp: true,
+            moveMap: false,
+            measureDistance: false,
+          });
+        }
+        break;
+      case "addAp":
+        if (!apMoveSettings.isMoving && !mapMoveSettings.isMoving) {
+          setMode({
+            ...mode,
+            addAp: true,
+            moveAp: false,
+            moveMap: false,
+            measureDistance: false,
+          });
+        }
+        break;
       default:
     }
   };
 
   return (
-    <ApContext.Provider
-      value={{ apMoveSettings, setApMoveSettings, arrayAps, setArrayAps }}
-    >
-      <Container>
-        <TopMenu menuAction={handleMenuAction} />
-        <SideMenu menuAction={handleMenuAction} />
+    <Container>
+      <TopMenu
+        menuAction={handleMenuAction}
+        visible={apMoveSettings.isMoving}
+      />
+      <SideMenu
+        menuAction={handleMenuAction}
+        visible={apMoveSettings.isMoving}
+      />
 
-        <MapContainer
-          onMouseDown={(e) => {
-            console.log(mapMoveSettings);
+      <MapContainer
+        ref={refMap}
+        onClick={(e) => {
+          e.preventDefault();
+
+          if (mode.addAp) {
+            console.log("Clicked!");
+
+            let { left, top } = refMap.current.getBoundingClientRect();
+            let newPosX = e.clientX - left - 10;
+            let newPosY = e.clientY - top - 10;
+
+            try {
+              let obj = {
+                apName: v4().substring(0, 5),
+                posX: newPosX,
+                posY: newPosY,
+                initialX: (newPosX * MAP_WIDTH) / apMoveSettings.currentMapX,
+                initialY: (newPosY * MAP_HEIGHT) / apMoveSettings.currentMapY,
+                apSize: 30,
+                label: true,
+              };
+              setArrayAps([...arrayAps, obj]);
+            } catch (error) {
+              console.log(error);
+            }
+          }
+        }}
+        onMouseDown={(e) => {
+          if (mode.addAp) {
+            return false;
+          }
+          if (mode.moveMap) {
             e.preventDefault();
             if (mapMoveSettings !== true) {
               {
@@ -193,61 +272,98 @@ export default function AppMap() {
                 });
               }
             }
-          }}
-          onMouseUp={(e) => {
-            e.stopPropagation();
-            if (mapMoveSettings.isMoving === true) {
-              setMapMoveSettings({
-                ...mapMoveSettings,
-                isMoving: false,
-              });
-            }
-          }}
-          onMouseMove={(e) => {
+          }
+        }}
+        onMouseUp={(e) => {
+          e.stopPropagation();
+          if (mode.addAp) {
+            return false;
+          }
+          if (apMoveSettings.isMoving === true) {
+            setApMoveSettings({
+              ...apMoveSettings,
+              isMoving: false,
+            });
+          }
+          if (mapMoveSettings.isMoving === true) {
+            setMapMoveSettings({
+              ...mapMoveSettings,
+              isMoving: false,
+            });
+          }
+        }}
+        onMouseMove={(e) => {
+          if (apMoveSettings.isMoving && mode.moveAp) {
+            const key = arrayAps.findIndex((obj) => {
+              return obj.apName === apMoveSettings.movingAp;
+            });
+
             {
-              if (mapMoveSettings.isMoving) {
-                setMapMoveSettings({
-                  ...mapMoveSettings,
-                  isMoving: true,
-                  posX:
-                    mapMoveSettings.initialPosX +
-                    e.clientX -
-                    mapMoveSettings.initialMouseX,
-                  posY:
-                    mapMoveSettings.initialPosY +
-                    e.clientY -
-                    mapMoveSettings.initialMouseY,
-                });
+              if (apMoveSettings.isMoving) {
+                let { left, top } = refMap.current.getBoundingClientRect();
+                let newPosX = e.clientX - left - 10;
+                let newPosY = e.clientY - top - 10;
+
+                try {
+                  arrayAps[key].posX = newPosX;
+                  arrayAps[key].posY = newPosY;
+                  setArrayAps([...arrayAps]);
+                } catch (error) {
+                  console.log(error);
+                }
+                try {
+                  arrayAps[key].initialX =
+                    (newPosX * MAP_WIDTH) / apMoveSettings.currentMapX;
+                  arrayAps[key].initialY =
+                    (newPosY * MAP_HEIGHT) / apMoveSettings.currentMapY;
+                  setArrayAps([...arrayAps]);
+                } catch (error) {
+                  console.log(error);
+                }
               }
             }
-          }}
-          MapPosX={mapMoveSettings.posX + "px"}
-          MapPosY={mapMoveSettings.posY + "px"}
-          MapWidth={mapMoveSettings.mapWidth + "px"}
-          MapWidth={mapMoveSettings.mapHeigth + "px"}
-        >
-          {arrayAps.map((entry) => {
-            return (
-              <AccessPoint
-                apName={entry.apName}
-                posX={entry.posX}
-                posY={entry.posY}
-                apSize={entry.apSize}
-                label={entry.label}
-                key={entry.apName}
-                initialMapSizeY={MAP_HEIGHT}
-                initialMapSizeX={MAP_WIDTH}
-                onMouseDown={(e) => {
-                  e.stopPropagation();
-                }}
-              />
-            );
-          })}
-          <div>
-            <img src={img} draggable="false" />
-          </div>
-        </MapContainer>
-      </Container>
-    </ApContext.Provider>
+          }
+          {
+            if (mapMoveSettings.isMoving && mode.moveMap) {
+              setMapMoveSettings({
+                ...mapMoveSettings,
+                isMoving: true,
+                posX:
+                  mapMoveSettings.initialPosX +
+                  e.clientX -
+                  mapMoveSettings.initialMouseX,
+                posY:
+                  mapMoveSettings.initialPosY +
+                  e.clientY -
+                  mapMoveSettings.initialMouseY,
+              });
+            }
+          }
+        }}
+        MapPosX={mapMoveSettings.posX + "px"}
+        MapPosY={mapMoveSettings.posY + "px"}
+        MapWidth={mapMoveSettings.mapWidth + "px"}
+        MapWidth={mapMoveSettings.mapHeigth + "px"}
+      >
+        {arrayAps.map((entry) => {
+          return (
+            <AccessPoint
+              dragAction={apDragAction}
+              apName={entry.apName}
+              posX={entry.posX}
+              posY={entry.posY}
+              apSize={entry.apSize}
+              label={entry.label}
+              key={entry.apName}
+              initialMapSizeY={MAP_HEIGHT}
+              initialMapSizeX={MAP_WIDTH}
+            />
+          );
+        })}
+        <div>
+          <img src={img} draggable="false" />
+        </div>
+      </MapContainer>
+    </Container>
   );
 }

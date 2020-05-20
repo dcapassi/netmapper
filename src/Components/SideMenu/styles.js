@@ -1,11 +1,19 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 export const Container = styled.div`
   position: absolute;
   display: flex;
-  top: 50%;
-  left: 5%;
+  top: 45%;
   z-index: 200;
+  left: 1%;
+
+  ${(props) =>
+    props.visible === true &&
+    css`
+      transition: opacity 0.3s ease-out;
+      opacity: 0;
+}
+    `}
 
   div {
     display: flex;

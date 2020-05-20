@@ -1,19 +1,26 @@
 import React from "react";
-import { FaRulerHorizontal, FaMousePointer, FaWifi } from "react-icons/fa";
-import { AiOutlineWifi } from "react-icons/ai";
+import {
+  FaRulerHorizontal,
+  FaMousePointer,
+  FaArrowsAlt,
+  FaWifi,
+} from "react-icons/fa";
 import { Container } from "./styles";
 
-function TopMenu({ menuAction }) {
+function TopMenu(props) {
   return (
-    <Container>
+    <Container visible={props.visible}>
       <div>
-        <div onClick={() => menuAction("Mouse")}>
+        <div onClick={() => props.menuAction("Mouse")}>
           <FaMousePointer />
         </div>
-        <div onClick={() => menuAction("addApp")}>
+        <div onClick={() => props.menuAction("Move")}>
+          <FaArrowsAlt />
+        </div>
+        <div onClick={() => props.menuAction("addAp")}>
           <FaWifi />
         </div>
-        <div onClick={() => menuAction("Ruler")}>
+        <div onClick={() => props.menuAction("Ruler")}>
           <FaRulerHorizontal />
         </div>
       </div>

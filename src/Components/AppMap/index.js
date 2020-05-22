@@ -1,10 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import img from "./img/base.png";
+import img from "./img/blueprint.png";
 import AccessPoint from "../AccessPoint";
 import { Container, MapContainer } from "./styles";
 import TopMenu from "../TopMenu";
 import SideMenu from "../SideMenu";
 import { v4 } from "uuid";
+import { getDistance, pixelToMeter } from "../../Utils";
 
 export default function AppMap() {
   const refMap = useRef(null);
@@ -27,6 +28,15 @@ export default function AppMap() {
     level: 1,
   });
 
+  const [scaleSettings, setScaleSettings] = useState({
+    point1: { x: null, y: null },
+    point2: { x: null, y: null },
+    measuredMapWidth: mapMoveSettings.mapWidth,
+    distance: 58,
+    pixelToMeter: 10,
+    mapWidthMeter: (10 * 1700) / 58, // 10 is the measure in meters informed by the user
+  });
+
   const [apMoveSettings, setApMoveSettings] = useState({
     movingMode: false,
     currentMapX: MAP_WIDTH,
@@ -44,8 +54,8 @@ export default function AppMap() {
   const [arrayAps, setArrayAps] = useState([
     {
       apName: "AP001",
-      posX: 30,
-      posY: 30,
+      posX: 0,
+      posY: 100,
       apSize: 30,
       label: true,
       initialX: 30,
@@ -53,8 +63,8 @@ export default function AppMap() {
     },
     {
       apName: "AP002",
-      posX: 100,
-      posY: 110,
+      posX: 800,
+      posY: 100,
       apSize: 30,
       label: true,
       initialX: 100,
@@ -95,7 +105,7 @@ export default function AppMap() {
 
     switch (type) {
       case "ZoomIn":
-        if (zoomLevel.level <= 10) {
+        if (zoomLevel.level <= 20) {
           setZoomLevel({ ...zoomLevel, level: zoomLevel.level + 1 });
           let mapHeightUpdated = mapMoveSettings.mapHeigth * ZoomInFactor;
           let mapWidthUpdated = mapMoveSettings.mapWidth * ZoomInFactor;
@@ -211,6 +221,17 @@ export default function AppMap() {
           });
         }
         break;
+      case "Ruler":
+        if (!apMoveSettings.isMoving && !mapMoveSettings.isMoving) {
+          setMode({
+            ...mode,
+            addAp: false,
+            moveAp: false,
+            moveMap: false,
+            measureDistance: true,
+          });
+        }
+        break;
       default:
     }
   };
@@ -230,14 +251,44 @@ export default function AppMap() {
         ref={refMap}
         onClick={(e) => {
           e.preventDefault();
+          let { left, top } = refMap.current.getBoundingClientRect();
+          let newPosX = e.clientX - left;
+          let newPosY = e.clientY - top;
+
+          if (mode.measureDistance) {
+            if (
+              scaleSettings.point1.x === null &&
+              scaleSettings.point1.y === null
+            ) {
+              console.log("got here!");
+              try {
+                setScaleSettings({
+                  ...scaleSettings,
+                  point1: { x: newPosX, y: newPosY },
+                  point2: { x: newPosX, y: newPosY },
+                });
+              } catch (error) {
+                console.log(error);
+              }
+              return true;
+            }
+            if (
+              scaleSettings.point2.x === null &&
+              scaleSettings.point2.y === null
+            ) {
+              try {
+                setScaleSettings({
+                  ...scaleSettings,
+                  point2: { x: newPosX, y: newPosY },
+                });
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          }
 
           if (mode.addAp) {
             console.log("Clicked!");
-
-            let { left, top } = refMap.current.getBoundingClientRect();
-            let newPosX = e.clientX - left - 10;
-            let newPosY = e.clientY - top - 10;
-
             try {
               let obj = {
                 apName: v4().substring(0, 5),
@@ -255,6 +306,8 @@ export default function AppMap() {
           }
         }}
         onMouseDown={(e) => {
+          if (mode.measureDistance) {
+          }
           if (mode.addAp) {
             return false;
           }
@@ -293,6 +346,26 @@ export default function AppMap() {
           }
         }}
         onMouseMove={(e) => {
+          // Measure mode second point follow the mouse;
+          if (mode.measureDistance) {
+            let { left, top } = refMap.current.getBoundingClientRect();
+            let newPosX = e.clientX - left;
+            let newPosY = e.clientY - top;
+            if (
+              scaleSettings.point1.x !== null &&
+              scaleSettings.point1.y !== null
+            ) {
+              try {
+                setScaleSettings({
+                  ...scaleSettings,
+                  point2: { x: newPosX, y: newPosY },
+                });
+              } catch (error) {
+                console.log(error);
+              }
+            }
+          }
+
           if (apMoveSettings.isMoving && mode.moveAp) {
             const key = arrayAps.findIndex((obj) => {
               return obj.apName === apMoveSettings.movingAp;
@@ -345,6 +418,43 @@ export default function AppMap() {
         MapWidth={mapMoveSettings.mapWidth + "px"}
         MapWidth={mapMoveSettings.mapHeigth + "px"}
       >
+        <svg
+          height="100%"
+          width="100%"
+          style={{
+            overflow: "hidden",
+            position: "absolute",
+            top: "0px",
+            left: "0px",
+            display: "flex",
+          }}
+        >
+          <line
+            x1={scaleSettings.point1.x}
+            y1={scaleSettings.point1.y}
+            x2={scaleSettings.point2.x}
+            y2={scaleSettings.point2.y}
+            style={{ stroke: "red", strokeWidth: 2 }}
+          />
+          <text
+            style={{ userSelect: "none", fontSize: "24px" }}
+            x={arrayAps[0].posX + (arrayAps[1].posX - arrayAps[0].posX) / 2}
+            y={
+              arrayAps[0].posY + (arrayAps[1].posY - arrayAps[0].posY) / 2 - 20
+            }
+          >
+            {pixelToMeter(
+              apMoveSettings.currentMapX,
+              scaleSettings.mapWidthMeter,
+              getDistance(
+                arrayAps[1].posX,
+                arrayAps[0].posX,
+                arrayAps[1].posY,
+                arrayAps[0].posY
+              )
+            ).toFixed(1)}
+          </text>
+        </svg>
         {arrayAps.map((entry) => {
           return (
             <AccessPoint

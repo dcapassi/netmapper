@@ -2,7 +2,6 @@ import React, { useContext } from "react";
 
 import { Container } from "./styles";
 import { AiOutlineWifi } from "react-icons/ai";
-import { ApContext } from "../AppMap/ApContext";
 
 function AccessPoint(props) {
   return (

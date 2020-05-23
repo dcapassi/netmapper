@@ -3,7 +3,7 @@ import styled, { css } from "styled-components";
 export const Container = styled.div`
   position: absolute;
   display: flex;
-  top: 45%;
+  top: 30%;
   z-index: 200;
   left: 1%;
 

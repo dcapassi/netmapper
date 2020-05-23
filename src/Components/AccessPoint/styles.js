@@ -21,6 +21,12 @@ export const Container = styled.div.attrs((props) => ({
   overflow: visible;
   margin: 0px;
 
+  ${(props) =>
+    props.isMoving &&
+    css`
+      cursor: none;
+    `}
+
   p {
     position: absolute;
     top: -25px;
@@ -30,15 +36,4 @@ export const Container = styled.div.attrs((props) => ({
   svg {
     color: blue;
   }
-  ${(props) =>
-    props.isDragging &&
-    css`
-      border: 2px dashed rgba(0, 0, 0, 0.2);
-      box-shadow: none;
-      background: transparent;
-      p,
-      svg {
-        opacity: 0.5;
-      }
-    `}
 `;

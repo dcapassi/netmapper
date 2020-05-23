@@ -95,8 +95,8 @@ function AccessPointContainer(props) {
           arrayAps.map((entry) => {
             return {
               ...entry,
-              posX: entry.initialX + apSize / 2,
-              posY: entry.initialY - apSize / 2,
+              posX: entry.initialX,
+              posY: entry.initialY,
             };
           })
         );
@@ -155,9 +155,9 @@ function AccessPointContainer(props) {
           const { x: calcInitialX, y: calcInitialY } = zoomFitCalc(
             newPosX,
             newPosY,
-            (apSize / 2) * (props.zoomLevel.zoomInFactor-1),
+            (apSize / 2) * (props.zoomLevel.zoomInFactor - 1),
             props.zoomLevel.zoomOutFactor,
-            props.zoomLevel.level
+            props.zoomLevel.level - 1
           );
           console.log({ calcInitialX, calcInitialY });
 

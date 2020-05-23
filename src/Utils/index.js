@@ -13,7 +13,7 @@ export function zoomFitCalc(x, y, c1, c2, level) {
   let resultX = x;
   let resultY = y;
   console.log({ x, y, c1, c2, level });
-  for (let i = 1; i < level; i++) {
+  for (let i = 1; i <= level; i++) {
     resultX = (resultX - c1) * c2;
     resultY = (resultY - c1) * c2;
     console.log({ x: resultX, y: resultY });

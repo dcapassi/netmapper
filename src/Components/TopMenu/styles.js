@@ -8,7 +8,7 @@ export const Container = styled.div`
   left: 42%;
 
   ${(props) =>
-    props.visible === true &&
+    props.visible !== true &&
     css`
       transition: opacity 0.3s ease-out;
       opacity: 0;

@@ -64,12 +64,14 @@ function AccessPointContainer(props) {
           initialMouseX: event.clientX,
           initialMouseY: event.clientY,
         });
+        props.messageCallBack({ isMoving: true });
       } else {
         setApMoveSettings({
           ...apMoveSettings,
           isMoving: false,
           movingAp: ap,
         });
+        props.messageCallBack({ isMoving: false });
       }
     }
   };

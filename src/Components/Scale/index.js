@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from "react";
 import Scale from "./Scale";
+import { getDistance, pixelToMeter } from "../../Utils";
 
 function ScaleContainer(props) {
   const [scaleSettings, setScaleSettings] = useState({
     point1: { x: null, y: null },
     point2: { x: null, y: null },
     isMeasuring: false,
-    measuredMapWidth: props.mapMoveSettings.mapWidth,
-    distance: 58,
-    pixelToMeter: 10,
-    mapWidthMeter: (10 * 1700) / 58, // 10 is the measure in meters informed by the user
+    measuredMapMt: null,
+    measuredMapPx: null,
+    convertedDistance: 0,
+    distance: null,
+    pixelToMeter: null,
+    currentMapWidth: props.mapMoveSettings.mapWidth,
+    pastMapWidth: props.mapMoveSettings.mapWidth,
+    //mapWidthMeter: (10 * 1700) / 58, // 10 is the measure in meters informed by the user
   });
 
   //UseEffect for handling click events
@@ -21,6 +26,26 @@ function ScaleContainer(props) {
       if (scaleSettings.isMeasuring) {
         setScaleSettings({ ...scaleSettings, isMeasuring: false });
         props.messageCallBack({ scale: { isMeasuring: false } });
+        if (!scaleSettings.measuredMapMt) {
+          let inputMeter = null;
+          inputMeter = prompt(
+            "Por favor insira a distância equivalente em metros: "
+          );
+          setScaleSettings({
+            ...scaleSettings,
+            measuredMapMt: inputMeter,
+            pastMapWidth: props.mapMoveSettings.mapWidth,
+            isMeasuring: false,
+            measuredMapPx: getDistance(
+              scaleSettings.point1.x,
+              scaleSettings.point2.x,
+              scaleSettings.point1.y,
+              scaleSettings.point2.y
+            ),
+            point1: { x: null, y: null },
+            point2: { x: null, y: null },
+          });
+        }
       }
 
       if (!scaleSettings.isMeasuring) {
@@ -46,6 +71,20 @@ function ScaleContainer(props) {
     });
   }, [props.mode]);
 
+  //Handling reset scale signal
+  useEffect(() => {
+    setScaleSettings({
+      ...scaleSettings,
+      point1: { x: null, y: null },
+      point2: { x: null, y: null },
+      isMeasuring: false,
+      measuredMapMt: null,
+      measuredMapPx: null,
+      convertedDistance: 0,
+      distance: null,
+    });
+  }, [props.resetSignal]);
+
   //UseEffect for handling mouse move events
   useEffect(() => {
     if (props.mode.measureDistance && scaleSettings.isMeasuring) {
@@ -58,6 +97,19 @@ function ScaleContainer(props) {
             ...scaleSettings,
             point2: { x: newPosX, y: newPosY },
             isMeasuring: true,
+            distance: getDistance(
+              scaleSettings.point1.x,
+              scaleSettings.point2.x,
+              scaleSettings.point1.y,
+              scaleSettings.point2.y
+            ),
+            convertedDistance:
+              (scaleSettings.pastMapWidth / props.mapMoveSettings.mapWidth) *
+              pixelToMeter(
+                scaleSettings.measuredMapPx,
+                scaleSettings.measuredMapMt,
+                scaleSettings.distance
+              ),
           });
           props.messageCallBack({ scale: { isMeasuring: true } });
         } catch (error) {
@@ -67,7 +119,13 @@ function ScaleContainer(props) {
     }
   }, [props.mouseMoveEvent]);
 
-  return <Scale p1={scaleSettings.point1} p2={scaleSettings.point2} />;
+  return (
+    <Scale
+      scaleSettings={scaleSettings}
+      p1={scaleSettings.point1}
+      p2={scaleSettings.point2}
+    />
+  );
 }
 
 export default ScaleContainer;

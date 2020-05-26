@@ -1,11 +1,14 @@
 import React from "react";
-import Container from "./styles";
-import { getDistance } from "../../Utils";
+import { getDistance, pixelToMeter } from "../../Utils";
 
 function Scale(props) {
-  var centerX = props.p1.x + (props.p2.x - props.p1.x) / 2;
-  var centerY = props.p1.y + (props.p2.y - props.p1.y) / 2 - 10;
-  var distance = getDistance(props.p1.x, props.p2.x, props.p1.y, props.p2.y);
+  let centerX = props.p1.x + (props.p2.x - props.p1.x) / 2;
+  let centerY = props.p1.y + (props.p2.y - props.p1.y) / 2 - 10;
+  let distance = props.scaleSettings.convertedDistance;
+  if (!distance) {
+    distance = "-";
+  } else distance = distance.toFixed(2);
+
   return (
     <>
       <line

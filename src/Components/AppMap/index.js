@@ -2,6 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import img from "./img/blueprint.png";
 import AccessPointContainer from "../AccessPoint";
 import ScaleContainer from "../Scale";
+import ResetScale from "../Scale/ResetScale";
+
 import { Container, MapContainer } from "./styles";
 import TopMenu from "../TopMenu";
 import SideMenu from "../SideMenu";
@@ -41,11 +43,21 @@ export default function AppMap() {
           visible: true,
         });
       }
+      if (msg.scale.reset === true) {
+        setResetScaleSignal({
+          ...resetScaleSignal,
+          reset: true,
+        });
+      }
     }
   };
 
   const [menuVisible, setMenuVisible] = useState({
     visible: true,
+  });
+
+  const [resetScaleSignal, setResetScaleSignal] = useState({
+    reset: false,
   });
 
   const [mapMoveSettings, setMapMoveSettings] = useState({
@@ -75,15 +87,6 @@ export default function AppMap() {
   const [mapClickEvent, setMapClickEvent] = useState({
     x: null,
     y: null,
-  });
-
-  const [scaleSettings, setScaleSettings] = useState({
-    point1: { x: null, y: null },
-    point2: { x: null, y: null },
-    measuredMapWidth: mapMoveSettings.mapWidth,
-    distance: 58,
-    pixelToMeter: 10,
-    mapWidthMeter: (10 * 1700) / 58, // 10 is the measure in meters informed by the user
   });
 
   const [mode, setMode] = useState({
@@ -149,52 +152,10 @@ export default function AppMap() {
     let { left, top } = refMap.current.getBoundingClientRect();
     let newPosX = e.clientX - left;
     let newPosY = e.clientY - top;
-
-    if (mode.measureDistance) {
-      if (scaleSettings.point1.x === null && scaleSettings.point1.y === null) {
-        try {
-          setScaleSettings({
-            ...scaleSettings,
-            point1: { x: newPosX, y: newPosY },
-            point2: { x: newPosX, y: newPosY },
-          });
-        } catch (error) {
-          console.log(error);
-        }
-        return true;
-      }
-      if (scaleSettings.point2.x === null && scaleSettings.point2.y === null) {
-        try {
-          setScaleSettings({
-            ...scaleSettings,
-            point2: { x: newPosX, y: newPosY },
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
   };
   const mapOnMouseMove = (e) => {
     ///Set the values to the MouseMoveEvent to be used by the children elements
     setMouseMoveEvent({ ...mouseMoveEvent, x: e.clientX, y: e.clientY });
-
-    // Measure mode second point follow the mouse;
-    if (mode.measureDistance) {
-      let { left, top } = refMap.current.getBoundingClientRect();
-      let newPosX = e.clientX - left;
-      let newPosY = e.clientY - top;
-      if (scaleSettings.point1.x !== null && scaleSettings.point1.y !== null) {
-        try {
-          setScaleSettings({
-            ...scaleSettings,
-            point2: { x: newPosX, y: newPosY },
-          });
-        } catch (error) {
-          console.log(error);
-        }
-      }
-    }
 
     {
       if (mapMoveSettings.isMoving && mode.moveMap) {
@@ -284,6 +245,13 @@ export default function AppMap() {
             mapHeigth: MAP_HEIGHT,
             mapWidth: MAP_WIDTH,
           });
+          setMode({
+            ...mode,
+            addAp: false,
+            moveAp: false,
+            moveMap: false,
+            measureDistance: false,
+          });
         }
         break;
       case "Mouse":
@@ -360,6 +328,10 @@ export default function AppMap() {
           mode={mode}
           messageCallBack={containerMessage}
         />
+        <ResetScale
+          visible={mode.measureDistance}
+          messageCallBack={containerMessage}
+        />
         {/*SVG Container*/}
         <svg
           height="100%"
@@ -379,6 +351,7 @@ export default function AppMap() {
             messageCallBack={containerMessage}
             mouseMoveEvent={mouseMoveEvent}
             refMap={refMap}
+            resetSignal={resetScaleSignal}
           />
         </svg>
         <div>

@@ -12,7 +12,8 @@ export const Container = styled.div`
     css`
       transition: opacity 0.3s ease-out;
       opacity: 0;
-}
+      
+    }
     `}
 
   div {

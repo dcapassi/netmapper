@@ -30,7 +30,40 @@ export const Container = styled.div`
 
     div:hover {
       box-shadow: none;
-      background: rgba(192, 220, 243, 0.6);
+      background: rgba(192, 220, 243, 0.9);
+    }
+
+    .moveAp {
+      ${(props) =>
+        props.mode.moveAp === true &&
+        css`
+          border: 1px solid black;
+          background: rgba(192, 220, 243, 0.9);
+        `}
+    }
+    .moveMap {
+      ${(props) =>
+        props.mode.moveMap === true &&
+        css`
+          border: 1px solid black;
+          background: rgba(192, 220, 243, 0.9);
+        `}
+    }
+    .addAp {
+      ${(props) =>
+        props.mode.addAp === true &&
+        css`
+          border: 1px solid black;
+          background: rgba(192, 220, 243, 0.9);
+        `}
+    }
+    .measureDistance {
+      ${(props) =>
+        props.mode.measureDistance === true &&
+        css`
+          border: 1px solid black;
+          background: rgba(192, 220, 243, 0.9);
+        `}
     }
   }
 `;

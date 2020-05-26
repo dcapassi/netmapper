@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
-import img from "./img/base.png";
+import img from "./img/tempBlue.png";
 import AccessPointContainer from "../AccessPoint";
-
+import ScaleContainer from "../Scale";
 import { Container, MapContainer } from "./styles";
 import TopMenu from "../TopMenu";
 import SideMenu from "../SideMenu";
@@ -15,19 +15,38 @@ export default function AppMap() {
   const MAP_HEIGHT = 860;
   const MAP_WIDTH = 1700;
 
-  const apContainerMessage = (msg) => {
-    if (msg.isMoving === true) {
-      setMode({
-        ...mode,
-        menu: false,
-      });
-    } else if (msg.isMoving === false) {
-      setMode({
-        ...mode,
-        menu: true,
-      });
+  const containerMessage = (msg) => {
+    if (msg.ap) {
+      if (msg.ap.isMoving === true) {
+        setMenuVisible({
+          ...menuVisible,
+          visible: false,
+        });
+      } else if (msg.ap.isMoving === false) {
+        setMenuVisible({
+          ...menuVisible,
+          visible: true,
+        });
+      }
+    }
+    if (msg.scale) {
+      if (msg.scale.isMeasuring === true) {
+        setMenuVisible({
+          ...menuVisible,
+          visible: false,
+        });
+      } else if (msg.scale.isMeasuring === false) {
+        setMenuVisible({
+          ...menuVisible,
+          visible: true,
+        });
+      }
     }
   };
+
+  const [menuVisible, setMenuVisible] = useState({
+    visible: true,
+  });
 
   const [mapMoveSettings, setMapMoveSettings] = useState({
     movingMode: false,
@@ -74,7 +93,6 @@ export default function AppMap() {
     measureDistance: false,
     moveMap: false,
     moveAp: false,
-    menu: true,
   });
 
   // Map Functions
@@ -97,9 +115,9 @@ export default function AppMap() {
               initialPosX: mapMoveSettings.posX,
               initialPosY: mapMoveSettings.posY,
             });
-            setMode({
-              ...mode,
-              menu: false,
+            setMenuVisible({
+              ...menuVisible,
+              visible: false,
             });
           }
         }
@@ -116,9 +134,9 @@ export default function AppMap() {
         ...mapMoveSettings,
         isMoving: false,
       });
-      setMode({
-        ...mode,
-        menu: true,
+      setMenuVisible({
+        ...menuVisible,
+        visible: true,
       });
     }
   };
@@ -209,6 +227,15 @@ export default function AppMap() {
             level: zoomLevel.level + 1,
             type: "ZoomIn",
           });
+
+          setMode({
+            ...mode,
+            addAp: false,
+            moveAp: false,
+            moveMap: false,
+            measureDistance: false,
+          });
+
           let mapHeightUpdated = mapMoveSettings.mapHeigth * ZoomInFactor;
           let mapWidthUpdated = mapMoveSettings.mapWidth * ZoomInFactor;
 
@@ -227,6 +254,13 @@ export default function AppMap() {
             ...zoomLevel,
             level: zoomLevel.level - 1,
             type: "ZoomOut",
+          });
+          setMode({
+            ...mode,
+            addAp: false,
+            moveAp: false,
+            moveMap: false,
+            measureDistance: false,
           });
           setMapMoveSettings({
             ...mapMoveSettings,
@@ -300,8 +334,12 @@ export default function AppMap() {
 
   return (
     <Container>
-      <TopMenu menuAction={handleMenuAction} visible={mode.menu} />
-      <SideMenu menuAction={handleMenuAction} visible={mode.menu} />
+      <TopMenu
+        mode={mode}
+        menuAction={handleMenuAction}
+        visible={menuVisible.visible}
+      />
+      <SideMenu menuAction={handleMenuAction} visible={menuVisible.visible} />
       <MapContainer
         ref={refMap}
         onClick={(e) => mapOnClick(e)}
@@ -320,8 +358,9 @@ export default function AppMap() {
           mouseMoveEvent={mouseMoveEvent}
           mapClickEvent={mapClickEvent}
           mode={mode}
-          messageCallBack={apContainerMessage}
+          messageCallBack={containerMessage}
         />
+        {/*SVG Container*/}
         <svg
           height="100%"
           width="100%"
@@ -332,7 +371,16 @@ export default function AppMap() {
             left: "0px",
             display: "flex",
           }}
-        ></svg>
+        >
+          <ScaleContainer
+            mapClickEvent={mapClickEvent}
+            mapMoveSettings={mapMoveSettings}
+            mode={mode}
+            messageCallBack={containerMessage}
+            mouseMoveEvent={mouseMoveEvent}
+            refMap={refMap}
+          />
+        </svg>
         <div>
           <img src={img} draggable="false" />
         </div>

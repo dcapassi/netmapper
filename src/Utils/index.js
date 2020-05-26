@@ -1,5 +1,5 @@
 export function getDistance(x1, x2, y1, y2) {
-  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+  return Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2)).toFixed(1);
 }
 
 export function pixelToMeter(currentMapWidthPx, mapWidthMeter, distancePx) {
@@ -12,11 +12,9 @@ export function zoomFitCalc(x, y, c1, c2, level) {
   //c2: is the zoomOut ex: 1/(1.10) = 0.909090..
   let resultX = x;
   let resultY = y;
-  console.log({ x, y, c1, c2, level });
   for (let i = 1; i <= level; i++) {
     resultX = (resultX - c1) * c2;
     resultY = (resultY - c1) * c2;
-    console.log({ x: resultX, y: resultY });
   }
   return { x: resultX, y: resultY };
 }

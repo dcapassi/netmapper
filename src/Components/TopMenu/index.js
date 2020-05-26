@@ -9,18 +9,19 @@ import { Container } from "./styles";
 
 function TopMenu(props) {
   return (
-    <Container visible={props.visible}>
+
+    <Container visible={props.visible} mode={props.mode}>
       <div>
-        <div onClick={() => props.menuAction("Mouse")}>
+        <div className="moveMap" onClick={() => props.menuAction("Mouse")}>
           <FaMousePointer />
         </div>
-        <div onClick={() => props.menuAction("Move")}>
+        <div className="moveAp"onClick={() => props.menuAction("Move")}>
           <FaArrowsAlt />
         </div>
-        <div onClick={() => props.menuAction("addAp")}>
+        <div className="addAp" onClick={() => props.menuAction("addAp")}>
           <FaWifi />
         </div>
-        <div onClick={() => props.menuAction("Ruler")}>
+        <div className="measureDistance"onClick={() => props.menuAction("Ruler")}>
           <FaRulerHorizontal />
         </div>
       </div>

@@ -56,7 +56,6 @@ function AccessPointContainer(props) {
   const apDragAction = (event, ap) => {
     if (props.mode.moveAp) {
       if (!apMoveSettings.isMoving) {
-        console.log("Drag Action: " + ap);
         setApMoveSettings({
           ...apMoveSettings,
           isMoving: true,
@@ -64,14 +63,14 @@ function AccessPointContainer(props) {
           initialMouseX: event.clientX,
           initialMouseY: event.clientY,
         });
-        props.messageCallBack({ isMoving: true });
+        props.messageCallBack({ ap: { isMoving: true } });
       } else {
         setApMoveSettings({
           ...apMoveSettings,
           isMoving: false,
           movingAp: ap,
         });
-        props.messageCallBack({ isMoving: false });
+        props.messageCallBack({ ap: { isMoving: false } });
       }
     }
   };
@@ -89,7 +88,6 @@ function AccessPointContainer(props) {
       case "ZoomOut":
         zoomFactor = props.zoomLevel.zoomOutFactor;
         offset1 = 0;
-        console.log(zoomFactor);
         offset2 = ((-1 * apSize) / 2) * (1 / props.zoomLevel.zoomOutFactor - 1);
         break;
       case "Fit":
@@ -113,7 +111,6 @@ function AccessPointContainer(props) {
       default:
         break;
     }
-    console.log("Offset2:______" + offset2);
 
     let mapHeightUpdated = props.mapMoveSettings.mapHeigth * zoomFactor;
     let mapWidthUpdated = props.mapMoveSettings.mapWidth * zoomFactor;

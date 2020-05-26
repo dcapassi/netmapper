@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import img from "./img/tempBlue.png";
+import img from "./img/blueprint.png";
 import AccessPointContainer from "../AccessPoint";
 import ScaleContainer from "../Scale";
 import { Container, MapContainer } from "./styles";

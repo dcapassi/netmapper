@@ -10,27 +10,26 @@ function AccessPointContainer(props) {
 
   const [apSize, setApSize] = useState(30);
 
+
+  //UseEffect for loading the Access Points
+  useEffect(() => {
+    const apsFromLocalStorage = JSON.parse(localStorage.getItem("venue1area1"));
+
+    if (apsFromLocalStorage !== null) {
+      const obj = apsFromLocalStorage.map((entry) => {
+        return { ...entry, posX: entry.initialX, posY: entry.initialY };
+      });
+      setArrayAps(obj);
+    }
+  }, []);
+
   //Access Points Array
-  const [arrayAps, setArrayAps] = useState([
-    {
-      apName: "AP001",
-      posX: 100,
-      posY: 100,
-      apSize: 30,
-      label: true,
-      initialX: 100,
-      initialY: 100,
-    },
-    {
-      apName: "AP002",
-      posX: 800,
-      posY: 100,
-      apSize: 30,
-      label: true,
-      initialX: 800,
-      initialY: 100,
-    },
-  ]);
+  const [arrayAps, setArrayAps] = useState([]);
+
+  
+  useEffect(() => {
+    props.sendApUpdatedList(arrayAps);
+  }, [arrayAps]);
 
   //Access Points properties to control de dragging
   const [apMoveSettings, setApMoveSettings] = useState({
@@ -170,6 +169,7 @@ function AccessPointContainer(props) {
             arrayAps[key].initialX = calcInitialX;
             arrayAps[key].initialY = calcInitialY;
             setArrayAps([...arrayAps]);
+            localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
           } catch (error) {
             console.log(error);
           }
@@ -204,6 +204,7 @@ function AccessPointContainer(props) {
           label: true,
         };
         setArrayAps([...arrayAps, obj]);
+        localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
       } catch (error) {
         console.log(error);
       }
@@ -212,22 +213,23 @@ function AccessPointContainer(props) {
 
   return (
     <>
-      {arrayAps.map((entry) => {
-        return (
-          <AccessPoint
-            dragAction={apDragAction}
-            apName={entry.apName}
-            posX={entry.posX}
-            posY={entry.posY}
-            apSize={apSize}
-            label={entry.label}
-            key={entry.apName}
-            initialMapSizeY={props.MAP_HEIGHT}
-            initialMapSizeX={props.MAP_WIDTH}
-            isMoving={apMoveSettings.isMoving}
-          />
-        );
-      })}
+      {arrayAps !== [] &&
+        arrayAps.map((entry) => {
+          return (
+            <AccessPoint
+              dragAction={apDragAction}
+              apName={entry.apName}
+              posX={entry.posX}
+              posY={entry.posY}
+              apSize={apSize}
+              label={entry.label}
+              key={entry.apName}
+              initialMapSizeY={props.MAP_HEIGHT}
+              initialMapSizeX={props.MAP_WIDTH}
+              isMoving={apMoveSettings.isMoving}
+            />
+          );
+        })}
     </>
   );
 }

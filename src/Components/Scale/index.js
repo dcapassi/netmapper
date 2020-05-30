@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import Scale from "./Scale";
+import DrawCircle from "./DrawCircle";
 import { getDistance, pixelToMeter } from "../../Utils";
 
 function ScaleContainer(props) {
@@ -28,10 +29,8 @@ function ScaleContainer(props) {
         props.messageCallBack({ scale: { isMeasuring: false } });
         if (!scaleSettings.measuredMapMt) {
           let inputMeter = null;
-          inputMeter = prompt(
-            "Por favor insira a distância equivalente em metros: "
-          );
-          setScaleSettings({
+          inputMeter = prompt("Please enter the measured distance in Meters:");
+          const obj = {
             ...scaleSettings,
             measuredMapMt: inputMeter,
             pastMapWidth: props.mapMoveSettings.mapWidth,
@@ -44,7 +43,15 @@ function ScaleContainer(props) {
             ),
             point1: { x: null, y: null },
             point2: { x: null, y: null },
-          });
+          };
+
+          setScaleSettings(obj);
+          console.log(obj);
+          try {
+            localStorage.setItem("scaleConfigs", JSON.stringify(obj));
+          } catch (error) {
+            console.log(error);
+          }
         }
       }
 
@@ -119,12 +126,32 @@ function ScaleContainer(props) {
     }
   }, [props.mouseMoveEvent]);
 
+  if (!scaleSettings.measuredMapMt) {
+    try {
+      const scaleConfigs = JSON.parse(localStorage.getItem("scaleConfigs"));
+      if (scaleConfigs !== null) {
+        console.log(scaleConfigs);
+        setScaleSettings(scaleConfigs);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   return (
-    <Scale
-      scaleSettings={scaleSettings}
-      p1={scaleSettings.point1}
-      p2={scaleSettings.point2}
-    />
+    <>
+      <DrawCircle
+        scaleSettings={scaleSettings}
+        mode={props.mode}
+        apUpdatedList={props.apUpdatedList}
+        currentMapWidth={props.mapMoveSettings.mapWidth}
+      />
+      <Scale
+        scaleSettings={scaleSettings}
+        p1={scaleSettings.point1}
+        p2={scaleSettings.point2}
+      />
+    </>
   );
 }
 

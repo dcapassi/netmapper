@@ -3,11 +3,11 @@ export function getDistance(x1, x2, y1, y2) {
 }
 
 export function pixelToMeter(MeasuredPx, MeasuredMt, distancePx) {
-  console.log(MeasuredPx);
-  console.log(MeasuredMt);
-  console.log(distancePx);
-
   return (MeasuredMt * distancePx) / MeasuredPx;
+}
+
+export function meterToPixel(MeasuredPx, MeasuredMt, distanceMt) {
+  return (distanceMt * MeasuredPx) / MeasuredMt;
 }
 
 export function zoomFitCalc(x, y, c1, c2, level) {

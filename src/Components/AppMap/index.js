@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import img from "./img/blueprint.png";
+import img from "./img/base.png";
 import AccessPointContainer from "../AccessPoint";
 import ScaleContainer from "../Scale";
 import ResetScale from "../Scale/ResetScale";
@@ -13,9 +13,18 @@ export default function AppMap() {
   //Reference passed to children to get the current map position.
   const refMap = useRef(null);
 
+  //ApSize
+  const [apSize, setApSize] = useState(15);
+
   //Map size, may be adjusted based on the img size.
   const MAP_HEIGHT = 860;
   const MAP_WIDTH = 1700;
+
+  const [apUpdatedList, setApUpdatedList] = useState([]);
+
+  const getApUpdatedList = (apList) => {
+    setApUpdatedList(apList);
+  };
 
   const containerMessage = (msg) => {
     if (msg.ap) {
@@ -49,6 +58,7 @@ export default function AppMap() {
           reset: true,
         });
       }
+      localStorage.removeItem("scaleConfigs");
     }
   };
 
@@ -182,7 +192,7 @@ export default function AppMap() {
 
     switch (type) {
       case "ZoomIn":
-        if (zoomLevel.level <= 20) {
+        if (zoomLevel.level <= 25) {
           setZoomLevel({
             ...zoomLevel,
             level: zoomLevel.level + 1,
@@ -327,6 +337,7 @@ export default function AppMap() {
           mapClickEvent={mapClickEvent}
           mode={mode}
           messageCallBack={containerMessage}
+          sendApUpdatedList={getApUpdatedList}
         />
         <ResetScale
           visible={mode.measureDistance}
@@ -352,6 +363,7 @@ export default function AppMap() {
             mouseMoveEvent={mouseMoveEvent}
             refMap={refMap}
             resetSignal={resetScaleSignal}
+            apUpdatedList={apUpdatedList}
           />
         </svg>
         <div>

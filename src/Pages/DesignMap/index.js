@@ -9,7 +9,6 @@ import { Container } from "./styles";
 function DesignMap() {
   return (
     <>
-        <Header />
         <Container>
           <SidePanel />
           <AppMap />

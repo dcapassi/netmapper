@@ -16,7 +16,7 @@ function Scale(props) {
         y1={props.p1.y}
         x2={props.p2.x}
         y2={props.p2.y}
-        style={{ stroke: "green", strokeWidth: 5 }}
+        style={{ zIndex: "200", stroke: "green", strokeWidth: 5 }}
       />
       <text x={centerX} y={centerY}>
         {`${distance} metros`}

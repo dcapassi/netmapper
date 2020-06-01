@@ -5,7 +5,7 @@ function DrawCircle(props) {
   const [apList, setApList] = useState([]);
   const [radiusPx, setRadiusPx] = useState(0);
 
-  const [apListWithChannel, setApListWithChannel] = useState();
+  //const [apListWithChannel, setApListWithChannel] = useState();
 
   //UseEffect for loading the Access Points
   useEffect(() => {
@@ -22,16 +22,53 @@ function DrawCircle(props) {
         )
       );
     }
-    console.log(props.scaleSettings.pastMapWidth / props.currentMapWidth);
   }, [props.scaleSettings]);
 
   useEffect(() => {
     setRadiusPx(0);
   }, [props.mode]);
 
+  /*
   useEffect(() => {
     let firstApX;
     let firstApY;
+    let arrayApsWithOverlapList = [];
+    //Get the list of overlaping circles for each AP
+    for (let apIndex = 0; apIndex < props.apUpdatedList.length; apIndex++) {
+      let numberOfOverlaps = 0;
+      let arrayOverlap = [];
+      let apEntryWithOverlap = {};
+      if (props.apUpdatedList) {
+        for (
+          let apChecked = 0;
+          apChecked < props.apUpdatedList.length;
+          apChecked++
+        ) {
+          let apEntry = props.apUpdatedList[apIndex];
+          let apVerified = props.apUpdatedList[apChecked];
+          let distance = parseInt(
+            getDistance(
+              apEntry.posX + 15,
+              apVerified.posX + 15,
+              apEntry.posY + 15,
+              apVerified.posY + 15
+            )
+          );
+          let apVerifiedWithDistance = { ...apVerified, distance };
+          console.log(radiusPx);
+          if (distance < radiusPx * 2 && apEntry.apName !== apVerified.apName) {
+            arrayOverlap.push(apVerifiedWithDistance);
+          }
+          apEntryWithOverlap = {
+            ...apEntry,
+            overlap: arrayOverlap,
+          };
+        }
+        arrayApsWithOverlapList.push(apEntryWithOverlap);
+      }
+      console.log(arrayApsWithOverlapList);
+    }
+
     const obj = props.apUpdatedList.map((entry, id) => {
       if (id === 0) {
         firstApX = entry.posX;
@@ -79,12 +116,14 @@ function DrawCircle(props) {
       };
     });
     setApListWithChannel(newArrayWithChannel);
-  }, [props.mode.measureDistance]);
+    //console.log(newArrayWithChannel);
+  }, [props.scaleSettings, radiusPx]);
+*/
 
   return (
     <>
-      {apListWithChannel != null &&
-        apListWithChannel.map((entry) => {
+      {props.apUpdatedList != null &&
+        props.apUpdatedList.map((entry) => {
           return (
             <circle
               key={entry.apName}
@@ -101,7 +140,9 @@ function DrawCircle(props) {
                   ? "rgb(255,0,0,0.4)"
                   : entry.channel === 6
                   ? "rgb(0,255,0,0.4)"
-                  : "rgb(0,0,255,0.4)"
+                  : entry.channel === 11
+                  ? "rgb(0,0,255,0.4)"
+                  : "rgb(0,0,0,0.4)"
               }
               strokeDasharray={"5,5"}
             />

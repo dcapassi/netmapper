@@ -1,9 +1,9 @@
 import React, { useState, useRef, useEffect } from "react";
-import img from "./img/base.png";
+import img from "./img/blueprint.png";
 import AccessPointContainer from "../AccessPoint";
 import ScaleContainer from "../Scale";
 import ResetScale from "../Scale/ResetScale";
-
+import DeviceMenu from "../DeviceMenu/DeviceMenu";
 import { Container, MapContainer } from "./styles";
 import TopMenu from "../TopMenu";
 import SideMenu from "../SideMenu";
@@ -312,6 +312,7 @@ export default function AppMap() {
 
   return (
     <Container>
+      <DeviceMenu />
       <TopMenu
         mode={mode}
         menuAction={handleMenuAction}

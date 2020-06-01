@@ -129,7 +129,8 @@ function ScaleContainer(props) {
   if (!scaleSettings.measuredMapMt) {
     try {
       const scaleConfigs = JSON.parse(localStorage.getItem("scaleConfigs"));
-      if (scaleConfigs !== null) {
+
+      if (scaleConfigs !== null && scaleConfigs.isMeasuring !== true) {
         console.log(scaleConfigs);
         setScaleSettings(scaleConfigs);
       }

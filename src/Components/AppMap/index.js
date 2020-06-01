@@ -3,7 +3,6 @@ import img from "./img/blueprint.png";
 import AccessPointContainer from "../AccessPoint";
 import ScaleContainer from "../Scale";
 import ResetScale from "../Scale/ResetScale";
-import DeviceMenu from "../DeviceMenu/DeviceMenu";
 import { Container, MapContainer } from "./styles";
 import TopMenu from "../TopMenu";
 import SideMenu from "../SideMenu";
@@ -17,8 +16,8 @@ export default function AppMap() {
   const [apSize, setApSize] = useState(15);
 
   //Map size, may be adjusted based on the img size.
-  const MAP_HEIGHT = 860;
-  const MAP_WIDTH = 1700;
+  const MAP_HEIGHT = 860 * 1.30;
+  const MAP_WIDTH = 1700 * 1.30;
 
   const [apUpdatedList, setApUpdatedList] = useState([]);
 
@@ -27,6 +26,19 @@ export default function AppMap() {
   };
 
   const containerMessage = (msg) => {
+    if (msg.edit) {
+      if (msg.edit.isEditing === true) {
+        setMode({
+          ...mode,
+          editing: true,
+        });
+      } else if (msg.edit.isEditing === false) {
+        setMode({
+          ...mode,
+          editing: false,
+        });
+      }
+    }
     if (msg.ap) {
       if (msg.ap.isMoving === true) {
         setMenuVisible({
@@ -104,35 +116,38 @@ export default function AppMap() {
     zoomOut: false,
     addAp: false,
     measureDistance: false,
-    moveMap: false,
+    clickMode: false,
     moveAp: false,
+    editing: false,
   });
 
   // Map Functions
   const mapOnMouseDown = (e) => {
-    {
-      if (mode.measureDistance) {
-      }
-      if (mode.addAp) {
-        return false;
-      }
-      if (mode.moveMap) {
-        e.preventDefault();
-        if (mapMoveSettings !== true) {
-          {
-            setMapMoveSettings({
-              ...mapMoveSettings,
-              isMoving: true,
-              initialMouseX: e.clientX,
-              initialMouseY: e.clientY,
-              initialPosX: mapMoveSettings.posX,
-              initialPosY: mapMoveSettings.posY,
-            });
-            setMenuVisible({
-              ...menuVisible,
-              visible: false,
-            });
-          }
+    if (mode.editing) {
+      console.log("auei");
+      return false;
+    }
+    if (mode.measureDistance) {
+    }
+    if (mode.addAp) {
+      return false;
+    }
+    if (mode.clickMode) {
+      e.preventDefault();
+      if (mapMoveSettings !== true) {
+        {
+          setMapMoveSettings({
+            ...mapMoveSettings,
+            isMoving: true,
+            initialMouseX: e.clientX,
+            initialMouseY: e.clientY,
+            initialPosX: mapMoveSettings.posX,
+            initialPosY: mapMoveSettings.posY,
+          });
+          setMenuVisible({
+            ...menuVisible,
+            visible: false,
+          });
         }
       }
     }
@@ -168,7 +183,7 @@ export default function AppMap() {
     setMouseMoveEvent({ ...mouseMoveEvent, x: e.clientX, y: e.clientY });
 
     {
-      if (mapMoveSettings.isMoving && mode.moveMap) {
+      if (mapMoveSettings.isMoving && mode.clickMode) {
         setMapMoveSettings({
           ...mapMoveSettings,
           isMoving: true,
@@ -203,7 +218,7 @@ export default function AppMap() {
             ...mode,
             addAp: false,
             moveAp: false,
-            moveMap: false,
+            clickMode: false,
             measureDistance: false,
           });
 
@@ -230,7 +245,7 @@ export default function AppMap() {
             ...mode,
             addAp: false,
             moveAp: false,
-            moveMap: false,
+            clickMode: false,
             measureDistance: false,
           });
           setMapMoveSettings({
@@ -259,7 +274,7 @@ export default function AppMap() {
             ...mode,
             addAp: false,
             moveAp: false,
-            moveMap: false,
+            clickMode: false,
             measureDistance: false,
           });
         }
@@ -269,7 +284,7 @@ export default function AppMap() {
           ...mode,
           addAp: false,
           moveAp: false,
-          moveMap: true,
+          clickMode: true,
           measureDistance: false,
         });
 
@@ -280,7 +295,7 @@ export default function AppMap() {
             ...mode,
             addAp: false,
             moveAp: true,
-            moveMap: false,
+            clickMode: false,
             measureDistance: false,
           });
         }
@@ -290,7 +305,7 @@ export default function AppMap() {
           ...mode,
           addAp: true,
           moveAp: false,
-          moveMap: false,
+          clickMode: false,
           measureDistance: false,
         });
 
@@ -301,7 +316,7 @@ export default function AppMap() {
             ...mode,
             addAp: false,
             moveAp: false,
-            moveMap: false,
+            clickMode: false,
             measureDistance: true,
           });
         }
@@ -312,7 +327,6 @@ export default function AppMap() {
 
   return (
     <Container>
-      <DeviceMenu />
       <TopMenu
         mode={mode}
         menuAction={handleMenuAction}

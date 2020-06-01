@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import AccessPoint from "./AccessPoint";
 import { zoomFitCalc } from "../../Utils/index";
 import { v4 } from "uuid";
+import DeviceEditBox from "../DeviceEditBox/DeviceEditBox";
 
 function AccessPointContainer(props) {
   //To be received
@@ -9,7 +10,6 @@ function AccessPointContainer(props) {
   const MAP_WIDTH = 1700;
 
   const [apSize, setApSize] = useState(30);
-
 
   //UseEffect for loading the Access Points
   useEffect(() => {
@@ -26,7 +26,17 @@ function AccessPointContainer(props) {
   //Access Points Array
   const [arrayAps, setArrayAps] = useState([]);
 
-  
+  useEffect(() => {
+    localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
+  }, [arrayAps]);
+
+  const [editElement, setEditElement] = useState({
+    visible: false,
+    elementName: "noname",
+    posX: null,
+    posY: null,
+  });
+
   useEffect(() => {
     props.sendApUpdatedList(arrayAps);
   }, [arrayAps]);
@@ -46,6 +56,24 @@ function AccessPointContainer(props) {
     movingAp: "",
   });
 
+  const closeBox = () => {
+    setEditElement({ ...editElement, visible: false });
+    props.messageCallBack({ edit: { isEditing: false } });
+  };
+
+  const getEditFields = (apObj) => {
+    let newArray = [...arrayAps];
+
+    try {
+      const key = newArray.findIndex((obj) => {
+        return obj.apName === apObj.targetElement;
+      });
+      newArray[key] = { ...newArray[key], apName: apObj.apName };
+    } catch (error) {
+      console.log(error);
+    }
+    setArrayAps(newArray);
+  };
   //Function passed to each AP as a callback.
   //The AP sends the Event and the ApId to be handled by this container
   //Checks if the mode.moveAps is true
@@ -53,6 +81,18 @@ function AccessPointContainer(props) {
   //Pass the apId to the movingAp
   //
   const apDragAction = (event, ap) => {
+    if (props.mode.clickMode) {
+      let { left, top } = props.refMap.current.getBoundingClientRect();
+      props.messageCallBack({ edit: { isEditing: true } });
+
+      setEditElement({
+        ...editElement,
+        visible: true,
+        elementName: ap,
+        posX: event.clientX - left,
+        posY: event.clientY - top,
+      });
+    }
     if (props.mode.moveAp) {
       if (!apMoveSettings.isMoving) {
         setApMoveSettings({
@@ -169,7 +209,6 @@ function AccessPointContainer(props) {
             arrayAps[key].initialX = calcInitialX;
             arrayAps[key].initialY = calcInitialY;
             setArrayAps([...arrayAps]);
-            localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
           } catch (error) {
             console.log(error);
           }
@@ -213,6 +252,13 @@ function AccessPointContainer(props) {
 
   return (
     <>
+      {editElement.visible && (
+        <DeviceEditBox
+          closeBox={closeBox}
+          setEditField={getEditFields}
+          editElement={editElement}
+        />
+      )}
       {arrayAps !== [] &&
         arrayAps.map((entry) => {
           return (

@@ -2,14 +2,14 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   position: absolute;
-  top: 10%;
-  left: 25%;
+  top: ${(props) => props.editElement.posY + "px"};
+  left: ${(props) => props.editElement.posX + "px"};
   width: 300px;
   height: 250px;
   border: 1px solid #ccc;
   background-color: white;
   border-radius: 4px;
-  z-index: 250;
+  z-index: 300;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 `;
 
@@ -22,9 +22,10 @@ export const Header = styled.div`
     align-content: center;
     align-items: center;
     div {
-      padding: 10px;
+      padding: 5px;
       svg {
         color: white;
+        cursor: pointer;
       }
     }
     p {
@@ -38,7 +39,7 @@ export const Header = styled.div`
   }
 `;
 export const Body = styled.div`
-  padding: 10px;
+  padding: 5px;
   div {
     padding-top: 10px;
     display: flex;

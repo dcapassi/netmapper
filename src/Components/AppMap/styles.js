@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const Container = styled.div`
-  border: 1px solid black;
   width: 100%;
   height: 100vh;
   background: white;
@@ -18,7 +17,6 @@ export const MapContainer = styled.div.attrs((props) => ({
   },
 }))`
   position: relative;
-  border: 1px solid gray;
 
   img {
     border: 1px solid black;

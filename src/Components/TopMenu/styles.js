@@ -43,7 +43,7 @@ export const Container = styled.div`
     }
     .moveMap {
       ${(props) =>
-        props.mode.moveMap === true &&
+        props.mode.clickMode  === true &&
         css`
           border: 1px solid black;
           background: rgba(192, 220, 243, 0.9);

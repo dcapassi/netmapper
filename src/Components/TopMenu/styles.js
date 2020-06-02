@@ -64,6 +64,14 @@ export const Container = styled.div`
           background: rgba(192, 220, 243, 0.9);
         `}
     }
+    .addSwitch {
+      ${(props) =>
+        props.mode.addSwitch === true &&
+        css`
+          border: 1px solid black;
+          background: rgba(192, 220, 243, 0.9);
+        `}
+    }
     .measureDistance {
       ${(props) =>
         props.mode.measureDistance === true &&

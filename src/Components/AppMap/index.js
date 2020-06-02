@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import img from "./img/blueprint.png";
 import AccessPointContainer from "../AccessPoint";
+import SwitchContainer from "../Switch";
 import ScaleContainer from "../Scale";
 import ResetScale from "../Scale/ResetScale";
 import { Container, MapContainer } from "./styles";
@@ -16,13 +17,18 @@ export default function AppMap() {
   const [apSize, setApSize] = useState(15);
 
   //Map size, may be adjusted based on the img size.
-  const MAP_HEIGHT = 860 * 1.30;
-  const MAP_WIDTH = 1700 * 1.30;
+  const MAP_HEIGHT = 860 * 1.3;
+  const MAP_WIDTH = 1700 * 1.3;
 
   const [apUpdatedList, setApUpdatedList] = useState([]);
+  const [switchUpdatedList, setSwitchUpdatedList] = useState([]);
 
   const getApUpdatedList = (apList) => {
     setApUpdatedList(apList);
+  };
+
+  const getSwitchesUpdatedList = (switchList) => {
+    setSwitchUpdatedList(switchList);
   };
 
   const containerMessage = (msg) => {
@@ -115,6 +121,7 @@ export default function AppMap() {
     zoomIn: false,
     zoomOut: false,
     addAp: false,
+    addSwitch: false,
     measureDistance: false,
     clickMode: false,
     moveAp: false,
@@ -124,12 +131,14 @@ export default function AppMap() {
   // Map Functions
   const mapOnMouseDown = (e) => {
     if (mode.editing) {
-      console.log("auei");
       return false;
     }
     if (mode.measureDistance) {
     }
     if (mode.addAp) {
+      return false;
+    }
+    if (mode.addSwitch) {
       return false;
     }
     if (mode.clickMode) {
@@ -155,6 +164,9 @@ export default function AppMap() {
   const mapOnMouseUp = (e) => {
     e.stopPropagation();
     if (mode.addAp) {
+      return false;
+    }
+    if (mode.addSwitch) {
       return false;
     }
     if (mapMoveSettings.isMoving === true) {
@@ -205,6 +217,8 @@ export default function AppMap() {
     const ZoomInFactor = 1.1;
     const ZoomOutFactor = 1 / ZoomInFactor;
 
+    console.log(type);
+
     switch (type) {
       case "ZoomIn":
         if (zoomLevel.level <= 25) {
@@ -217,6 +231,7 @@ export default function AppMap() {
           setMode({
             ...mode,
             addAp: false,
+            addSwitch: false,
             moveAp: false,
             clickMode: false,
             measureDistance: false,
@@ -244,6 +259,7 @@ export default function AppMap() {
           setMode({
             ...mode,
             addAp: false,
+            addSwitch: false,
             moveAp: false,
             clickMode: false,
             measureDistance: false,
@@ -273,6 +289,7 @@ export default function AppMap() {
           setMode({
             ...mode,
             addAp: false,
+            addSwitch: false,
             moveAp: false,
             clickMode: false,
             measureDistance: false,
@@ -283,6 +300,7 @@ export default function AppMap() {
         setMode({
           ...mode,
           addAp: false,
+          addSwitch: false,
           moveAp: false,
           clickMode: true,
           measureDistance: false,
@@ -294,6 +312,7 @@ export default function AppMap() {
           setMode({
             ...mode,
             addAp: false,
+            addSwitch: false,
             moveAp: true,
             clickMode: false,
             measureDistance: false,
@@ -304,6 +323,17 @@ export default function AppMap() {
         setMode({
           ...mode,
           addAp: true,
+          addSwitch: false,
+          moveAp: false,
+          clickMode: false,
+          measureDistance: false,
+        });
+        break;
+      case "addSwitch":
+        setMode({
+          ...mode,
+          addAp: false,
+          addSwitch: true,
           moveAp: false,
           clickMode: false,
           measureDistance: false,
@@ -315,6 +345,7 @@ export default function AppMap() {
           setMode({
             ...mode,
             addAp: false,
+            addSwitch: false,
             moveAp: false,
             clickMode: false,
             measureDistance: true,
@@ -344,6 +375,17 @@ export default function AppMap() {
         MapWidth={mapMoveSettings.mapWidth + "px"}
         MapWidth={mapMoveSettings.mapHeigth + "px"}
       >
+        <SwitchContainer
+          zoomLevel={zoomLevel}
+          mapMoveSettings={mapMoveSettings}
+          refMap={refMap}
+          mouseMoveEvent={mouseMoveEvent}
+          mapClickEvent={mapClickEvent}
+          mode={mode}
+          messageCallBack={containerMessage}
+          sendSwitchesUpdatedList={getSwitchesUpdatedList}
+        />
+
         <AccessPointContainer
           zoomLevel={zoomLevel}
           mapMoveSettings={mapMoveSettings}

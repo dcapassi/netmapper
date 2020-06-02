@@ -16,7 +16,6 @@ function DeviceEditBox(props) {
   deviceArray.push("");
   deviceList.map((entry) => deviceArray.push(entry.model));
 
-  console.log(deviceArray);
   const [modelList, setModelList] = useState(deviceArray);
   const [ch24GhzList, setCh24Ghz] = useState(["", 1, 6, 11]);
   const [ch5GhzList, setCh5GhzList] = useState([

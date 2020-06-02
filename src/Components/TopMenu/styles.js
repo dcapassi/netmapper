@@ -33,6 +33,13 @@ export const Container = styled.div`
       background: rgba(192, 220, 243, 0.9);
     }
 
+    #switch {
+      padding: 0px;
+      border: solid black 1px;
+      border-radius: 3px;
+      padding: 1px;
+    }
+
     .moveAp {
       ${(props) =>
         props.mode.moveAp === true &&
@@ -43,7 +50,7 @@ export const Container = styled.div`
     }
     .moveMap {
       ${(props) =>
-        props.mode.clickMode  === true &&
+        props.mode.clickMode === true &&
         css`
           border: 1px solid black;
           background: rgba(192, 220, 243, 0.9);

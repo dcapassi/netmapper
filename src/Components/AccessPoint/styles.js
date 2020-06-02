@@ -13,7 +13,7 @@ export const Container = styled.div.attrs((props) => ({
   position: absolute;
   background-color: white;
   border-radius: 6px;
-  border: 1px solid;
+  border: 1px darkblue solid;
   align-items: center;
   justify-content: center;
   box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
@@ -29,9 +29,12 @@ export const Container = styled.div.attrs((props) => ({
 
   p {
     position: absolute;
-    top: -25px;
-    left: -5px;
+    top: -15px;
+    left: -0px;
     font-family: "Roboto";
+    overflow: visible;
+    width: 150px;
+    font-size: 0.75rem;
   }
   svg {
     color: blue;

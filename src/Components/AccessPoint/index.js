@@ -68,7 +68,14 @@ function AccessPointContainer(props) {
       const key = newArray.findIndex((obj) => {
         return obj.apName === apObj.targetElement;
       });
-      newArray[key] = { ...newArray[key], apName: apObj.apName };
+      newArray[key] = {
+        ...newArray[key],
+        apName: apObj.apName,
+        channel: apObj.channel24G,
+        channel5Ghz: apObj.channel5G,
+        customer: apObj.customer,
+        model: apObj.model,
+      };
     } catch (error) {
       console.log(error);
     }
@@ -201,6 +208,9 @@ function AccessPointContainer(props) {
           try {
             arrayAps[key].posX = newPosX;
             arrayAps[key].posY = newPosY;
+            arrayAps[key].channel = null;
+            arrayAps[key].channel5G = null;
+            arrayAps[key].customer = null;
             setArrayAps([...arrayAps]);
           } catch (error) {
             console.log(error);

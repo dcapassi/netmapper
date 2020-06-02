@@ -30,27 +30,29 @@ function ScaleContainer(props) {
         if (!scaleSettings.measuredMapMt) {
           let inputMeter = null;
           inputMeter = prompt("Please enter the measured distance in Meters:");
-          const obj = {
-            ...scaleSettings,
-            measuredMapMt: inputMeter,
-            pastMapWidth: props.mapMoveSettings.mapWidth,
-            isMeasuring: false,
-            measuredMapPx: getDistance(
-              scaleSettings.point1.x,
-              scaleSettings.point2.x,
-              scaleSettings.point1.y,
-              scaleSettings.point2.y
-            ),
-            point1: { x: null, y: null },
-            point2: { x: null, y: null },
-          };
+          if (inputMeter) {
+            const obj = {
+              ...scaleSettings,
+              measuredMapMt: inputMeter,
+              pastMapWidth: props.mapMoveSettings.mapWidth,
+              isMeasuring: false,
+              measuredMapPx: getDistance(
+                scaleSettings.point1.x,
+                scaleSettings.point2.x,
+                scaleSettings.point1.y,
+                scaleSettings.point2.y
+              ),
+              point1: { x: null, y: null },
+              point2: { x: null, y: null },
+            };
 
-          setScaleSettings(obj);
-          console.log(obj);
-          try {
-            localStorage.setItem("scaleConfigs", JSON.stringify(obj));
-          } catch (error) {
-            console.log(error);
+            setScaleSettings(obj);
+            console.log(obj);
+            try {
+              localStorage.setItem("scaleConfigs", JSON.stringify(obj));
+            } catch (error) {
+              console.log(error);
+            }
           }
         }
       }

@@ -1,5 +1,4 @@
 import React from "react";
-import { getDistance, pixelToMeter } from "../../Utils";
 
 function Scale(props) {
   let centerX = props.p1.x + (props.p2.x - props.p1.x) / 2;
@@ -19,7 +18,7 @@ function Scale(props) {
         style={{ zIndex: "200", stroke: "green", strokeWidth: 5 }}
       />
       <text x={centerX} y={centerY}>
-        {`${distance} metros`}
+        {`${distance} meters`}
       </text>
     </>
   );

@@ -136,13 +136,13 @@ function DrawCircle(props) {
               strokeWidth={1}
               stroke={"black"}
               fill={
-                entry.channel === 1
+                entry.channel === "1"
                   ? "rgb(255,0,0,0.4)"
-                  : entry.channel === 6
+                  : entry.channel === "6"
                   ? "rgb(0,255,0,0.4)"
-                  : entry.channel === 11
+                  : entry.channel === "11"
                   ? "rgb(0,0,255,0.4)"
-                  : "rgb(0,0,0,0.4)"
+                  : "rgb(255,255,255,0.4)"
               }
               strokeDasharray={"5,5"}
             />

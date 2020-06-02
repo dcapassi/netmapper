@@ -3,10 +3,24 @@ import React, { useState } from "react";
 import { Container, Header, Body } from "./styles";
 import { AiOutlineClose } from "react-icons/ai";
 
+import { deviceList } from "../../Data/DeviceList";
+
 function DeviceEditBox(props) {
   const [inputName, setInputName] = useState(props.editElement.elementName);
-  const [ch24Ghz, setCh24Ghz] = useState([1, 6, 11]);
-  const [ch5Ghz, setCh5Ghz] = useState([
+
+  const [customer, setCustomer] = useState();
+  const [model, setModel] = useState();
+
+  //Push a "" item as the first item
+  let deviceArray = [];
+  deviceArray.push("");
+  deviceList.map((entry) => deviceArray.push(entry.model));
+
+  console.log(deviceArray);
+  const [modelList, setModelList] = useState(deviceArray);
+  const [ch24GhzList, setCh24Ghz] = useState(["", 1, 6, 11]);
+  const [ch5GhzList, setCh5GhzList] = useState([
+    "",
     34,
     36,
     38,
@@ -31,6 +45,8 @@ function DeviceEditBox(props) {
     136,
     140,
   ]);
+  const [channel24G, setChannel24G] = useState(ch24GhzList[0]);
+  const [channel5G, setChannel5G] = useState(ch5GhzList[0]);
   return (
     <Container
       editElement={props.editElement}
@@ -52,7 +68,7 @@ function DeviceEditBox(props) {
         <div>
           <p>Name</p>
           <input
-            value={inputName}
+            defaultValue={inputName}
             onChange={(e) => {
               setInputName(e.target.value);
             }}
@@ -61,16 +77,42 @@ function DeviceEditBox(props) {
         </div>
         <div>
           <p>Model</p>
-          <input type="text" />
+          <select
+            defaultValue={model}
+            onChange={(e) => {
+              setModel(e.target.value);
+            }}
+            type="text"
+          >
+            {deviceArray.map((entry) => {
+              return (
+                <option key={entry} value={entry}>
+                  {entry}
+                </option>
+              );
+            })}
+          </select>
         </div>
         <div>
           <p>Customer</p>
-          <input type="text" />
+          <input
+            defaultValue={customer}
+            onChange={(e) => {
+              setCustomer(e.target.value);
+            }}
+            type="text"
+          />
         </div>
         <div>
           <p>Channel 2.4 GHz</p>
-          <select name="ch24">
-            {ch24Ghz.map((entry) => {
+          <select
+            defaultValue={channel24G}
+            onChange={(e) => {
+              setChannel24G(e.target.value);
+            }}
+            name="ch24"
+          >
+            {ch24GhzList.map((entry) => {
               return (
                 <option key={entry} value={entry}>
                   {entry}
@@ -81,8 +123,14 @@ function DeviceEditBox(props) {
         </div>
         <div>
           <p>Channel 5 GHz</p>
-          <select name="ch5">
-            {ch5Ghz.map((entry) => {
+          <select
+            defaultValue={channel5G}
+            onChange={(e) => {
+              setChannel5G(e.target.value);
+            }}
+            name="ch5"
+          >
+            {ch5GhzList.map((entry) => {
               return (
                 <option key={entry} value={entry}>
                   {entry}
@@ -97,6 +145,10 @@ function DeviceEditBox(props) {
               props.setEditField({
                 targetElement: props.editElement.elementName,
                 apName: inputName,
+                model,
+                customer,
+                channel24G,
+                channel5G,
               });
               props.closeBox();
               e.stopPropagation();

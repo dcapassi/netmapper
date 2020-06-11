@@ -9,7 +9,10 @@ function Switch(props) {
         posY={props.posY}
         isMoving={props.isMoving}
         switchSize={props.switchSize}
-        onMouseDown={(e) => props.dragAction(e, props.switchName)}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          props.dragAction(e, props.switchName);
+        }}
       >
         <div className="switchMarker">
           <BsArrowLeftRight />

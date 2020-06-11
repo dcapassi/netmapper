@@ -2,9 +2,9 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   position: absolute;
-  top: ${(props) => props.editElement.posY + "px"};
-  left: ${(props) => props.editElement.posX + "px"};
-  width: 300px;
+  top: 10%;
+  left: 35%;
+  width: 30%;
   height: 250px;
   border: 1px solid #ccc;
   background-color: white;

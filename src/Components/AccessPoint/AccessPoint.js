@@ -10,7 +10,10 @@ function AccessPoint(props) {
         posY={props.posY}
         isMoving={props.isMoving}
         apSize={props.apSize}
-        onMouseDown={(e) => props.dragAction(e, props.apName)}
+        onMouseDown={(e) => {
+          e.stopPropagation();
+          props.dragAction(e, props.apName, props.id);
+        }}
       >
         <div className="apMarker">
           <AiOutlineWifi />

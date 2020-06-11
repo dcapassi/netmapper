@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import AccessPoint from "./AccessPoint";
 import { zoomFitCalc } from "../../Utils/index";
 import { v4 } from "uuid";
-import DeviceEditBox from "../DeviceEditBox/DeviceEditBox";
 
 function AccessPointContainer(props) {
   //To be received
@@ -30,6 +29,10 @@ function AccessPointContainer(props) {
     localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
   }, [arrayAps]);
 
+  useEffect(() => {
+    getEditFields(props.apConfigModified);
+  }, [props.apConfigModified]);
+
   const [editElement, setEditElement] = useState({
     visible: false,
     elementName: "noname",
@@ -56,17 +59,12 @@ function AccessPointContainer(props) {
     movingAp: "",
   });
 
-  const closeBox = () => {
-    setEditElement({ ...editElement, visible: false });
-    props.messageCallBack({ edit: { isEditing: false } });
-  };
-
   const getEditFields = (apObj) => {
     let newArray = [...arrayAps];
 
     try {
       const key = newArray.findIndex((obj) => {
-        return obj.apName === apObj.targetElement;
+        return obj.key === apObj.targetElement;
       });
       newArray[key] = {
         ...newArray[key],
@@ -75,6 +73,7 @@ function AccessPointContainer(props) {
         channel5Ghz: apObj.channel5G,
         customer: apObj.customer,
         model: apObj.model,
+        accessSwitch: apObj.accessSwitch,
       };
     } catch (error) {
       console.log(error);
@@ -87,15 +86,18 @@ function AccessPointContainer(props) {
   //It toggles the "isMoving"
   //Pass the apId to the movingAp
   //
-  const apDragAction = (event, ap) => {
+  const apDragAction = (event, ap, key) => {
     if (props.mode.clickMode) {
       let { left, top } = props.refMap.current.getBoundingClientRect();
-      props.messageCallBack({ edit: { isEditing: true } });
+      props.messageCallBack({
+        edit: { isEditing: true, type: "ap", elementName: ap, elementKey: key },
+      });
 
       setEditElement({
         ...editElement,
         visible: true,
         elementName: ap,
+        elementKey: key,
         posX: event.clientX - left,
         posY: event.clientY - top,
       });
@@ -208,9 +210,6 @@ function AccessPointContainer(props) {
           try {
             arrayAps[key].posX = newPosX;
             arrayAps[key].posY = newPosY;
-            arrayAps[key].channel = null;
-            arrayAps[key].channel5G = null;
-            arrayAps[key].customer = null;
             setArrayAps([...arrayAps]);
           } catch (error) {
             console.log(error);
@@ -243,8 +242,10 @@ function AccessPointContainer(props) {
       );
 
       try {
+        const generateKey = v4();
         let obj = {
-          apName: v4().substring(0, 5),
+          key: generateKey,
+          apName: generateKey.substring(0, 5),
           posX: newPosX,
           posY: newPosY,
           initialX: calcInitialX,
@@ -262,24 +263,18 @@ function AccessPointContainer(props) {
 
   return (
     <>
-      {editElement.visible && (
-        <DeviceEditBox
-          closeBox={closeBox}
-          setEditField={getEditFields}
-          editElement={editElement}
-        />
-      )}
       {arrayAps !== [] &&
         arrayAps.map((entry) => {
           return (
             <AccessPoint
               dragAction={apDragAction}
               apName={entry.apName}
+              key={entry.key}
+              id={entry.key}
               posX={entry.posX}
               posY={entry.posY}
               apSize={apSize}
               label={entry.label}
-              key={entry.apName}
               initialMapSizeY={props.MAP_HEIGHT}
               initialMapSizeX={props.MAP_WIDTH}
               isMoving={apMoveSettings.isMoving}

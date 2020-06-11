@@ -7,6 +7,8 @@ import ResetScale from "../Scale/ResetScale";
 import { Container, MapContainer } from "./styles";
 import TopMenu from "../TopMenu";
 import SideMenu from "../SideMenu";
+import DeviceEditBox from "../DeviceEditBox/DeviceEditBox";
+
 import { getDistance, pixelToMeter } from "../../Utils";
 
 export default function AppMap() {
@@ -16,12 +18,51 @@ export default function AppMap() {
   //ApSize
   const [apSize, setApSize] = useState(15);
 
+  //Element being edited
+  const [editingElement, setEditingElement] = useState("");
+  const [editingKey, setEditingKey] = useState("");
+
+  const [editType, setEditType] = useState();
+
+  //Pass to the AccessPoint Controller that there was a change
+  const [apConfigModified, setApConfigModified] = useState({});
+
+  const getEditFields = (obj) => {
+    switch (editType) {
+      case "ap":
+        {
+          setApConfigModified({ ...obj });
+        }
+        break;
+      default:
+        break;
+    }
+  };
   //Map size, may be adjusted based on the img size.
   const MAP_HEIGHT = 860 * 1.3;
   const MAP_WIDTH = 1700 * 1.3;
 
   const [apUpdatedList, setApUpdatedList] = useState([]);
   const [switchUpdatedList, setSwitchUpdatedList] = useState([]);
+
+  const closeBox = () => {
+    setMode({
+      ...mode,
+      zoomIn: false,
+      zoomOut: false,
+      addAp: false,
+      addSwitch: false,
+      measureDistance: false,
+      clickMode: true,
+      moveAp: false,
+      editing: false,
+    });
+
+    setMenuVisible({
+      ...menuVisible,
+      visible: true,
+    });
+  };
 
   const getApUpdatedList = (apList) => {
     setApUpdatedList(apList);
@@ -37,12 +78,31 @@ export default function AppMap() {
         setMode({
           ...mode,
           editing: true,
+          zoomIn: false,
+          zoomOut: false,
+          addAp: false,
+          addSwitch: false,
+          measureDistance: false,
+          clickMode: false,
         });
+        setMenuVisible({
+          ...menuVisible,
+          visible: false,
+        });
+        setEditingElement(msg.edit.elementName);
+        setEditingKey(msg.edit.elementKey);
+        setEditType(msg.edit.type);
       } else if (msg.edit.isEditing === false) {
         setMode({
           ...mode,
           editing: false,
         });
+        setMenuVisible({
+          ...menuVisible,
+          visible: true,
+        });
+        setEditingElement(null);
+        setEditType(null);
       }
     }
     if (msg.ap) {
@@ -217,8 +277,6 @@ export default function AppMap() {
     const ZoomInFactor = 1.1;
     const ZoomOutFactor = 1 / ZoomInFactor;
 
-    console.log(type);
-
     switch (type) {
       case "ZoomIn":
         if (zoomLevel.level <= 25) {
@@ -363,6 +421,16 @@ export default function AppMap() {
         menuAction={handleMenuAction}
         visible={menuVisible.visible}
       />
+      {mode.editing && (
+        <DeviceEditBox
+          closeBox={closeBox}
+          setEditField={getEditFields}
+          editElement={{ elementName: editingElement, elementKey: editingKey }}
+          apList={apUpdatedList}
+          switchList={switchUpdatedList}
+          editType={editType}
+        />
+      )}
       <SideMenu menuAction={handleMenuAction} visible={menuVisible.visible} />
       <MapContainer
         ref={refMap}
@@ -387,6 +455,7 @@ export default function AppMap() {
         />
 
         <AccessPointContainer
+          apConfigModified={apConfigModified}
           zoomLevel={zoomLevel}
           mapMoveSettings={mapMoveSettings}
           refMap={refMap}

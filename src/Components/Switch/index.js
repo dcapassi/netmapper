@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import Switch from "./Switch";
 import { zoomFitCalc } from "../../Utils/index";
 import { v4 } from "uuid";
-import DeviceEditBox from "../DeviceEditBox/DeviceEditBox";
 
 function SwitchContainer(props) {
   //To be received
@@ -55,11 +54,6 @@ function SwitchContainer(props) {
     movingSwitch: "",
   });
 
-  const closeBox = () => {
-    setEditElement({ ...editElement, visible: false });
-    props.messageCallBack({ edit: { isEditing: false } });
-  };
-
   const getEditFields = (apObj) => {
     let newArray = [...arraySwitches];
 
@@ -89,7 +83,7 @@ function SwitchContainer(props) {
   const apDragAction = (event, ap) => {
     if (props.mode.clickMode) {
       let { left, top } = props.refMap.current.getBoundingClientRect();
-      props.messageCallBack({ edit: { isEditing: true } });
+      props.messageCallBack({ edit: { isEditing: true, elementName: ap } });
 
       setEditElement({
         ...editElement,
@@ -108,7 +102,9 @@ function SwitchContainer(props) {
           initialMouseX: event.clientX,
           initialMouseY: event.clientY,
         });
-        props.messageCallBack({ switch: { isMoving: true } });
+        props.messageCallBack({
+          edit: { isEditing: true, type: "switch", elementName: ap },
+        });
       } else {
         setSwitchMoveSettings({
           ...SwitchMoveSettings,
@@ -262,13 +258,6 @@ function SwitchContainer(props) {
 
   return (
     <>
-      {editElement.visible && (
-        <DeviceEditBox
-          closeBox={closeBox}
-          setEditField={getEditFields}
-          editElement={editElement}
-        />
-      )}
       {arraySwitches !== [] &&
         arraySwitches.map((entry) => {
           return (

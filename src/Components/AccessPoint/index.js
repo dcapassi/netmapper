@@ -12,14 +12,14 @@ function AccessPointContainer(props) {
 
   //UseEffect for loading the Access Points
   useEffect(() => {
-    const apsFromLocalStorage = JSON.parse(localStorage.getItem("venue1area1"));
+    /*const apsFromLocalStorage = JSON.parse(localStorage.getItem("venue1area1"));
 
     if (apsFromLocalStorage !== null) {
       const obj = apsFromLocalStorage.map((entry) => {
         return { ...entry, posX: entry.initialX, posY: entry.initialY };
       });
       setArrayAps(obj);
-    }
+    }*/
   }, []);
 
   //Access Points Array

@@ -490,6 +490,7 @@ export default function AppMap() {
             refMap={refMap}
             resetSignal={resetScaleSignal}
             apUpdatedList={apUpdatedList}
+            switchUpdatedList={switchUpdatedList}
           />
         </svg>
         <div>

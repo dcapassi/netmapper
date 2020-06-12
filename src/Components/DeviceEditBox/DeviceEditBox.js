@@ -56,7 +56,7 @@ function DeviceEditBox(props) {
     props.editType === "ap" &&
       props.apList.map((entry) => {
         if (entry.key === props.editElement.elementKey) {
-          setSavedChannel24G(entry.channel);
+          setChannel24G(entry.channel);
           setChannel5G(entry.channel5Ghz);
           setModel(entry.model);
           setCustomer(entry.customer);
@@ -65,8 +65,6 @@ function DeviceEditBox(props) {
         }
       });
   }, []);
-
-  const [savedChannel24G, setSavedChannel24G] = useState();
 
   return (
     <Container
@@ -129,8 +127,8 @@ function DeviceEditBox(props) {
           <div>
             <p>Channel 2.4 GHz</p>
             <select
-              defaultValue={savedChannel24G}
-              value={savedChannel24G}
+              defaultValue={channel24G}
+              value={channel24G}
               onChange={(e) => {
                 setChannel24G(e.target.value);
               }}

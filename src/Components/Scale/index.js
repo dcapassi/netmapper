@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Scale from "./Scale";
 import DrawCircle from "./DrawCircle";
+import TraceSwitchToAp from "./TraceSwitchToAp";
 import { getDistance, pixelToMeter } from "../../Utils";
 
 function ScaleContainer(props) {
@@ -149,6 +150,15 @@ function ScaleContainer(props) {
         apUpdatedList={props.apUpdatedList}
         currentMapWidth={props.mapMoveSettings.mapWidth}
       />
+
+      <TraceSwitchToAp
+        scaleSettings={scaleSettings}
+        mode={props.mode}
+        apUpdatedList={props.apUpdatedList}
+        switchUpdatedList={props.switchUpdatedList}
+        currentMapWidth={props.mapMoveSettings.mapWidth}
+      />
+
       <Scale
         scaleSettings={scaleSettings}
         p1={scaleSettings.point1}

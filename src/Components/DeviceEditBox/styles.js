@@ -2,10 +2,10 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   position: absolute;
-  top: 10%;
-  left: 35%;
+  top: 0%;
+  right: 0%;
   width: 30%;
-  height: 250px;
+  height: 100%;
   border: 1px solid #ccc;
   background-color: white;
   border-radius: 4px;

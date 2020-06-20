@@ -5,12 +5,24 @@ import { Container } from "./styles";
 function SidePanel() {
   return (
     <Container>
-      <ul className="Venue">
-        <li>Venue 1</li>
-        <ul className="Area">
-          <li>Area 1</li>
-          <li>Area 2</li>
-          <li>Area 3</li>
+      <ul className="Root">
+        <li>Global</li>
+        <ul className="Country">
+          <li>Brazil</li>
+          <ul className="Region">
+            <li>São Paulo</li>
+            <ul className="Venue">
+              <li>Airport XYZ</li>
+              <ul className="Building">
+                <li>Terminal 1</li>
+                <ul className="Floor">
+                  <li>First Floor</li>
+                  <li>Second Floor</li>
+                  <li>Third Floor</li>
+                </ul>
+              </ul>
+            </ul>
+          </ul>
         </ul>
       </ul>
     </Container>

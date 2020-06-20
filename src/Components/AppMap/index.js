@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import img from "./img/blueprint.png";
+import img from "./img/planta.png";
 import AccessPointContainer from "../AccessPoint";
 import SwitchContainer from "../Switch";
 import ScaleContainer from "../Scale";
@@ -39,8 +39,8 @@ export default function AppMap() {
     }
   };
   //Map size, may be adjusted based on the img size.
-  const MAP_HEIGHT = 860 * 1.3;
-  const MAP_WIDTH = 1700 * 1.3;
+  const MAP_HEIGHT = 860 * 1.2;
+  const MAP_WIDTH = 1700 * 1.2;
 
   const [apUpdatedList, setApUpdatedList] = useState([]);
   const [switchUpdatedList, setSwitchUpdatedList] = useState([]);

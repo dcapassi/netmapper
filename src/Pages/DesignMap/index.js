@@ -9,10 +9,11 @@ import { Container } from "./styles";
 function DesignMap() {
   return (
     <>
-        <Container>
-          <SidePanel />
-          <AppMap />
-        </Container>
+      <Header />
+      <Container>
+        <SidePanel />
+        <AppMap />
+      </Container>
     </>
   );
 }

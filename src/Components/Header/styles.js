@@ -5,7 +5,7 @@ export const Container = styled.div`
   background-color: white;
   height: 11vh;
   padding: 5px;
-  width:100%;
+  width: 100%;
 
   .Wrapper {
     align-items: center;

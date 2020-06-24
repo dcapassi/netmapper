@@ -51,9 +51,9 @@ export const Body = styled.div`
     input,
     select {
       font-family: "Roboto";
-      font-weight: lighter;
       font-size: 0.75rem;
       user-select: none;
+      
     }
 
     button {

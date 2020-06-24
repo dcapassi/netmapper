@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import img from "./img/planta.png";
+import img from "./img/blueprint.png";
 import AccessPointContainer from "../AccessPoint";
 import SwitchContainer from "../Switch";
 import ScaleContainer from "../Scale";

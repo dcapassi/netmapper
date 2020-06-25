@@ -3,10 +3,10 @@ import List from "../List/List";
 
 import { Container } from "./styles";
 
-function SidePanel() {
+function SidePanel(props) {
   return (
     <Container>
-      <List />
+      <List callBack={props.callBack} />
     </Container>
   );
 }

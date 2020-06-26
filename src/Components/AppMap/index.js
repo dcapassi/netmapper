@@ -39,8 +39,8 @@ export default function AppMap() {
     }
   };
   //Map size, may be adjusted based on the img size.
-  const MAP_HEIGHT = 860 * 1.2;
-  const MAP_WIDTH = 1700 * 1.2;
+  const MAP_HEIGHT = 860 * 0.9;
+  const MAP_WIDTH = 1700 * 0.9;
 
   const [apUpdatedList, setApUpdatedList] = useState([]);
   const [switchUpdatedList, setSwitchUpdatedList] = useState([]);

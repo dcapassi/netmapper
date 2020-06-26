@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import List from "../List/List";
+import { BsArrowLeft } from "react-icons/bs";
 
-import { Container } from "./styles";
+import { Container, ActionButton } from "./styles";
 
 function SidePanel(props) {
   return (

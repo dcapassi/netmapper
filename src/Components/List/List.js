@@ -15,7 +15,7 @@ const theme = createMuiTheme({
 const useStyles = makeStyles({
   root: {
     flexGrow: 1,
-    maxWidth: 400,
+    maxWidth: 300,
   },
 });
 
@@ -148,29 +148,24 @@ export default function List(props) {
   const classes = useStyles();
 
   const renderTree = (nodes) => (
-    <>
-      <div style={{ display: "flex" }}>
-        <TreeItem
-          button={false}
-          key={nodes.id}
-          nodeId={nodes.id}
-          label={nodes.name}
-          onLabelClick={(event) => {
-            nodes.type === "floor"
-              ? props.callBack({ type: "floor" })
-              : props.callBack({ type: null });
-            event.preventDefault();
-            console.log(
-              `Node Id:${nodes.id}, Label:${nodes.name}, Type:${nodes.type}`
-            );
-          }}
-        >
-          {Array.isArray(nodes.children)
-            ? nodes.children.map((node) => renderTree(node))
-            : null}
-        </TreeItem>
-      </div>
-    </>
+    <TreeItem
+      key={nodes.id}
+      nodeId={nodes.id}
+      label={nodes.name}
+      onLabelClick={(event) => {
+        nodes.type === "floor"
+          ? props.callBack({ type: "floor" })
+          : props.callBack({ type: null });
+        event.preventDefault();
+        console.log(
+          `Node Id:${nodes.id}, Label:${nodes.name}, Type:${nodes.type}`
+        );
+      }}
+    >
+      {Array.isArray(nodes.children)
+        ? nodes.children.map((node) => renderTree(node))
+        : null}
+    </TreeItem>
   );
 
   return (

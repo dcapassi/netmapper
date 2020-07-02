@@ -12,7 +12,7 @@ import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
-
+import ListMenu from "../ListMenu";
 import ListTree from "../../Components/List/List";
 
 const drawerWidth = 240;
@@ -78,7 +78,8 @@ export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [mapVisible, setMapVisible] = React.useState(true);
+  const [mapVisible, setMapVisible] = React.useState(false);
+  const [mapLevel, setMapLevel] = React.useState("Global");
 
   const getOptionCallBack = (message) => {
     if (message.type === "floor") {
@@ -86,6 +87,7 @@ export default function PersistentDrawerLeft() {
     } else {
       setMapVisible(false);
     }
+    setMapLevel(message.level);
   };
 
   const handleDrawerOpen = () => {
@@ -116,7 +118,7 @@ export default function PersistentDrawerLeft() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap>
-            Airport XYZ - First Floor
+            {mapLevel}
           </Typography>
         </Toolbar>
       </AppBar>
@@ -147,6 +149,7 @@ export default function PersistentDrawerLeft() {
       >
         <div className={classes.drawerHeader} />
         {mapVisible && <AppMap />}
+        {!mapVisible && <ListMenu />}
       </main>
     </div>
   );

@@ -155,7 +155,7 @@ export default function List(props) {
       onLabelClick={(event) => {
         nodes.type === "floor"
           ? props.callBack({ level: nodes.name, type: "floor" })
-          : props.callBack({ level: nodes.name, type: null });
+          : props.callBack({ level: nodes.name, type: nodes.type });
         event.preventDefault();
         console.log(
           `Node Id:${nodes.id}, Label:${nodes.name}, Type:${nodes.type}`

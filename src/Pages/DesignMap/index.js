@@ -80,6 +80,7 @@ export default function PersistentDrawerLeft() {
   const [open, setOpen] = React.useState(false);
   const [mapVisible, setMapVisible] = React.useState(false);
   const [mapLevel, setMapLevel] = React.useState("Global");
+  const [mapLevelType, setMapLevelType] = React.useState("Global");
 
   const getOptionCallBack = (message) => {
     if (message.type === "floor") {
@@ -88,6 +89,7 @@ export default function PersistentDrawerLeft() {
       setMapVisible(false);
     }
     setMapLevel(message.level);
+    setMapLevelType(message.type);
   };
 
   const handleDrawerOpen = () => {
@@ -149,7 +151,9 @@ export default function PersistentDrawerLeft() {
       >
         <div className={classes.drawerHeader} />
         {mapVisible && <AppMap />}
-        {!mapVisible && <ListMenu />}
+        <div style={{ backgroundColor: "blue" }}>
+          {!mapVisible && <ListMenu mapLevelType={mapLevelType} />}
+        </div>
       </main>
     </div>
   );

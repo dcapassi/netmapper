@@ -8,6 +8,7 @@ import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Settings from "@material-ui/icons/Settings";
 import Dashboard from "@material-ui/icons/Dashboard";
+import SettingsMenu from "./Settings";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -22,7 +23,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box p={3}>
-          <Typography>{children}</Typography>
+          <Typography component={"span"}>{children}</Typography>
         </Box>
       )}
     </div>
@@ -49,7 +50,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SimpleTabs() {
+export default function SimpleTabs(props) {
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
 
@@ -75,7 +76,7 @@ export default function SimpleTabs() {
         Dashboard
       </TabPanel>
       <TabPanel value={value} index={1}>
-        Configuration
+        <SettingsMenu mapLevelType={props.mapLevelType} />
       </TabPanel>
     </div>
   );

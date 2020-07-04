@@ -39,7 +39,7 @@ export const list = {
             },
             {
               id: "2003",
-              name: "Aeroporto XYZ",
+              name: "Aeroporto XPTO",
               type: "venue",
               children: [
                 {
@@ -54,6 +54,23 @@ export const list = {
                     },
                     {
                       id: "2006",
+                      name: "Desembarque",
+                      type: "floor",
+                    },
+                  ],
+                },
+                {
+                  id: "2014",
+                  name: "Terminal 2",
+                  type: "building",
+                  children: [
+                    {
+                      id: "2015",
+                      name: "Embarque",
+                      type: "floor",
+                    },
+                    {
+                      id: "2016",
                       name: "Desembarque",
                       type: "floor",
                     },

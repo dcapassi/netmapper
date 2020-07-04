@@ -72,16 +72,10 @@ export default function FormDialog(props) {
 
   return (
     <>
-      <Button
-        variant="outlined"
-        startIcon={<Add />}
-        color="primary"
-        onClick={handleClickOpen}
-      >
+      <Button startIcon={<Add />} color="primary" onClick={handleClickOpen}>
         Add
       </Button>
       <Button
-        variant="outlined"
         startIcon={<Remove />}
         color="secondary"
         onClick={handleClickOpen}

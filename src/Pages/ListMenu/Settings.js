@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
 import Button from "@material-ui/core/Button";
@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Add from "@material-ui/icons/Add";
 import Remove from "@material-ui/icons/Remove";
 import Grid from "@material-ui/core/Grid";
+import AddDialog from "./AddDialog";
 
 // import { Container } from './styles';
 
@@ -41,8 +42,13 @@ const returnLabel = (level) => {
   }
   return label;
 };
+
 function Settings(props) {
-  console.log(props);
+  const [nextLevel, setNextLabel] = useState("");
+  useEffect(() => {
+    setNextLabel(returnLabel(props.mapLevelType));
+  }, [props.mapLevelType]);
+
   const classes = useStyles();
 
   return (
@@ -56,26 +62,18 @@ function Settings(props) {
     >
       <Grid item xs={4}>
         <Typography component={"span"} variant="h6" noWrap>
-          {returnLabel(props.mapLevelType)}
+          {nextLevel}
         </Typography>
       </Grid>
-      <Grid item xs={4}>
-        <Button
-          variant="contained"
-          color="primary"
-          className={classes.button}
-          startIcon={<Add />}
-        >
-          Add
-        </Button>
-        <Button
-          variant="contained"
-          color="secondary"
-          className={classes.button}
-          startIcon={<Remove />}
-        >
-          Remove
-        </Button>
+      <Grid item xs={6}>
+        <AddDialog
+          mapLevelType={props.mapLevelType}
+          nextMapLevelType={nextLevel}
+          mapLevelName={props.mapLevelName}
+          mapLevelId={props.mapLevelId}
+          list={props.list}
+          callBack={props.callBack}
+        />
       </Grid>
     </Grid>
   );

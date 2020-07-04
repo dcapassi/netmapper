@@ -14,6 +14,7 @@ import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListMenu from "../ListMenu";
 import ListTree from "../../Components/List/List";
+import { list } from "../../Data/List/initialList";
 
 const drawerWidth = 240;
 
@@ -80,9 +81,17 @@ export default function PersistentDrawerLeft() {
   const [open, setOpen] = React.useState(false);
   const [mapVisible, setMapVisible] = React.useState(false);
   const [mapLevel, setMapLevel] = React.useState("Global");
+  const [mapLevelId, setMapLevelId] = React.useState("root");
   const [mapLevelType, setMapLevelType] = React.useState("Global");
+  const [listJson, setListJson] = React.useState(list);
 
   const getOptionCallBack = (message) => {
+    if (message.update === true) {
+      console.log("updated");
+      setListJson({ ...listJson });
+      return;
+    }
+
     if (message.type === "floor") {
       setMapVisible(true);
     } else {
@@ -90,6 +99,7 @@ export default function PersistentDrawerLeft() {
     }
     setMapLevel(message.level);
     setMapLevelType(message.type);
+    setMapLevelId(message.id);
   };
 
   const handleDrawerOpen = () => {
@@ -142,7 +152,7 @@ export default function PersistentDrawerLeft() {
             )}
           </IconButton>
         </div>
-        <ListTree callBack={getOptionCallBack} />
+        <ListTree list={listJson} callBack={getOptionCallBack} />
       </Drawer>
       <main
         className={clsx(classes.content, {
@@ -152,7 +162,15 @@ export default function PersistentDrawerLeft() {
         <div className={classes.drawerHeader} />
         {mapVisible && <AppMap />}
         <div style={{ backgroundColor: "blue" }}>
-          {!mapVisible && <ListMenu mapLevelType={mapLevelType} />}
+          {!mapVisible && (
+            <ListMenu
+              mapLevelName={mapLevel}
+              mapLevelId={mapLevelId}
+              mapLevelType={mapLevelType}
+              list={list}
+              callBack={getOptionCallBack}
+            />
+          )}
         </div>
       </main>
     </div>

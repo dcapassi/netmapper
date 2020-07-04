@@ -76,7 +76,13 @@ export default function SimpleTabs(props) {
         Dashboard
       </TabPanel>
       <TabPanel value={value} index={1}>
-        <SettingsMenu mapLevelType={props.mapLevelType} />
+        <SettingsMenu
+          mapLevelName={props.mapLevelName}
+          mapLevelType={props.mapLevelType}
+          mapLevelId={props.mapLevelId}
+          list={props.list}
+          callBack={props.callBack}
+        />
       </TabPanel>
     </div>
   );

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Switch from "./Switch";
 import { zoomFitCalc } from "../../Utils/index";
 import { v4 } from "uuid";
+import { load } from "../../Data/InitialLoadTemp/switches";
 
 function SwitchContainer(props) {
   //To be received
@@ -22,10 +23,10 @@ function SwitchContainer(props) {
   }, []);
 
   //Switches Array
-  const [arraySwitches, setArraySwitches] = useState([]);
+  const [arraySwitches, setArraySwitches] = useState(load);
 
   useEffect(() => {
-    localStorage.setItem("venue1area1", JSON.stringify(arraySwitches));
+    localStorage.setItem("venue1area1_Switch", JSON.stringify(arraySwitches));
   }, [arraySwitches]);
 
   const [editElement, setEditElement] = useState({

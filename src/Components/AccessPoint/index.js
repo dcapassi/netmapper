@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import AccessPoint from "./AccessPoint";
 import { zoomFitCalc } from "../../Utils/index";
 import { v4 } from "uuid";
+import { load } from "../../Data/InitialLoadTemp/aps";
 
 function AccessPointContainer(props) {
   //To be received
@@ -23,7 +24,7 @@ function AccessPointContainer(props) {
   }, []);
 
   //Access Points Array
-  const [arrayAps, setArrayAps] = useState([]);
+  const [arrayAps, setArrayAps] = useState(load);
 
   useEffect(() => {
     localStorage.setItem("venue1area1", JSON.stringify(arrayAps));

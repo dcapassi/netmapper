@@ -1,15 +1,23 @@
-import React, { useState, useEffect } from "react";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import IconButton from "@material-ui/core/IconButton";
+import React, { useEffect, useState } from "react";
+import Container from "@material-ui/core/Container";
 import Typography from "@material-ui/core/Typography";
-import SkipPreviousIcon from "@material-ui/icons/SkipPrevious";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
-import SkipNextIcon from "@material-ui/icons/SkipNext";
+import Button from "@material-ui/core/Button";
+import { makeStyles } from "@material-ui/core/styles";
+import Add from "@material-ui/icons/Add";
+import Remove from "@material-ui/icons/Remove";
+import Grid from "@material-ui/core/Grid";
 import AddDialog from "./AddDialog";
-import country from "./country.png";
+
+// import { Container } from './styles';
+
+const useStyles = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(1),
+  },
+  container: {
+    textAlign: "center",
+  },
+}));
 
 const returnLabel = (level) => {
   let label = "Country";
@@ -35,69 +43,64 @@ const returnLabel = (level) => {
   return label;
 };
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    display: "flex",
-    height: "200px",
-    width: "400px",
-  },
-  details: {
-    display: "flex",
-    alignContent: "center",
-    flexDirection: "column",
-    justifyContent: "center",
-  },
-  content: {
-    flex: "1 0 auto",
-  },
-  cover: {
-    width: 200,
-  },
-  controls: {
-    display: "flex",
-    alignItems: "center",
-    paddingLeft: theme.spacing(1),
-    paddingBottom: theme.spacing(1),
-  },
-  playIcon: {
-    height: 38,
-    width: 38,
-  },
-}));
-
-export default function MediaControlCard(props) {
+function Settings(props) {
   const [nextLevel, setNextLabel] = useState("");
   useEffect(() => {
     setNextLabel(returnLabel(props.mapLevelType));
   }, [props.mapLevelType]);
 
   const classes = useStyles();
-  const theme = useTheme();
 
   return (
-      <Card className={classes.root}>
-        <div className={classes.details}>
-          <CardContent className={classes.content}>
-            <Typography component="h5" variant="h5">
-              {nextLevel}
-            </Typography>
-          </CardContent>
-          <div className={classes.controls}>
-            <AddDialog
-              mapLevelType={props.mapLevelType}
-              nextMapLevelType={nextLevel}
-              mapLevelName={props.mapLevelName}
-              mapLevelId={props.mapLevelId}
-              list={props.list}
-              callBack={props.callBack}
-            />
-          </div>
-        </div>
-        <CardMedia
-          className={classes.cover}
-          image={country}
-          title={nextLevel}
+    <Grid
+      container
+      item
+      xs={12}
+      spacing={1}
+      justify="center"
+      alignItems="center"
+    >
+      <Grid item xs={4}>
+        <Typography component={"span"} variant="h6" noWrap>
+          {nextLevel}
+        </Typography>
+      </Grid>
+      <Grid item xs={6}>
+        <AddDialog
+          mapLevelType={props.mapLevelType}
+          nextMapLevelType={nextLevel}
+          mapLevelName={props.mapLevelName}
+          mapLevelId={props.mapLevelId}
+          list={props.list}
+          callBack={props.callBack}
         />
-      </Card>
+      </Grid>
+
+      {console.log(props.mapLevelType)}
+      {
+        //Settings for the GLobal Menu
+        props.mapLevelName === "Global" && (
+          <>
+            <Grid item xs={4}>
+              <Typography component={"span"} variant="h6" noWrap>
+                Zabbix Integration
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <AddDialog
+                mapLevelType={props.mapLevelType}
+                nextMapLevelType={nextLevel}
+                mapLevelName={props.mapLevelName}
+                mapLevelId={props.mapLevelId}
+                list={props.list}
+                callBack={props.callBack}
+              />
+            </Grid>
+          </>
+        )
+      }
+    </Grid>
   );
 }
+
+export default Settings;

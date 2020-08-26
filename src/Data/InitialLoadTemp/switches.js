@@ -1,0 +1,38 @@
+export const load = [
+  {
+    switchName: "36972",
+    posX: 111,
+    posY: 107,
+    initialX: 111,
+    initialY: 107,
+    switchSize: 30,
+    label: true,
+  },
+  {
+    switchName: "de176",
+    posX: 245,
+    posY: 231,
+    initialX: 245,
+    initialY: 231,
+    switchSize: 30,
+    label: true,
+  },
+  {
+    switchName: "59a77",
+    posX: 419,
+    posY: 157,
+    initialX: 419,
+    initialY: 157,
+    switchSize: 30,
+    label: true,
+  },
+  {
+    switchName: "81c23",
+    posX: 263,
+    posY: 83,
+    initialX: 263,
+    initialY: 83,
+    switchSize: 30,
+    label: true,
+  },
+];

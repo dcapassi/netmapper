@@ -7,6 +7,7 @@ import Add from "@material-ui/icons/Add";
 import Remove from "@material-ui/icons/Remove";
 import Grid from "@material-ui/core/Grid";
 import AddDialog from "./AddDialog";
+import AddDialogIntegration from "./addDialogIntegration";
 
 // import { Container } from './styles';
 
@@ -87,14 +88,7 @@ function Settings(props) {
               </Typography>
             </Grid>
             <Grid item xs={6}>
-              <AddDialog
-                mapLevelType={props.mapLevelType}
-                nextMapLevelType={nextLevel}
-                mapLevelName={props.mapLevelName}
-                mapLevelId={props.mapLevelId}
-                list={props.list}
-                callBack={props.callBack}
-              />
+              <AddDialogIntegration />
             </Grid>
           </>
         )

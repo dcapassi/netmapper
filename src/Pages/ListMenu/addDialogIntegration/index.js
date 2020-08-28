@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -11,7 +11,10 @@ import { v4 } from "uuid";
 
 export default function FormDialog(props) {
   const [open, setOpen] = React.useState(false);
-  const [value, setValue] = React.useState("");
+  const [ipAddress, setIpAddress] = React.useState("");
+  const [port, setPort] = React.useState("");
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -24,6 +27,26 @@ export default function FormDialog(props) {
   const handleSubmit = () => {
     setOpen(false);
   };
+
+  useEffect(() => {
+    const integrationFromLocalStorage = JSON.parse(
+      localStorage.getItem("integration")
+    );
+
+    if (integrationFromLocalStorage !== null) {
+      setUsername(integrationFromLocalStorage.username);
+      setPassword(integrationFromLocalStorage.password);
+      setPort(integrationFromLocalStorage.port);
+      setIpAddress(integrationFromLocalStorage.ipAddress);
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "integration",
+      JSON.stringify({ ipAddress, port, username, password })
+    );
+  }, [ipAddress, port, username, password]);
 
   return (
     <>
@@ -51,9 +74,10 @@ export default function FormDialog(props) {
             label="IP Address"
             type="text"
             fullWidth
+            value={ipAddress}
             autoComplete="off"
             onChange={(e) => {
-              setValue(e.target.value);
+              setIpAddress(e.target.value);
             }}
           />
           <TextField
@@ -65,8 +89,9 @@ export default function FormDialog(props) {
             type="text"
             fullWidth
             autoComplete="off"
+            value={port}
             onChange={(e) => {
-              setValue(e.target.value);
+              setPort(e.target.value);
             }}
           />
           <TextField
@@ -75,10 +100,11 @@ export default function FormDialog(props) {
             id="username"
             label="Username"
             type="text"
+            value={username}
             fullWidth
             autoComplete="off"
             onChange={(e) => {
-              setValue(e.target.value);
+              setUsername(e.target.value);
             }}
           />
           <TextField
@@ -87,10 +113,11 @@ export default function FormDialog(props) {
             id="password"
             label="Password"
             type="password"
+            value={password}
             fullWidth
             autoComplete="off"
             onChange={(e) => {
-              setValue(e.target.value);
+              setPassword(e.target.value);
             }}
           />
         </DialogContent>

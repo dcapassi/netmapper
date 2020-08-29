@@ -7,14 +7,20 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Add from "@material-ui/icons/Add";
 import Remove from "@material-ui/icons/Remove";
+import Check from "@material-ui/icons/Check";
 import { v4 } from "uuid";
 
 export default function FormDialog(props) {
+  const [update, setUpdate] = React.useState({ update: true });
   const [open, setOpen] = React.useState(false);
   const [ipAddress, setIpAddress] = React.useState("");
   const [port, setPort] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [
+    integrationFromLocalStorage,
+    setIntegrationFromLocalStorage,
+  ] = React.useState("");
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -24,13 +30,25 @@ export default function FormDialog(props) {
     setOpen(false);
   };
 
+  const clearInput = () => {
+    setUsername("");
+    setPassword("");
+    setPort("");
+    setIpAddress("");
+  };
+
   const handleSubmit = () => {
     setOpen(false);
+    localStorage.setItem(
+      "integration",
+      JSON.stringify({ ipAddress, port, username, password })
+    );
+    setUpdate({ ...update, update: true });
   };
 
   useEffect(() => {
-    const integrationFromLocalStorage = JSON.parse(
-      localStorage.getItem("integration")
+    setIntegrationFromLocalStorage(
+      JSON.parse(localStorage.getItem("integration"))
     );
 
     if (integrationFromLocalStorage !== null) {
@@ -39,27 +57,38 @@ export default function FormDialog(props) {
       setPort(integrationFromLocalStorage.port);
       setIpAddress(integrationFromLocalStorage.ipAddress);
     }
-  }, []);
+  }, [update]);
 
-  useEffect(() => {
-    localStorage.setItem(
-      "integration",
-      JSON.stringify({ ipAddress, port, username, password })
-    );
-  }, [ipAddress, port, username, password]);
+  useEffect(() => {}, []);
 
   return (
     <>
       <Button startIcon={<Add />} color="primary" onClick={handleClickOpen}>
         Add
       </Button>
-      <Button
-        startIcon={<Remove />}
-        color="secondary"
-        onClick={handleClickOpen}
-      >
-        Remove
-      </Button>
+      {integrationFromLocalStorage !== null && (
+        <>
+          <Button
+            startIcon={<Check />}
+            color="primary"
+            onClick={handleClickOpen}
+          >
+            Check
+          </Button>
+
+          <Button
+            startIcon={<Remove />}
+            color="secondary"
+            onClick={(e) => {
+              clearInput();
+              localStorage.removeItem("integration");
+              setUpdate({ ...update, update: true });
+            }}
+          >
+            Remove
+          </Button>
+        </>
+      )}
       <Dialog
         open={open}
         onClose={handleClose}

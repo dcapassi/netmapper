@@ -13,6 +13,7 @@ import { v4 } from "uuid";
 export default function FormDialog(props) {
   const [update, setUpdate] = React.useState({ update: true });
   const [open, setOpen] = React.useState(false);
+  const [openCheck, setOpenCheck] = React.useState(false);
   const [ipAddress, setIpAddress] = React.useState("");
   const [port, setPort] = React.useState("");
   const [username, setUsername] = React.useState("");
@@ -24,6 +25,10 @@ export default function FormDialog(props) {
 
   const handleClickOpen = () => {
     setOpen(true);
+  };
+
+  const handleClickCheck = () => {
+    setOpenCheck(true);
   };
 
   const handleClose = () => {
@@ -71,7 +76,7 @@ export default function FormDialog(props) {
           <Button
             startIcon={<Check />}
             color="primary"
-            onClick={handleClickOpen}
+            onClick={handleClickCheck}
           >
             Check
           </Button>
@@ -150,12 +155,34 @@ export default function FormDialog(props) {
             }}
           />
         </DialogContent>
+
         <DialogActions>
           <Button onClick={handleClose} color="primary">
             Cancel
           </Button>
           <Button onClick={handleSubmit} color="primary">
             Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      <Dialog
+        open={openCheck}
+        onClose={handleClose}
+        aria-labelledby="form-dialog-title"
+      >
+        <DialogContent>
+          <DialogContentText>Check Zabbix Integration</DialogContentText>
+        </DialogContent>
+
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setOpenCheck(false);
+            }}
+            color="primary"
+          >
+            Ok
           </Button>
         </DialogActions>
       </Dialog>

@@ -36,6 +36,7 @@ export default function FormDialog(props) {
   };
 
   const clearInput = () => {
+    console.log("clear!");
     setUsername("");
     setPassword("");
     setPort("");
@@ -64,8 +65,6 @@ export default function FormDialog(props) {
     }
   }, [update]);
 
-  useEffect(() => {}, []);
-
   return (
     <>
       <Button startIcon={<Add />} color="primary" onClick={handleClickOpen}>
@@ -85,8 +84,8 @@ export default function FormDialog(props) {
             startIcon={<Remove />}
             color="secondary"
             onClick={(e) => {
-              clearInput();
               localStorage.removeItem("integration");
+              clearInput();
               setUpdate({ ...update, update: true });
             }}
           >

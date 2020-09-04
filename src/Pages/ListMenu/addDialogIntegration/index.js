@@ -11,8 +11,9 @@ import Check from "@material-ui/icons/Check";
 import { v4 } from "uuid";
 
 export default function FormDialog(props) {
-  const [update, setUpdate] = React.useState({ update: true });
+  const [update, setUpdate] = React.useState({ udpate: false });
   const [open, setOpen] = React.useState(false);
+  const [showIntegration, setShowIntegration] = React.useState(false);
   const [openCheck, setOpenCheck] = React.useState(false);
   const [ipAddress, setIpAddress] = React.useState("");
   const [port, setPort] = React.useState("");
@@ -37,6 +38,7 @@ export default function FormDialog(props) {
 
   const clearInput = () => {
     console.log("clear!");
+    setIntegrationFromLocalStorage("");
     setUsername("");
     setPassword("");
     setPort("");
@@ -53,15 +55,18 @@ export default function FormDialog(props) {
   };
 
   useEffect(() => {
-    setIntegrationFromLocalStorage(
-      JSON.parse(localStorage.getItem("integration"))
-    );
+    const integrationData = JSON.parse(localStorage.getItem("integration"));
+    if (integrationData !== null) {
+      //Update the input fields with the integration data
+      setIpAddress(integrationData.ipAddress);
+      setPort(integrationData.port);
+      setUsername(integrationData.username);
+      setPassword(integrationData.password);
 
-    if (integrationFromLocalStorage !== null) {
-      setUsername(integrationFromLocalStorage.username);
-      setPassword(integrationFromLocalStorage.password);
-      setPort(integrationFromLocalStorage.port);
-      setIpAddress(integrationFromLocalStorage.ipAddress);
+      setShowIntegration(true);
+    } else {
+      console.log("Got here!");
+      setShowIntegration(false);
     }
   }, [update]);
 
@@ -70,7 +75,7 @@ export default function FormDialog(props) {
       <Button startIcon={<Add />} color="primary" onClick={handleClickOpen}>
         Add
       </Button>
-      {integrationFromLocalStorage !== null && (
+      {showIntegration === true && (
         <>
           <Button
             startIcon={<Check />}

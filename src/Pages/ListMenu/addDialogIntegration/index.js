@@ -8,9 +8,22 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import Add from "@material-ui/icons/Add";
 import Remove from "@material-ui/icons/Remove";
 import Check from "@material-ui/icons/Check";
-import { v4 } from "uuid";
+import getToken from "../../../API/Zabbix/getToken";
+import CircularProgress from "@material-ui/core/CircularProgress";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
+
+const useStyles = makeStyles((theme) => ({
+  form: {
+    display: "flex",
+    flexDirection: "column",
+    margin: "auto",
+    width: "fit-content",
+  },
+}));
 
 export default function FormDialog(props) {
+  const classes = useStyles();
   const [update, setUpdate] = React.useState({ udpate: false });
   const [open, setOpen] = React.useState(false);
   const [showIntegration, setShowIntegration] = React.useState(false);
@@ -19,6 +32,11 @@ export default function FormDialog(props) {
   const [port, setPort] = React.useState("");
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [intLoading, setIntLoading] = React.useState(true);
+  const [zabbixIntegrationStatus, setZabbixIntegrationStatus] = React.useState(
+    false
+  );
+
   const [
     integrationFromLocalStorage,
     setIntegrationFromLocalStorage,
@@ -30,6 +48,18 @@ export default function FormDialog(props) {
 
   const handleClickCheck = () => {
     setOpenCheck(true);
+    getToken(ipAddress, port, username, password)
+      .then((response) => {
+        const token = response.data.result;
+        setIntLoading(false);
+        if (token !== null) {
+          setZabbixIntegrationStatus(true);
+        }
+      })
+      .catch((e) => {
+        setIntLoading(false);
+        console.log(e);
+      });
   };
 
   const handleClose = () => {
@@ -51,6 +81,8 @@ export default function FormDialog(props) {
       "integration",
       JSON.stringify({ ipAddress, port, username, password })
     );
+    setZabbixIntegrationStatus(false);
+    setIntLoading(true);
     setUpdate({ ...update, update: true });
   };
 
@@ -65,7 +97,6 @@ export default function FormDialog(props) {
 
       setShowIntegration(true);
     } else {
-      console.log("Got here!");
       setShowIntegration(false);
     }
   }, [update]);
@@ -177,6 +208,15 @@ export default function FormDialog(props) {
       >
         <DialogContent>
           <DialogContentText>Check Zabbix Integration</DialogContentText>
+          <form className={classes.form} noValidate>
+            {intLoading ? (
+              <CircularProgress disableShrink />
+            ) : zabbixIntegrationStatus ? (
+              <Typography>Success!</Typography>
+            ) : (
+              <Typography>Failure!</Typography>
+            )}
+          </form>
         </DialogContent>
 
         <DialogActions>

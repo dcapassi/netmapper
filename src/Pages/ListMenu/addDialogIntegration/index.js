@@ -52,7 +52,8 @@ export default function FormDialog(props) {
       .then((response) => {
         const token = response.data.result;
         setIntLoading(false);
-        if (token !== null) {
+        if (token !== undefined) {
+          console.log(token);
           setZabbixIntegrationStatus(true);
         }
       })

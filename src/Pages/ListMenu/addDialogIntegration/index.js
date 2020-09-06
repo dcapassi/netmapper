@@ -12,6 +12,7 @@ import getToken from "../../../API/Zabbix/getToken";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import Settings from "@material-ui/icons/Settings";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -107,6 +108,7 @@ export default function FormDialog(props) {
       <Button startIcon={<Add />} color="primary" onClick={handleClickOpen}>
         Add
       </Button>
+
       {showIntegration === true && (
         <>
           <Button
@@ -115,6 +117,13 @@ export default function FormDialog(props) {
             onClick={handleClickCheck}
           >
             Check
+          </Button>
+          <Button
+            startIcon={<Settings />}
+            color="primary"
+            onClick={handleClickCheck}
+          >
+            Settings
           </Button>
 
           <Button

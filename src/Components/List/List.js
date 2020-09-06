@@ -5,6 +5,7 @@ import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 
 const theme = createMuiTheme({
   typography: {
@@ -48,14 +49,19 @@ export default function List(props) {
   );
 
   return (
-    <MuiThemeProvider theme={theme}>
-      <TreeView
-        className={classes.root}
-        defaultCollapseIcon={<ExpandMoreIcon />}
-        defaultExpandIcon={<ChevronRightIcon />}
-      >
-        {renderTree(props.list)}
-      </TreeView>
-    </MuiThemeProvider>
+    <>
+
+      <Typography variant="h6">Site Hierarchy</Typography>
+
+      <MuiThemeProvider theme={theme}>
+        <TreeView
+          className={classes.root}
+          defaultCollapseIcon={<ExpandMoreIcon />}
+          defaultExpandIcon={<ChevronRightIcon />}
+        >
+          {renderTree(props.list)}
+        </TreeView>
+      </MuiThemeProvider>
+    </>
   );
 }

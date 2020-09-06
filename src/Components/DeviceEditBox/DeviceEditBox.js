@@ -6,7 +6,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import Typography from "@material-ui/core/Typography";
 import { deviceList } from "../../Data/DeviceList";
-import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import ListItemText from "@material-ui/core/ListItemText";
@@ -74,6 +73,7 @@ export default function FormDialog(props) {
   const [channel5G, setChannel5G] = React.useState("");
   const handleClose = () => {
     setOpen(false);
+    props.closeBox();
   };
 
   const handleSubmit = () => {

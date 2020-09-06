@@ -8,7 +8,6 @@ import Remove from "@material-ui/icons/Remove";
 import Grid from "@material-ui/core/Grid";
 import AddDialog from "./AddDialog";
 import AddDialogIntegration from "./addDialogIntegration";
-
 // import { Container } from './styles';
 
 const useStyles = makeStyles((theme) => ({

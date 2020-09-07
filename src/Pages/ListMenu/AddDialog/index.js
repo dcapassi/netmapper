@@ -73,13 +73,19 @@ export default function FormDialog(props) {
 
   return (
     <>
-      <Button startIcon={<Add />} color="primary" onClick={handleClickOpen}>
+      <Button
+        startIcon={<Add />}
+        color="primary"
+        onClick={handleClickOpen}
+        size="small"
+      >
         Add
       </Button>
       <Button
         startIcon={<Remove />}
         color="secondary"
         onClick={handleClickOpen}
+        size="small"
       >
         Remove
       </Button>
@@ -87,6 +93,7 @@ export default function FormDialog(props) {
         open={open}
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
+        size="small"
       >
         <DialogContent>
           <DialogContentText>

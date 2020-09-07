@@ -73,6 +73,7 @@ export default function AppMap() {
   };
 
   const containerMessage = (msg) => {
+    console.log(msg);
     if (msg.edit) {
       if (msg.edit.isEditing === true) {
         setMode({

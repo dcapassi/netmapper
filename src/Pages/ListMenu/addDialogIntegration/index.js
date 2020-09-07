@@ -13,6 +13,14 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import Settings from "@material-ui/icons/Settings";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+import IconButton from "@material-ui/core/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
+import Card from "@material-ui/core/Card";
+import CardActions from "@material-ui/core/CardActions";
+import CardContent from "@material-ui/core/CardContent";
+import Paper from "@material-ui/core/Paper";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -20,6 +28,13 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     margin: "auto",
     width: "fit-content",
+  },
+  appBar: {
+    position: "relative",
+  },
+  title: {
+    marginLeft: theme.spacing(2),
+    flex: 1,
   },
 }));
 
@@ -29,6 +44,7 @@ export default function FormDialog(props) {
   const [open, setOpen] = React.useState(false);
   const [showIntegration, setShowIntegration] = React.useState(false);
   const [openCheck, setOpenCheck] = React.useState(false);
+  const [openSettings, setOpenSettings] = React.useState(false);
   const [ipAddress, setIpAddress] = React.useState("");
   const [port, setPort] = React.useState("");
   const [username, setUsername] = React.useState("");
@@ -62,6 +78,10 @@ export default function FormDialog(props) {
         setIntLoading(false);
         console.log(e);
       });
+  };
+
+  const handleClickSettings = () => {
+    setOpenSettings(true);
   };
 
   const handleClose = () => {
@@ -105,7 +125,12 @@ export default function FormDialog(props) {
 
   return (
     <>
-      <Button startIcon={<Add />} color="primary" onClick={handleClickOpen}>
+      <Button
+        startIcon={<Add />}
+        color="primary"
+        onClick={handleClickOpen}
+        size="small"
+      >
         Add
       </Button>
 
@@ -115,20 +140,27 @@ export default function FormDialog(props) {
             startIcon={<Check />}
             color="primary"
             onClick={handleClickCheck}
+            size="small"
           >
             Check
           </Button>
-          <Button
-            startIcon={<Settings />}
-            color="primary"
-            onClick={handleClickCheck}
-          >
-            Settings
-          </Button>
+          {zabbixIntegrationStatus ? (
+            <Button
+              startIcon={<Settings />}
+              color="primary"
+              onClick={handleClickSettings}
+              size="small"
+            >
+              Settings
+            </Button>
+          ) : (
+            <></>
+          )}
 
           <Button
             startIcon={<Remove />}
             color="secondary"
+            size="small"
             onClick={(e) => {
               localStorage.removeItem("integration");
               clearInput();
@@ -139,6 +171,7 @@ export default function FormDialog(props) {
           </Button>
         </>
       )}
+
       <Dialog
         open={open}
         onClose={handleClose}
@@ -211,6 +244,8 @@ export default function FormDialog(props) {
         </DialogActions>
       </Dialog>
 
+      {/*Dialog to check Zabbix Integration*/}
+
       <Dialog
         open={openCheck}
         onClose={handleClose}
@@ -220,7 +255,7 @@ export default function FormDialog(props) {
           <DialogContentText>Check Zabbix Integration</DialogContentText>
           <form className={classes.form} noValidate>
             {intLoading ? (
-              <CircularProgress disableShrink />
+              <CircularProgress />
             ) : zabbixIntegrationStatus ? (
               <Typography>Success!</Typography>
             ) : (
@@ -239,6 +274,57 @@ export default function FormDialog(props) {
             Ok
           </Button>
         </DialogActions>
+      </Dialog>
+
+      {/*Dialog for Zabbix Integration Settings*/}
+
+      <Dialog
+        fullScreen
+        open={openSettings}
+        aria-labelledby="form-dialog-title"
+      >
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => {
+                setOpenSettings(false);
+              }}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              {`Zabbix Integration Settings`}
+            </Typography>
+            <Button
+              autoFocus
+              color="inherit"
+              onClick={() => {
+                setOpenSettings(false);
+              }}
+            >
+              save
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <DialogContent>
+          <Paper>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant="h5">{`Access Point Templates`}</Typography>
+                <Typography variant="body1" color="textSecondary">
+                  Choose the Zabbix templates to be applied on all the Access
+                  Points.
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button size="medium">Configure</Button>
+              </CardActions>
+            </Card>
+          </Paper>
+        </DialogContent>
       </Dialog>
     </>
   );

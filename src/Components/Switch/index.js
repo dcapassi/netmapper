@@ -10,6 +10,8 @@ function SwitchContainer(props) {
   const MAP_WIDTH = 1700;
   const [switchSize, setswitchSize] = useState(30);
 
+										   
+
   //UseEffect for loading the Access Points
   useEffect(() => {
     /*const apsFromLocalStorage = JSON.parse(localStorage.getItem("venue1area1"));
@@ -28,6 +30,10 @@ function SwitchContainer(props) {
   useEffect(() => {
     localStorage.setItem("venue1area1_Switch", JSON.stringify(arraySwitches));
   }, [arraySwitches]);
+
+				   
+										  
+							   
 
   const [editElement, setEditElement] = useState({
     visible: false,
@@ -69,6 +75,7 @@ function SwitchContainer(props) {
         channel5Ghz: apObj.channel5G,
         customer: apObj.customer,
         model: apObj.model,
+										 
       };
     } catch (error) {
       console.log(error);
@@ -84,12 +91,15 @@ function SwitchContainer(props) {
   const apDragAction = (event, ap) => {
     if (props.mode.clickMode) {
       let { left, top } = props.refMap.current.getBoundingClientRect();
+							 
       props.messageCallBack({ edit: { isEditing: true, elementName: ap } });
+		 
 
       setEditElement({
         ...editElement,
         visible: true,
         elementName: ap,
+						
         posX: event.clientX - left,
         posY: event.clientY - top,
       });
@@ -103,9 +113,7 @@ function SwitchContainer(props) {
           initialMouseX: event.clientX,
           initialMouseY: event.clientY,
         });
-        props.messageCallBack({
-          edit: { isEditing: true, type: "switch", elementName: ap },
-        });
+        props.messageCallBack({ ap: { isMoving: true } });
       } else {
         setSwitchMoveSettings({
           ...SwitchMoveSettings,
@@ -240,7 +248,9 @@ function SwitchContainer(props) {
       );
 
       try {
+								 
         let obj = {
+						   
           switchName: v4().substring(0, 5),
           posX: newPosX,
           posY: newPosY,
@@ -265,6 +275,8 @@ function SwitchContainer(props) {
             <Switch
               dragAction={apDragAction}
               switchName={entry.switchName}
+							 
+							
               posX={entry.posX}
               posY={entry.posY}
               switchSize={switchSize}

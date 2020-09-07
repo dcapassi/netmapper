@@ -145,79 +145,83 @@ export default function FormDialog(props) {
               setName(e.target.value);
             }}
           />
-          <InputLabel id="modelLabel">Model</InputLabel>
-          <Select
-            labelId="modelLabel"
-            id="model"
-            type="text"
-            fullWidth
-            value={model}
-            autoComplete="on"
-            onChange={(e) => {
-              setModel(e.target.value);
-            }}
-          >
-            {modelList.map((entry) => (
-              <MenuItem key={entry} value={entry}>
-                <ListItemText primary={entry} />
-              </MenuItem>
-            ))}
-          </Select>
-          <InputLabel id="ch24Label">Channel 2.4GHz</InputLabel>
-          <Select
-            labelId="ch24Label"
-            id="24ch"
-            label="ch24Label"
-            type="text"
-            fullWidth
-            value={channel24G}
-            autoComplete="off"
-            onChange={(e) => {
-              setChannel24G(e.target.value);
-            }}
-          >
-            {ch24GhzList.map((entry) => (
-              <MenuItem key={entry} value={entry}>
-                <ListItemText primary={entry} />
-              </MenuItem>
-            ))}
-          </Select>
-          <InputLabel id="ch5Label">Channel 5GHz</InputLabel>
-          <Select
-            labelId="ch5Label"
-            id="5ch"
-            type="text"
-            fullWidth
-            value={channel5G}
-            autoComplete="off"
-            onChange={(e) => {
-              setChannel5G(e.target.value);
-            }}
-          >
-            {ch5GhzList.map((entry) => (
-              <MenuItem key={entry} value={entry}>
-                <ListItemText primary={entry} />
-              </MenuItem>
-            ))}
-          </Select>
-          <InputLabel id="switchLabel">Access Switch</InputLabel>
-          <Select
-            labelId="switchLabel"
-            id="accessSwitch"
-            type="text"
-            fullWidth
-            value={accessSwitch}
-            autoComplete="off"
-            onChange={(e) => {
-              setAccessSwitch(e.target.value);
-            }}
-          >
-            {props.switchList.map((entry) => (
-              <MenuItem key={entry.switchName} value={entry.switchName}>
-                <ListItemText primary={entry.switchName} />
-              </MenuItem>
-            ))}
-          </Select>
+          {props.editType === "ap" && (
+            <>
+              <InputLabel id="modelLabel">Model</InputLabel>
+              <Select
+                labelId="modelLabel"
+                id="model"
+                type="text"
+                fullWidth
+                value={model}
+                autoComplete="on"
+                onChange={(e) => {
+                  setModel(e.target.value);
+                }}
+              >
+                {modelList.map((entry) => (
+                  <MenuItem key={entry} value={entry}>
+                    <ListItemText primary={entry} />
+                  </MenuItem>
+                ))}
+              </Select>
+              <InputLabel id="ch24Label">Channel 2.4GHz</InputLabel>
+              <Select
+                labelId="ch24Label"
+                id="24ch"
+                label="ch24Label"
+                type="text"
+                fullWidth
+                value={channel24G}
+                autoComplete="off"
+                onChange={(e) => {
+                  setChannel24G(e.target.value);
+                }}
+              >
+                {ch24GhzList.map((entry) => (
+                  <MenuItem key={entry} value={entry}>
+                    <ListItemText primary={entry} />
+                  </MenuItem>
+                ))}
+              </Select>
+              <InputLabel id="ch5Label">Channel 5GHz</InputLabel>
+              <Select
+                labelId="ch5Label"
+                id="5ch"
+                type="text"
+                fullWidth
+                value={channel5G}
+                autoComplete="off"
+                onChange={(e) => {
+                  setChannel5G(e.target.value);
+                }}
+              >
+                {ch5GhzList.map((entry) => (
+                  <MenuItem key={entry} value={entry}>
+                    <ListItemText primary={entry} />
+                  </MenuItem>
+                ))}
+              </Select>
+              <InputLabel id="switchLabel">Access Switch</InputLabel>
+              <Select
+                labelId="switchLabel"
+                id="accessSwitch"
+                type="text"
+                fullWidth
+                value={accessSwitch}
+                autoComplete="off"
+                onChange={(e) => {
+                  setAccessSwitch(e.target.value);
+                }}
+              >
+                {props.switchList.map((entry) => (
+                  <MenuItem key={entry.switchName} value={entry.switchName}>
+                    <ListItemText primary={entry.switchName} />
+                  </MenuItem>
+                ))}
+              </Select>
+            </>
+          )}
         </DialogContent>
       </Dialog>
     </>

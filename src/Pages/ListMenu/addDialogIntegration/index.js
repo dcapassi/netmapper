@@ -53,6 +53,7 @@ export default function FormDialog(props) {
   const [zabbixIntegrationStatus, setZabbixIntegrationStatus] = React.useState(
     false
   );
+  const [openTemplatesAps, setOpenTemplatesAps] = React.useState(false);
 
   const [
     integrationFromLocalStorage,
@@ -277,7 +278,6 @@ export default function FormDialog(props) {
       </Dialog>
 
       {/*Dialog for Zabbix Integration Settings*/}
-
       <Dialog
         fullScreen
         open={openSettings}
@@ -320,11 +320,52 @@ export default function FormDialog(props) {
                 </Typography>
               </CardContent>
               <CardActions>
-                <Button size="medium">Configure</Button>
+                <Button
+                  size="medium"
+                  onClick={() => {
+                    setOpenTemplatesAps(true);
+                  }}
+                >
+                  Configure
+                </Button>
               </CardActions>
             </Card>
           </Paper>
         </DialogContent>
+      </Dialog>
+
+      {/*Dialog - Add AP Templates*/}
+      <Dialog
+        fullScreen
+        open={openTemplatesAps}
+        aria-labelledby="form-dialog-title"
+      >
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => {
+                setOpenTemplatesAps(false);
+              }}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              {`Zabbix - Templates`}
+            </Typography>
+            <Button
+              autoFocus
+              color="inherit"
+              onClick={() => {
+                setOpenTemplatesAps(false);
+              }}
+            >
+              save
+            </Button>
+          </Toolbar>
+        </AppBar>
       </Dialog>
     </>
   );

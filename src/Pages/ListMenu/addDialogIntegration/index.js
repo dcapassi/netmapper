@@ -21,6 +21,7 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Paper from "@material-ui/core/Paper";
+import ListTemplates from "./ListTemplates";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -54,6 +55,7 @@ export default function FormDialog(props) {
     false
   );
   const [openTemplatesAps, setOpenTemplatesAps] = React.useState(false);
+  const [zabbixToken, setZabbixToken] = React.useState("");
 
   const [
     integrationFromLocalStorage,
@@ -72,11 +74,13 @@ export default function FormDialog(props) {
         setIntLoading(false);
         if (token !== undefined) {
           console.log(token);
+          setZabbixToken(token);
           setZabbixIntegrationStatus(true);
         }
       })
       .catch((e) => {
         setIntLoading(false);
+        setZabbixToken("");
         console.log(e);
       });
   };
@@ -335,38 +339,7 @@ export default function FormDialog(props) {
       </Dialog>
 
       {/*Dialog - Add AP Templates*/}
-      <Dialog
-        fullScreen
-        open={openTemplatesAps}
-        aria-labelledby="form-dialog-title"
-      >
-        <AppBar className={classes.appBar}>
-          <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={() => {
-                setOpenTemplatesAps(false);
-              }}
-              aria-label="close"
-            >
-              <CloseIcon />
-            </IconButton>
-            <Typography variant="h6" className={classes.title}>
-              {`Zabbix - Templates`}
-            </Typography>
-            <Button
-              autoFocus
-              color="inherit"
-              onClick={() => {
-                setOpenTemplatesAps(false);
-              }}
-            >
-              save
-            </Button>
-          </Toolbar>
-        </AppBar>
-      </Dialog>
+      <ListTemplates setOpenTemplatesAps={setOpenTemplatesAps} openTemplatesAps={openTemplatesAps} />
     </>
   );
 }

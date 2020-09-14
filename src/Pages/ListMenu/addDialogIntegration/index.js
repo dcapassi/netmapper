@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import createZabbixApi from "../../../API/Zabbix/zabbixAPI";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -9,6 +10,7 @@ import Add from "@material-ui/icons/Add";
 import Remove from "@material-ui/icons/Remove";
 import Check from "@material-ui/icons/Check";
 import getToken from "../../../API/Zabbix/getToken";
+import getTemplates from "../../../API/Zabbix/getTemplates";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -21,7 +23,7 @@ import Card from "@material-ui/core/Card";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Paper from "@material-ui/core/Paper";
-import ListTemplates from "./ListTemplates";
+import TransferList from "./transferList";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -41,6 +43,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function FormDialog(props) {
   const classes = useStyles();
+  const [zabbixAPI, setZabbixAPI] = React.useState(() => {});
   const [update, setUpdate] = React.useState({ udpate: false });
   const [open, setOpen] = React.useState(false);
   const [showIntegration, setShowIntegration] = React.useState(false);
@@ -68,7 +71,9 @@ export default function FormDialog(props) {
 
   const handleClickCheck = () => {
     setOpenCheck(true);
-    getToken(ipAddress, port, username, password)
+    const api = createZabbixApi(ipAddress, port);
+    setZabbixAPI(() => api);
+    getToken(username, password, api)
       .then((response) => {
         const token = response.data.result;
         setIntLoading(false);
@@ -76,6 +81,23 @@ export default function FormDialog(props) {
           console.log(token);
           setZabbixToken(token);
           setZabbixIntegrationStatus(true);
+        }
+      })
+      .catch((e) => {
+        setIntLoading(false);
+        setZabbixToken("");
+        console.log(e);
+      });
+  };
+
+  const handleGetTemplates = () => {
+    getTemplates(zabbixToken, zabbixAPI)
+      .then((response) => {
+        const list = response.data.result;
+
+        if (list !== undefined) {
+          console.log(list);
+          setOpenTemplatesAps(true);
         }
       })
       .catch((e) => {
@@ -327,7 +349,7 @@ export default function FormDialog(props) {
                 <Button
                   size="medium"
                   onClick={() => {
-                    setOpenTemplatesAps(true);
+                    handleGetTemplates(zabbixAPI);
                   }}
                 >
                   Configure
@@ -339,7 +361,41 @@ export default function FormDialog(props) {
       </Dialog>
 
       {/*Dialog - Add AP Templates*/}
-      <ListTemplates setOpenTemplatesAps={setOpenTemplatesAps} openTemplatesAps={openTemplatesAps} />
+      <Dialog
+        fullScreen
+        open={openTemplatesAps}
+        aria-labelledby="form-dialog-title"
+      >
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => {
+                setOpenTemplatesAps(false);
+              }}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              {`Choose the Templates to apply to the AP group`}
+            </Typography>
+            <Button
+              autoFocus
+              color="inherit"
+              onClick={() => {
+                setOpenTemplatesAps(false);
+              }}
+            >
+              save
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <DialogContent>
+          <TransferList />
+        </DialogContent>
+      </Dialog>
     </>
   );
 }

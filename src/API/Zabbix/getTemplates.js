@@ -1,7 +1,6 @@
 import createZabbixApi from "./zabbixAPI";
 
-async function getTemplates(token) {
-  const zabbixAPI = createZabbixApi(ip, port);
+async function getTemplates(token,zabbixAPI) {
 
   const obj = {
     jsonrpc: "2.0",

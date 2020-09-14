@@ -1,8 +1,4 @@
-import createZabbixApi from "./zabbixAPI";
-
-async function getToken(ip, port, username, password) {
-  const zabbixAPI = createZabbixApi(ip, port);
-
+async function getToken(username, password, zabbixAPI) {
   const obj = {
     jsonrpc: "2.0",
     method: "user.login",

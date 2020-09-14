@@ -42,6 +42,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FormDialog(props) {
+  const [selectedApsTemplates, setSelectedApsTemplates] = React.useState([]);
+  const [selectedSwtTemplates, setSelectedSwtTemplates] = React.useState([]);
+
   const classes = useStyles();
   const [zabbixAPI, setZabbixAPI] = React.useState(() => {});
   const [update, setUpdate] = React.useState({ udpate: false });
@@ -58,6 +61,8 @@ export default function FormDialog(props) {
     false
   );
   const [openTemplatesAps, setOpenTemplatesAps] = React.useState(false);
+  const [openTemplatesSwts, setOpenTemplatesSwts] = React.useState(false);
+
   const [zabbixToken, setZabbixToken] = React.useState("");
   const [templateList, setTemplateList] = React.useState([]);
 
@@ -91,14 +96,28 @@ export default function FormDialog(props) {
       });
   };
 
-  const handleGetTemplates = () => {
+  const transferListCallBack = (data, type) => {
+    if (type === "ap") {
+      setSelectedApsTemplates(data);
+    }
+    if (type === "swt") {
+      setSelectedSwtTemplates(data);
+    }
+  };
+
+  const handleGetTemplates = (type) => {
     getTemplates(zabbixToken, zabbixAPI)
       .then((response) => {
         const list = response.data.result;
 
         if (list !== undefined) {
           setTemplateList(list);
-          setOpenTemplatesAps(true);
+          if (type === "ap") {
+            setOpenTemplatesAps(true);
+          }
+          if (type === "swt") {
+            setOpenTemplatesSwts(true);
+          }
         }
       })
       .catch((e) => {
@@ -150,6 +169,22 @@ export default function FormDialog(props) {
       setShowIntegration(false);
     }
   }, [update]);
+
+  useEffect(() => {
+    const apTemplateListData = JSON.parse(
+      localStorage.getItem("apTemplateList")
+    );
+    if (apTemplateListData !== undefined) {
+      setSelectedApsTemplates(apTemplateListData);
+    }
+
+    const swtTemplateListData = JSON.parse(
+      localStorage.getItem("swtTemplateList")
+    );
+    if (swtTemplateListData !== undefined) {
+      setSelectedSwtTemplates(swtTemplateListData);
+    }
+  }, []);
 
   return (
     <>
@@ -342,15 +377,34 @@ export default function FormDialog(props) {
               <CardContent>
                 <Typography variant="h5">{`Access Point Templates`}</Typography>
                 <Typography variant="body1" color="textSecondary">
-                  Choose the Zabbix templates to be applied on all the Access
-                  Points.
+                  Choose the Zabbix templates to be applied by default on all of
+                  the Access Points Points.
                 </Typography>
               </CardContent>
               <CardActions>
                 <Button
                   size="medium"
                   onClick={() => {
-                    handleGetTemplates(zabbixAPI);
+                    handleGetTemplates("ap");
+                  }}
+                >
+                  Configure
+                </Button>
+              </CardActions>
+            </Card>
+            <Card variant="outlined">
+              <CardContent>
+                <Typography variant="h5">{`Switch Templates`}</Typography>
+                <Typography variant="body1" color="textSecondary">
+                  Choose the Zabbix templates to be applied by default on all of
+                  the switches
+                </Typography>
+              </CardContent>
+              <CardActions>
+                <Button
+                  size="medium"
+                  onClick={() => {
+                    handleGetTemplates("swt");
                   }}
                 >
                   Configure
@@ -380,12 +434,16 @@ export default function FormDialog(props) {
               <CloseIcon />
             </IconButton>
             <Typography variant="h6" className={classes.title}>
-              {`Choose the Templates to apply to the AP group`}
+              {`Default Templates for the Access Points`}
             </Typography>
             <Button
               autoFocus
               color="inherit"
               onClick={() => {
+                localStorage.setItem(
+                  "apTemplateList",
+                  JSON.stringify(selectedApsTemplates)
+                );
                 setOpenTemplatesAps(false);
               }}
             >
@@ -394,7 +452,58 @@ export default function FormDialog(props) {
           </Toolbar>
         </AppBar>
         <DialogContent>
-          <TransferList templateList={templateList} />
+          <TransferList
+            type={"ap"}
+            selectedApsTemplates={selectedApsTemplates}
+            transferListCallBack={transferListCallBack}
+            templateList={templateList}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/*Dialog - Add Switch Templates*/}
+      <Dialog
+        fullScreen
+        open={openTemplatesSwts}
+        aria-labelledby="form-dialog-title"
+      >
+        <AppBar className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              edge="start"
+              color="inherit"
+              onClick={() => {
+                setOpenTemplatesSwts(false);
+              }}
+              aria-label="close"
+            >
+              <CloseIcon />
+            </IconButton>
+            <Typography variant="h6" className={classes.title}>
+              {`Default Templates for the Switches`}
+            </Typography>
+            <Button
+              autoFocus
+              color="inherit"
+              onClick={() => {
+                localStorage.setItem(
+                  "swtTemplateList",
+                  JSON.stringify(selectedSwtTemplates)
+                );
+                setOpenTemplatesSwts(false);
+              }}
+            >
+              save
+            </Button>
+          </Toolbar>
+        </AppBar>
+        <DialogContent>
+          <TransferList
+            type={"swt"}
+            selectedTemplates={selectedSwtTemplates}
+            transferListCallBack={transferListCallBack}
+            templateList={templateList}
+          />
         </DialogContent>
       </Dialog>
     </>

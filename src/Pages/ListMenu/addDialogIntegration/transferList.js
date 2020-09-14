@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import List from "@material-ui/core/List";
@@ -30,7 +30,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function getNameFromId(array, id) {
-  console.log(id);
   return array.find((entry) => entry.templateid === id);
 }
 
@@ -52,11 +51,32 @@ export default function TransferList(props) {
   props.templateList.map((entry) => {
     arrayOfIndex.push(entry.templateid);
   });
-  console.log(arrayOfIndex);
   const classes = useStyles();
   const [checked, setChecked] = React.useState([]);
   const [left, setLeft] = React.useState(arrayOfIndex);
-  const [right, setRight] = React.useState([]);
+
+  let selectedArray = [];
+  if (props.selectedTemplates) {
+    selectedArray = props.selectedTemplates;
+  } else {
+    if (props.type === "ap") {
+      //Add the default ICMP Template by default to the APs
+      if (getNameFromId(props.templateList, "10186")) {
+        selectedArray = ["10186"];
+      }
+    }
+    if (props.type === "swt") {
+      //Add the default SNMP Template by default to the Switches
+      if (getNameFromId(props.templateList, "10188")) {
+        selectedArray = ["10188"];
+      }
+    }
+  }
+  const [right, setRight] = React.useState(selectedArray);
+
+  useEffect(() => {
+    props.transferListCallBack(right, props.type);
+  }, [right]);
 
   const leftChecked = intersection(checked, left);
   const rightChecked = intersection(checked, right);

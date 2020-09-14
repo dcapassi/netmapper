@@ -59,6 +59,7 @@ export default function FormDialog(props) {
   );
   const [openTemplatesAps, setOpenTemplatesAps] = React.useState(false);
   const [zabbixToken, setZabbixToken] = React.useState("");
+  const [templateList, setTemplateList] = React.useState([]);
 
   const [
     integrationFromLocalStorage,
@@ -96,7 +97,7 @@ export default function FormDialog(props) {
         const list = response.data.result;
 
         if (list !== undefined) {
-          console.log(list);
+          setTemplateList(list);
           setOpenTemplatesAps(true);
         }
       })
@@ -393,7 +394,7 @@ export default function FormDialog(props) {
           </Toolbar>
         </AppBar>
         <DialogContent>
-          <TransferList />
+          <TransferList templateList={templateList} />
         </DialogContent>
       </Dialog>
     </>

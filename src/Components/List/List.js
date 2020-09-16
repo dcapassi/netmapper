@@ -17,6 +17,12 @@ const useStyles = makeStyles({
   root: {
     flexGrow: 1,
     maxWidth: 300,
+    marginLeft: 10,
+    marginBottom: 10,
+  },
+  typography: {
+    fontSize: 20,
+    marginLeft: 10,
   },
 });
 
@@ -50,8 +56,10 @@ export default function List(props) {
 
   return (
     <>
-
-      <Typography variant="h6">Site Hierarchy</Typography>
+      <Typography
+        className={classes.typography}
+        variant="h6"
+      >{` Site Hierarchy`}</Typography>
 
       <MuiThemeProvider theme={theme}>
         <TreeView

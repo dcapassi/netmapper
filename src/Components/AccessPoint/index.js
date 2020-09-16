@@ -10,19 +10,6 @@ function AccessPointContainer(props) {
   const MAP_WIDTH = 1700;
 
   const [apSize, setApSize] = useState(30);
-
-  //UseEffect for loading the Access Points
-  useEffect(() => {
-    /*const apsFromLocalStorage = JSON.parse(localStorage.getItem("venue1area1"));
-
-    if (apsFromLocalStorage !== null) {
-      const obj = apsFromLocalStorage.map((entry) => {
-        return { ...entry, posX: entry.initialX, posY: entry.initialY };
-      });
-      setArrayAps(obj);
-    }*/
-  }, []);
-
   //Access Points Array
   const [arrayAps, setArrayAps] = useState(load);
 

@@ -62,6 +62,7 @@ function AccessPointContainer(props) {
         customer: apObj.customer,
         model: apObj.model,
         accessSwitch: apObj.accessSwitch,
+        ipAddress: apObj.ipAddress,
       };
     } catch (error) {
       console.log(error);

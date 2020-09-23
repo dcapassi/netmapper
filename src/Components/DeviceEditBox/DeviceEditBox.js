@@ -55,8 +55,7 @@ export default function FormDialog(props) {
   const [accessSwitch, setAccessSwitch] = React.useState("");
   const [selectedModel, setSelectedModel] = React.useState();
   const [state, setState] = React.useState({
-    checkedA: true,
-    checkedB: true,
+    checkedA: false,
   });
 
   const handleChange = (event) => {
@@ -183,7 +182,9 @@ export default function FormDialog(props) {
               {props.editType === "ap" && (
                 <>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="modelLabel">Model</InputLabel>
+                    <InputLabel shrink id="modelLabel">
+                      Model
+                    </InputLabel>
                     <Select
                       labelId="modelLabel"
                       id="model"
@@ -238,10 +239,11 @@ export default function FormDialog(props) {
                   <Divider />
                   <Typography
                     className={classes.formControl}
-                  >{`Wireless`}</Typography>
-
+                  >{`WiFi Channel`}</Typography>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="ch24Label">Channel 2.4GHz</InputLabel>
+                    <InputLabel shrink id="ch24Label">
+                      2.4GHz
+                    </InputLabel>
                     <Select
                       labelId="ch24Label"
                       id="24ch"
@@ -261,7 +263,9 @@ export default function FormDialog(props) {
                     </Select>
                   </FormControl>
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="ch5Label">Channel 5GHz</InputLabel>
+                    <InputLabel shrink id="ch5Label">
+                      5GHz
+                    </InputLabel>
                     <Select
                       labelId="ch5Label"
                       id="5ch"
@@ -280,11 +284,11 @@ export default function FormDialog(props) {
                     </Select>
                   </FormControl>
                   <Divider />
-                  <Typography
-                    className={classes.formControl}
-                  >{`LAN`}</Typography>
+
                   <FormControl className={classes.formControl}>
-                    <InputLabel id="switchLabel">Access Switch</InputLabel>
+                    <InputLabel shrink id="switchLabel">
+                      Access Switch
+                    </InputLabel>
                     <Select
                       labelId="switchLabel"
                       id="accessSwitch"

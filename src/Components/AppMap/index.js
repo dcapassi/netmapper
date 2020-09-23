@@ -10,6 +10,7 @@ import SideMenu from "../SideMenu";
 import DeviceEditBox from "../DeviceEditBox/DeviceEditBox";
 
 import { getDistance, pixelToMeter } from "../../Utils";
+import DeviceMenu from "../../Pages/DeviceMenu";
 
 export default function AppMap() {
   //Reference passed to children to get the current map position.
@@ -423,7 +424,7 @@ export default function AppMap() {
         visible={menuVisible.visible}
       />
       {mode.editing && (
-        <DeviceEditBox
+        <DeviceMenu
           closeBox={closeBox}
           setEditField={getEditFields}
           editElement={{ elementName: editingElement, elementKey: editingKey }}

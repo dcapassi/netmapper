@@ -22,6 +22,11 @@ import FormControl from "@material-ui/core/FormControl";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import Switch from "@material-ui/core/Switch";
+//API
+import createZabbixApi from "../../API/Zabbix/zabbixAPI";
+import getToken from "../../API/Zabbix/getToken";
+import getHost from "../../API/Zabbix/getHost";
+import getZabbixItems from "../../API/Zabbix/getItems";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,6 +70,9 @@ export default function FormDialog(props) {
   deviceArray.push("");
   deviceList.map((entry) => deviceArray.push(entry.model));
 
+  const [zabbixAPI, setZabbixAPI] = React.useState(() => {});
+  const [zabbixToken, setZabbixToken] = React.useState(() => {});
+
   const [modelList, setModelList] = React.useState(deviceArray);
   const [ch24GhzList, setCh24GhzList] = React.useState(["", "1", "6", "11"]);
   const [ch5GhzList, setCh5GhzList] = React.useState([
@@ -94,6 +102,8 @@ export default function FormDialog(props) {
     140,
   ]);
   const [channel24G, setChannel24G] = React.useState("");
+  const [itemsValue, setItemsValue] = React.useState([]);
+  const [zabbixIntegration, setZabbixIntegration] = React.useState("");
   const [channel5G, setChannel5G] = React.useState("");
   const handleClose = () => {
     setOpen(false);
@@ -119,6 +129,11 @@ export default function FormDialog(props) {
   };
 
   useEffect(() => {
+    let zabbixIntegrationFromLocalStorage = JSON.parse(
+      localStorage.getItem("integration")
+    );
+    setZabbixIntegration(zabbixIntegrationFromLocalStorage);
+
     props.editType === "ap" &&
       props.apList.map((entry) => {
         if (entry.key === props.editElement.elementKey) {
@@ -131,7 +146,53 @@ export default function FormDialog(props) {
           setMonitoring(entry.monitoring);
         }
       });
+    if (zabbixIntegrationFromLocalStorage) {
+      const api = createZabbixApi(
+        zabbixIntegrationFromLocalStorage.ipAddress,
+        zabbixIntegrationFromLocalStorage.port
+      );
+      setZabbixAPI(() => api);
+
+      getToken(
+        zabbixIntegrationFromLocalStorage.username,
+        zabbixIntegrationFromLocalStorage.password,
+        api
+      ).then((response) => {
+        const token = response.data.result;
+        if (token !== undefined) {
+          console.log(token);
+          setZabbixToken(token);
+          getItems(token, api, props.editElement.elementName);
+        }
+      });
+    }
   }, []);
+
+  const getItems = (token, api, name) => {
+    getHost(token, api, name).then((result) => {
+      let hostId = false;
+      try {
+        hostId = result.data.result[0].hostid;
+      } catch (error) {
+        console.log(error);
+      }
+      if (hostId) {
+        getZabbixItems(token, api, hostId).then((response) => {
+          console.log(response);
+          let data = response.data.result;
+          let arrayItems = [];
+          data.map((entry) => {
+            arrayItems.push({
+              key: entry.key_,
+              lastvalue: entry.lastvalue,
+            });
+          });
+          console.log(arrayItems);
+          setItemsValue(arrayItems);
+        });
+      }
+    });
+  };
 
   return (
     <>
@@ -235,6 +296,11 @@ export default function FormDialog(props) {
                       label="Monitoring"
                     />
                   </FormGroup>
+                  {itemsValue.map((entry) => {
+                    return (
+                      <Typography>{` ${entry.key} - ${entry.lastvalue} `}</Typography>
+                    );
+                  })}
 
                   <Divider />
                   <Typography

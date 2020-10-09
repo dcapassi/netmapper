@@ -13,7 +13,7 @@ export const load = [
     channel5Ghz: "34",
     customer: "Customer A",
     model: "C1921-AX",
-    ipAddress: "127.0.0.1",
+    ipAddress: "8.8.8.8",
     monitoring: true,
   },
   {

@@ -90,6 +90,12 @@ export default function FormDialog(props) {
           console.log(token);
           setZabbixToken(token);
           setZabbixIntegrationStatus(true);
+
+          //Temp
+          localStorage.setItem(
+            "zabbixInteration",
+            JSON.stringify({ integration: true })
+          );
         }
       })
       .catch((e) => {
@@ -154,6 +160,12 @@ export default function FormDialog(props) {
       JSON.stringify({ ipAddress, port, username, password })
     );
     setZabbixIntegrationStatus(false);
+    //Temp
+    localStorage.setItem(
+      "zabbixInteration",
+      JSON.stringify({ integration: false })
+    );
+
     setIntLoading(true);
     setUpdate({ ...update, update: true });
   };

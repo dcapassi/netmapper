@@ -79,7 +79,7 @@ export default function PersistentDrawerLeft() {
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const [mapVisible, setMapVisible] = React.useState(true);
+  const [mapVisible, setMapVisible] = React.useState(false);
   const [mapLevel, setMapLevel] = React.useState("Global");
   const [mapLevelId, setMapLevelId] = React.useState("root");
   const [mapLevelType, setMapLevelType] = React.useState("Global");

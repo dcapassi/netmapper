@@ -11,7 +11,8 @@ function AccessPointContainer(props) {
 
   const [apSize, setApSize] = useState(30);
   //Access Points Array
-  const [arrayAps, setArrayAps] = useState(load);
+  let loadFromFile = JSON.parse(localStorage.getItem("venue1area1"));
+  const [arrayAps, setArrayAps] = useState(loadFromFile);
 
   useEffect(() => {
     localStorage.setItem("venue1area1", JSON.stringify(arrayAps));

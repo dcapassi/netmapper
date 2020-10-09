@@ -14,6 +14,7 @@ export const load = [
     customer: "Customer A",
     model: "C1921-AX",
     ipAddress: "127.0.0.1",
+    monitoring: true,
   },
   {
     key: "6ab39845-9591-4350-a7d2-f10ac9656d44",
@@ -30,6 +31,7 @@ export const load = [
     customer: "Customer A",
     model: "C1921-AX",
     ipAddress: "127.0.0.2",
+    monitoring: true,
   },
   {
     key: "fff20fa4-cd54-4d4f-ba55-0e57edac5c12",
@@ -46,6 +48,7 @@ export const load = [
     customer: "Customer A",
     model: "C1921-AX",
     ipAddress: "127.0.0.3",
+    monitoring: true,
   },
   {
     key: "eb7b2851-bd32-4c13-8e92-810706b5b320",
@@ -61,6 +64,7 @@ export const load = [
     customer: "Customer C",
     model: "C1921-AX",
     ipAddress: "127.0.0.4",
+    monitoring: true,
   },
   {
     key: "9eb3f3b8-c0bb-4f63-91fc-f289c53a5b90",
@@ -77,6 +81,7 @@ export const load = [
     customer: "Customer B",
     model: "3702i",
     ipAddress: "127.0.0.5",
+    monitoring: true,
   },
   {
     key: "6f6ff28f-57d0-4ccf-a3f5-51106964a4a1",
@@ -93,6 +98,7 @@ export const load = [
     customer: "Customer C",
     model: "C1921-AX",
     ipAddress: "127.0.0.6",
+    monitoring: true,
   },
   {
     key: "0d6103b6-5905-4962-94ea-a8264760caf6",
@@ -108,5 +114,7 @@ export const load = [
     channel5Ghz: "48",
     customer: "Customer D",
     model: "C1921-AX",
+    ipAddress: "127.0.0.7",
+    monitoring: true,
   },
 ];

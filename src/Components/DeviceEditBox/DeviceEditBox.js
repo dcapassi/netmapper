@@ -54,12 +54,10 @@ export default function FormDialog(props) {
   const [model, setModel] = React.useState("");
   const [accessSwitch, setAccessSwitch] = React.useState("");
   const [selectedModel, setSelectedModel] = React.useState();
-  const [state, setState] = React.useState({
-    checkedA: false,
-  });
+  const [monitoring, setMonitoring] = React.useState(false);
 
   const handleChange = (event) => {
-    setState({ ...state, [event.target.name]: event.target.checked });
+    setMonitoring(event.target.checked);
   };
 
   //Push a "" item as the first item
@@ -115,6 +113,7 @@ export default function FormDialog(props) {
       channel24G,
       channel5G,
       ipAddress,
+      monitoring,
     });
     props.closeBox();
   };
@@ -129,6 +128,7 @@ export default function FormDialog(props) {
           setCustomer(entry.customer);
           setAccessSwitch(entry.accessSwitch);
           setIpAddress(entry.ipAddress);
+          setMonitoring(entry.monitoring);
         }
       });
   }, []);
@@ -226,7 +226,7 @@ export default function FormDialog(props) {
                     <FormControlLabel
                       control={
                         <Switch
-                          checked={state.checkedA}
+                          checked={monitoring}
                           onChange={handleChange}
                           name="checkedA"
                           color="primary"

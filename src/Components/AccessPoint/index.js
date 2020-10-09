@@ -63,6 +63,7 @@ function AccessPointContainer(props) {
         model: apObj.model,
         accessSwitch: apObj.accessSwitch,
         ipAddress: apObj.ipAddress,
+        monitoring: apObj.monitoring,
       };
     } catch (error) {
       console.log(error);

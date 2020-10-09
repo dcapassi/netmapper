@@ -11,6 +11,7 @@ import Remove from "@material-ui/icons/Remove";
 import Check from "@material-ui/icons/Check";
 import getToken from "../../../API/Zabbix/getToken";
 import getTemplates from "../../../API/Zabbix/getTemplates";
+import createHost from "../../../API/Zabbix/createHost";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
@@ -44,7 +45,9 @@ const useStyles = makeStyles((theme) => ({
 export default function FormDialog(props) {
   const [selectedApsTemplates, setSelectedApsTemplates] = React.useState([]);
   const [selectedSwtTemplates, setSelectedSwtTemplates] = React.useState([]);
-
+  const [apListFromLocalStorage, setApListFromLocalStorage] = React.useState(
+    []
+  );
   const classes = useStyles();
   const [zabbixAPI, setZabbixAPI] = React.useState(() => {});
   const [update, setUpdate] = React.useState({ udpate: false });
@@ -157,6 +160,11 @@ export default function FormDialog(props) {
 
   useEffect(() => {
     const integrationData = JSON.parse(localStorage.getItem("integration"));
+
+    //Temporary!!!
+    setApListFromLocalStorage(JSON.parse(localStorage.getItem("venue1area1")));
+    //
+
     if (integrationData !== null) {
       //Update the input fields with the integration data
       setIpAddress(integrationData.ipAddress);
@@ -185,6 +193,25 @@ export default function FormDialog(props) {
       setSelectedSwtTemplates(swtTemplateListData);
     }
   }, []);
+
+  useEffect(() => {
+    if (zabbixIntegrationStatus === true) {
+      if (apListFromLocalStorage) {
+        apListFromLocalStorage.map((entry) => {
+          createHost(
+            zabbixToken,
+            zabbixAPI,
+            selectedApsTemplates,
+            "15",
+            entry.apName,
+            entry.ipAddress
+          ).then((response) => {
+            console.log(response);
+          });
+        });
+      }
+    }
+  }, [zabbixIntegrationStatus]);
 
   return (
     <>

@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import QRCode from "qrcode.react"
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -27,6 +28,7 @@ import createZabbixApi from "../../API/Zabbix/zabbixAPI";
 import getToken from "../../API/Zabbix/getToken";
 import getHost from "../../API/Zabbix/getHost";
 import getZabbixItems from "../../API/Zabbix/getItems";
+import qrcode from "qrcode.react";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -70,6 +72,8 @@ export default function FormDialog(props) {
   deviceArray.push("");
   deviceList.map((entry) => deviceArray.push(entry.model));
 
+  const [showQrCode, setShowQrCode] = React.useState(false);
+
   const [zabbixAPI, setZabbixAPI] = React.useState(() => {});
   const [zabbixToken, setZabbixToken] = React.useState(() => {});
 
@@ -109,7 +113,7 @@ export default function FormDialog(props) {
     setOpen(false);
     props.closeBox();
   };
-
+  
   const handleSubmit = () => {
     setOpen(false);
     setUpdate({ ...update, update: true });
@@ -295,14 +299,30 @@ export default function FormDialog(props) {
                       }
                       label="Monitoring"
                     />
+                               <Button autoFocus color="inherit" onClick={() => setShowQrCode(!showQrCode)}>
+                    {
+
+                    showQrCode?  "Ocultar QrCode" : "Mostrar QrCode"
+                    }
+            </Button>
+
+                  </FormGroup>
+
+                  <FormGroup>
+                  {
+
+                  showQrCode?  <QRCode  value={props.editElement.elementName}/> : <></>
+
+                  }
                   </FormGroup>
                   {itemsValue.map((entry) => {
                     return (
-                      <Typography>{` ${entry.key} - ${entry.lastvalue} `}</Typography>
+                      <Typography key={entry.key}>{` ${entry.key} - ${entry.lastvalue} `}</Typography>
                     );
                   })}
 
                   <Divider />
+
                   <Typography
                     className={classes.formControl}
                   >{`WiFi Channel`}</Typography>

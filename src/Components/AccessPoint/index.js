@@ -49,6 +49,7 @@ function AccessPointContainer(props) {
   });
 
   const getEditFields = (apObj) => {
+    if (arrayAps!==null){
     let newArray = [...arrayAps];
 
     try {
@@ -70,6 +71,7 @@ function AccessPointContainer(props) {
       console.log(error);
     }
     setArrayAps(newArray);
+  }
   };
   //Function passed to each AP as a callback.
   //The AP sends the Event and the ApId to be handled by this container
@@ -254,7 +256,8 @@ function AccessPointContainer(props) {
 
   return (
     <>
-      {arrayAps !== [] &&
+    {console.log(arrayAps)}
+      {arrayAps !== null &&
         arrayAps.map((entry) => {
           return (
             <AccessPoint

@@ -329,7 +329,7 @@ export default function FormDialog(props) {
                                     <FormGroup>
                   {
 
-                  showQrCode?  <QRCode  value={props.editElement.elementName}/> : <></>
+                  showQrCode?  <QRCode  value={"nmp-"+props.editElement.elementName}/> : <></>
 
                   }
                   </FormGroup>

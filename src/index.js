@@ -1,9 +1,20 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import App from "./App";
+import Routes from "../src/routes";
+import { Router } from "react-router-dom";
+import history from "../src/API/backend/history";
+import { Provider } from "react-redux";
+import "./config/ReactotronConfig";
 
-ReactDOM.render(<App />, document.getElementById("root"));
+import store from "./store";
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
+ReactDOM.render(
+  <>
+    <Provider store={store}>
+      <Router history={history}>
+        <Routes />
+      </Router>
+    </Provider>
+  </>,
+  document.getElementById("root")
+);

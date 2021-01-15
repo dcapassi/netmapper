@@ -16,6 +16,7 @@ export default async (req, res, next) => {
     if (decoded) {
       res.id = decoded.id;
       res.tipo = decoded.tipo;
+      res.conta = decoted.conta;
       if (res.tipo !== "1") {
         return res.status(401).json({ error: "Token não autorizado!" });
       }

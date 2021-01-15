@@ -3,11 +3,11 @@
 import { Router } from "express";
 import CadastrosController from "../src/app/controller/CadastrosController";
 import SessionController from "../src/app/controller/SessionController";
+import SitesController from "../src/app/controller/SitesController";
 
 //Importação do Middleware para validação de Autenticação JWT
 import authMiddleware from "../src/app/middlewares/auth";
 import authMiddlewareAdm from "../src/app/middlewares/authAdm";
-
 
 const routes = new Router();
 
@@ -20,6 +20,11 @@ routes.delete("/cadastros/:id", CadastrosController.delete);
 
 //Rotas para o Controlador Sessão
 routes.post("/sessao", SessionController.show);
+
+//Rotas para o Controlador Sites
+routes.get("/sites/:id", SitesController.show);
+routes.post("/sites", SitesController.store);
+routes.put("/sites/:id", authMiddleware, SitesController.update);
 
 //Middlware usage
 /*

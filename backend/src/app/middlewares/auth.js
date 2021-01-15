@@ -5,8 +5,6 @@ import authConfig from "../../configs/authConfig";
 export default async (req, res, next) => {
   const authHeader = req.headers.authorization;
 
-  console.log(type);
-
   if (!authHeader) {
     return res.status(401).json({ error: "JWT Token must be provided" });
   }
@@ -18,6 +16,7 @@ export default async (req, res, next) => {
     if (decoded) {
       res.id = decoded.id;
       res.tipo = decoded.tipo;
+      res.conta = decoded.conta;
       return next();
     }
     return res.status(401).json({ error: "Token invalido" });

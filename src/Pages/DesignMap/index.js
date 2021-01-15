@@ -1,6 +1,6 @@
 import AppMap from "../../Components/AppMap";
 import Header from "../../Components/Header";
-import React from "react";
+import React, { useEffect } from "react";
 import clsx from "clsx";
 import { makeStyles, useTheme } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -15,6 +15,9 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import ListMenu from "../ListMenu";
 import ListTree from "../../Components/List/List";
 import { list } from "../../Data/List/initialList";
+import GlobalStyle from "../../Styles/global";
+import { useSelector } from "react-redux";
+import apiBackend from "../../API/backend/api.js";
 
 const drawerWidth = 240;
 
@@ -84,11 +87,49 @@ export default function PersistentDrawerLeft() {
   const [mapLevelId, setMapLevelId] = React.useState("root");
   const [mapLevelType, setMapLevelType] = React.useState("Global");
   const [listJson, setListJson] = React.useState(list);
+  const [user, setUser] = React.useState({});
+  const [listFromDb, setListFromDb] = React.useState({});
+
+  const users = useSelector((state) => state.user);
+
+  //Temp/*
+  useEffect(() => {
+    const data = apiBackend
+      .get(`/sites/${users.conta}`, {})
+      .then(function (response) {
+        console.log(response);
+        setListJson(response.data);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+  }, []);
+
+  const updateSite = () => {
+    const data = apiBackend
+      .put(
+        `/sites/${users.conta}`,
+        { dados: listJson },
+        {
+          headers: {
+            Authorization: `Bearer ${users.token}`,
+          },
+        }
+      )
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+  };
 
   const getOptionCallBack = (message) => {
     if (message.update === true) {
       console.log("updated");
       setListJson({ ...listJson });
+      updateSite();
+
       return;
     }
 
@@ -111,68 +152,71 @@ export default function PersistentDrawerLeft() {
   };
 
   return (
-    <div className={classes.root}>
-      <CssBaseline />
-      <AppBar
-        position="fixed"
-        className={clsx(classes.appBar, {
-          [classes.appBarShift]: open,
-        })}
-      >
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="open drawer"
-            onClick={handleDrawerOpen}
-            edge="start"
-            className={clsx(classes.menuButton, open && classes.hide)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" noWrap>
-            {mapLevel}
-          </Typography>
-        </Toolbar>
-      </AppBar>
-      <Drawer
-        className={classes.drawer}
-        variant="persistent"
-        anchor="left"
-        open={open}
-        classes={{
-          paper: classes.drawerPaper,
-        }}
-      >
-        <div className={classes.drawerHeader}>
-          <IconButton onClick={handleDrawerClose}>
-            {theme.direction === "ltr" ? (
-              <ChevronLeftIcon />
-            ) : (
-              <ChevronRightIcon />
+    <>
+      <GlobalStyle />
+      <div className={classes.root}>
+        <CssBaseline />
+        <AppBar
+          position="fixed"
+          className={clsx(classes.appBar, {
+            [classes.appBarShift]: open,
+          })}
+        >
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="open drawer"
+              onClick={handleDrawerOpen}
+              edge="start"
+              className={clsx(classes.menuButton, open && classes.hide)}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography variant="h6" noWrap>
+              {mapLevel}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+        <Drawer
+          className={classes.drawer}
+          variant="persistent"
+          anchor="left"
+          open={open}
+          classes={{
+            paper: classes.drawerPaper,
+          }}
+        >
+          <div className={classes.drawerHeader}>
+            <IconButton onClick={handleDrawerClose}>
+              {theme.direction === "ltr" ? (
+                <ChevronLeftIcon />
+              ) : (
+                <ChevronRightIcon />
+              )}
+            </IconButton>
+          </div>
+          <ListTree list={listJson} callBack={getOptionCallBack} />
+        </Drawer>
+        <main
+          className={clsx(classes.content, {
+            [classes.contentShift]: open,
+          })}
+        >
+          <div className={classes.drawerHeader} />
+          {mapVisible && <AppMap />}
+          <div style={{ backgroundColor: "blue" }}>
+            {!mapVisible && (
+              <ListMenu
+                mapLevelName={mapLevel}
+                mapLevelId={mapLevelId}
+                mapLevelType={mapLevelType}
+                list={listJson}
+                callBack={getOptionCallBack}
+              />
             )}
-          </IconButton>
-        </div>
-        <ListTree list={listJson} callBack={getOptionCallBack} />
-      </Drawer>
-      <main
-        className={clsx(classes.content, {
-          [classes.contentShift]: open,
-        })}
-      >
-        <div className={classes.drawerHeader} />
-        {mapVisible && <AppMap />}
-        <div style={{ backgroundColor: "blue" }}>
-          {!mapVisible && (
-            <ListMenu
-              mapLevelName={mapLevel}
-              mapLevelId={mapLevelId}
-              mapLevelType={mapLevelType}
-              list={list}
-              callBack={getOptionCallBack}
-            />
-          )}
-        </div>
-      </main>
-    </div>
+          </div>
+        </main>
+      </div>
+    </>
   );
 }

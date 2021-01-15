@@ -7,7 +7,8 @@ class SessionController {
   async show(req, res) {
     //Input Validation
     const schema = Yup.object().shape({
-      email: Yup.string().email().required(),
+      //email: Yup.string().email().required(),
+      email: Yup.string().required(),
       senha: Yup.string().required(),
     });
 
@@ -29,11 +30,11 @@ class SessionController {
       return res.status(401).json({ error: "Senha incorreta" });
     }
 
-    const { id, nome, tipo } = user;
+    const { id, nome, tipo, conta } = user;
 
     return res.json({
-      usuario: { tipo, id, nome, email },
-      token: jwt.sign({ id, tipo, nome, email }, authConfig.secret, {
+      usuario: { tipo, id, nome, email, conta },
+      token: jwt.sign({ id, tipo, nome, email, conta }, authConfig.secret, {
         expiresIn: authConfig.expiresIn,
       }),
     });

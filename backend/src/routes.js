@@ -10,7 +10,12 @@ import MapsController from "../src/app/controller/MapsController";
 import authMiddleware from "../src/app/middlewares/auth";
 import authMiddlewareAdm from "../src/app/middlewares/authAdm";
 
+//Multer
+import multer from "multer";
+import uploadConfig from "./app/middlewares/multer";
+
 const routes = new Router();
+const upload = multer(uploadConfig);
 
 //Rotas para o Controlador CadastrosController
 routes.get("/cadastros", authMiddlewareAdm, CadastrosController.index);
@@ -29,6 +34,7 @@ routes.put("/sites/:id", authMiddleware, SitesController.update);
 
 //Rotas para o Controlador Maps
 routes.get("/maps/:id", MapsController.show);
+routes.post("/maps/:id", authMiddleware, upload.single("map"), MapsController.store);
 
 //Middlware usage
 /*

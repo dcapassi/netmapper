@@ -6,6 +6,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Add from "@material-ui/icons/Add";
 import Remove from "@material-ui/icons/Remove";
 import Grid from "@material-ui/core/Grid";
+import AddMap from "./AddMap";
 import AddDialog from "./AddDialog";
 import AddDialogIntegration from "./addDialogIntegration";
 // import { Container } from './styles';
@@ -63,23 +64,25 @@ function Settings(props) {
       justify="center"
       alignItems="center"
     >
-      <Grid item xs={4}>
-        <Typography component={"span"} variant="h6" noWrap>
-          {nextLevel}
-        </Typography>
-      </Grid>
-      <Grid item xs={6}>
-        <AddDialog
-          mapLevelType={props.mapLevelType}
-          nextMapLevelType={nextLevel}
-          mapLevelName={props.mapLevelName}
-          mapLevelId={props.mapLevelId}
-          list={props.list}
-          callBack={props.callBack}
-        />
-      </Grid>
-
-      {console.log(props.mapLevelType)}
+      {props.mapLevelType !== "floor" && (
+        <>
+          <Grid item xs={4}>
+            <Typography component={"span"} variant="h6" noWrap>
+              {nextLevel}
+            </Typography>
+          </Grid>
+          <Grid item xs={6}>
+            <AddDialog
+              mapLevelType={props.mapLevelType}
+              nextMapLevelType={nextLevel}
+              mapLevelName={props.mapLevelName}
+              mapLevelId={props.mapLevelId}
+              list={props.list}
+              callBack={props.callBack}
+            />
+          </Grid>
+        </>
+      )}
       {
         //Settings for the GLobal Menu
         props.mapLevelName === "Global" && (
@@ -91,6 +94,28 @@ function Settings(props) {
             </Grid>
             <Grid item xs={6}>
               <AddDialogIntegration />
+            </Grid>
+          </>
+        )
+      }
+      {
+        //Settings for the GLobal Menu
+        props.mapLevelType === "floor" && (
+          <>
+            <Grid item xs={4}>
+              <Typography component={"span"} variant="h6" noWrap>
+                Map
+              </Typography>
+            </Grid>
+            <Grid item xs={6}>
+              <AddMap
+                mapLevelType={props.mapLevelType}
+                nextMapLevelType={nextLevel}
+                mapLevelName={props.mapLevelName}
+                mapLevelId={props.mapLevelId}
+                list={props.list}
+                callBack={props.callBack}
+              />
             </Grid>
           </>
         )

@@ -37,6 +37,9 @@ const returnLabel = (level) => {
     case "building":
       label = "Floor";
       break;
+    case "floor":
+      label = "Map";
+      break;
     default:
       break;
   }

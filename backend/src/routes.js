@@ -4,6 +4,7 @@ import { Router } from "express";
 import CadastrosController from "../src/app/controller/CadastrosController";
 import SessionController from "../src/app/controller/SessionController";
 import SitesController from "../src/app/controller/SitesController";
+import MapsController from "../src/app/controller/MapsController";
 
 //Importação do Middleware para validação de Autenticação JWT
 import authMiddleware from "../src/app/middlewares/auth";
@@ -25,6 +26,9 @@ routes.post("/sessao", SessionController.show);
 routes.get("/sites/:id", SitesController.show);
 routes.post("/sites", SitesController.store);
 routes.put("/sites/:id", authMiddleware, SitesController.update);
+
+//Rotas para o Controlador Maps
+routes.get("/maps/:id", MapsController.show);
 
 //Middlware usage
 /*

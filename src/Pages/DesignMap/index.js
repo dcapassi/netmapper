@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PersistentDrawerLeft() {
+  const imgPath = "http://127.0.0.1:3399/files/";
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -86,26 +87,38 @@ export default function PersistentDrawerLeft() {
   const [mapLevel, setMapLevel] = React.useState("Global");
   const [mapLevelId, setMapLevelId] = React.useState("root");
   const [mapLevelType, setMapLevelType] = React.useState("Global");
-  const [listJson, setListJson] = React.useState(list);
+  const [listJson, setListJson] = React.useState({});
   const [user, setUser] = React.useState({});
   const [listFromDb, setListFromDb] = React.useState({});
 
   const users = useSelector((state) => state.user);
+
+  const [imgFromDatabase, setImgFromDatabase] = React.useState();
+
+  const getMap = async (mapId) => {
+    const data = await apiBackend.get(`/maps/${mapId}`, {});
+    return data;
+  };
 
   //Temp/*
   useEffect(() => {
     const data = apiBackend
       .get(`/sites/${users.conta}`, {})
       .then(function (response) {
-        console.log(response);
-        setListJson(response.data);
+        console.log(response.data);
+        if (Object.keys(response.data).length !== 0) {
+          setListJson(response.data);
+        } else {
+          setListJson(list);
+          updateSite(list);
+        }
       })
       .catch(function (response) {
         console.log(response);
       });
   }, []);
 
-  const updateSite = () => {
+  const updateSite = (listJson) => {
     const data = apiBackend
       .put(
         `/sites/${users.conta}`,
@@ -128,16 +141,26 @@ export default function PersistentDrawerLeft() {
     if (message.update === true) {
       console.log("updated");
       setListJson({ ...listJson });
-      updateSite();
+      updateSite(listJson);
 
       return;
     }
 
     if (message.type === "floor") {
-      setMapVisible(true);
-    } else {
+
       setMapVisible(false);
+      
+      getMap(message.id)
+        .then((reply) => {
+          console.log(reply.data.img);
+          setImgFromDatabase(reply.data.img);
+          setMapVisible(true);
+        })
+        .catch((reply) => {
+          console.log(reply);
+        });
     }
+
     setMapLevel(message.level);
     setMapLevelType(message.type);
     setMapLevelId(message.id);
@@ -203,8 +226,9 @@ export default function PersistentDrawerLeft() {
           })}
         >
           <div className={classes.drawerHeader} />
-          {mapVisible && <AppMap />}
-          <div style={{ backgroundColor: "blue" }}>
+          {console.log(imgPath + imgFromDatabase)}
+          {mapVisible && <AppMap img={imgPath + imgFromDatabase} />}
+          <div style={{ backgroundColor: "`blue`" }}>
             {!mapVisible && (
               <ListMenu
                 mapLevelName={mapLevel}

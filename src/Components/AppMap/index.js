@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-import img from "./img/blueprint.png";
 import AccessPointContainer from "../AccessPoint";
 import SwitchContainer from "../Switch";
 import ScaleContainer from "../Scale";
@@ -9,8 +8,7 @@ import TopMenu from "../TopMenu";
 import SideMenu from "../SideMenu";
 import DeviceEditBox from "../DeviceEditBox/DeviceEditBox";
 
-
-export default function AppMap() {
+export default function AppMap(props) {
   //Reference passed to children to get the current map position.
   const refMap = useRef(null);
 
@@ -494,7 +492,8 @@ export default function AppMap() {
           />
         </svg>
         <div>
-          <img src={img} draggable="false" />
+          {console.log(props.img)}
+          <img src={props.img} draggable="false" />
         </div>
       </MapContainer>
     </Container>

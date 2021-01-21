@@ -49,29 +49,29 @@ function AccessPointContainer(props) {
   });
 
   const getEditFields = (apObj) => {
-    if (arrayAps!==null){
-    let newArray = [...arrayAps];
+    if (arrayAps !== null) {
+      let newArray = [...arrayAps];
 
-    try {
-      const key = newArray.findIndex((obj) => {
-        return obj.key === apObj.targetElement;
-      });
-      newArray[key] = {
-        ...newArray[key],
-        apName: apObj.apName,
-        channel: apObj.channel24G,
-        channel5Ghz: apObj.channel5G,
-        customer: apObj.customer,
-        model: apObj.model,
-        accessSwitch: apObj.accessSwitch,
-        ipAddress: apObj.ipAddress,
-        monitoring: apObj.monitoring,
-      };
-    } catch (error) {
-      console.log(error);
+      try {
+        const key = newArray.findIndex((obj) => {
+          return obj.key === apObj.targetElement;
+        });
+        newArray[key] = {
+          ...newArray[key],
+          apName: apObj.apName,
+          channel: apObj.channel24G,
+          channel5Ghz: apObj.channel5G,
+          customer: apObj.customer,
+          model: apObj.model,
+          accessSwitch: apObj.accessSwitch,
+          ipAddress: apObj.ipAddress,
+          monitoring: apObj.monitoring,
+        };
+      } catch (error) {
+        console.log(error);
+      }
+      setArrayAps(newArray);
     }
-    setArrayAps(newArray);
-  }
   };
   //Function passed to each AP as a callback.
   //The AP sends the Event and the ApId to be handled by this container
@@ -256,7 +256,7 @@ function AccessPointContainer(props) {
 
   return (
     <>
-    {console.log(arrayAps)}
+      {console.log(arrayAps)}
       {arrayAps !== null &&
         arrayAps.map((entry) => {
           return (

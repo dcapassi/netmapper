@@ -147,9 +147,8 @@ export default function PersistentDrawerLeft() {
     }
 
     if (message.type === "floor") {
-
       setMapVisible(false);
-      
+
       getMap(message.id)
         .then((reply) => {
           console.log(reply.data.img);
@@ -159,6 +158,8 @@ export default function PersistentDrawerLeft() {
         .catch((reply) => {
           console.log(reply);
         });
+    } else {
+      setMapVisible(false);
     }
 
     setMapLevel(message.level);

@@ -42,6 +42,8 @@ export default function AppMap(props) {
   const [apUpdatedList, setApUpdatedList] = useState([]);
   const [switchUpdatedList, setSwitchUpdatedList] = useState([]);
 
+  console.log("Look at me: " + props.apsFromDb);
+
   const closeBox = () => {
     setMode({
       ...mode,
@@ -453,6 +455,7 @@ export default function AppMap(props) {
         />
 
         <AccessPointContainer
+          apsFromDb={props.apsFromDb}
           apConfigModified={apConfigModified}
           zoomLevel={zoomLevel}
           mapMoveSettings={mapMoveSettings}

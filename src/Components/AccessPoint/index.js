@@ -11,11 +11,14 @@ function AccessPointContainer(props) {
 
   const [apSize, setApSize] = useState(30);
   //Access Points Array
-  let loadFromFile = JSON.parse(localStorage.getItem("venue1area1"));
-  const [arrayAps, setArrayAps] = useState(loadFromFile);
+  //let loadFromFile = JSON.parse(localStorage.getItem("venue1area1"));
+  const [arrayAps, setArrayAps] = useState(props.apsFromDb);
+  console.log("Olha aqui!!!");
+  console.log(props.apsFromDb);
+  console.log(props.apsFromDb.length !== 0);
 
   useEffect(() => {
-    localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
+    //localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
   }, [arrayAps]);
 
   useEffect(() => {
@@ -247,7 +250,7 @@ function AccessPointContainer(props) {
           label: true,
         };
         setArrayAps([...arrayAps, obj]);
-        localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
+        //localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
       } catch (error) {
         console.log(error);
       }
@@ -256,8 +259,7 @@ function AccessPointContainer(props) {
 
   return (
     <>
-      {console.log(arrayAps)}
-      {arrayAps !== null &&
+      {arrayAps.length !== 0 &&
         arrayAps.map((entry) => {
           return (
             <AccessPoint

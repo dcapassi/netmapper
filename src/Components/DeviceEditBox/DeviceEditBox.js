@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import QRCode from "qrcode.react"
+import QRCode from "qrcode.react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -29,7 +29,7 @@ import getToken from "../../API/Zabbix/getToken";
 import getHost from "../../API/Zabbix/getHost";
 import getZabbixItems from "../../API/Zabbix/getItems";
 import qrcode from "qrcode.react";
-import MonitorCard from "../monitorCard"
+import MonitorCard from "../monitorCard";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,7 +114,7 @@ export default function FormDialog(props) {
     setOpen(false);
     props.closeBox();
   };
-  
+
   const handleSubmit = () => {
     setOpen(false);
     setUpdate({ ...update, update: true });
@@ -163,17 +163,16 @@ export default function FormDialog(props) {
         zabbixIntegrationFromLocalStorage.password,
         api
       ).then((response) => {
-        try{
-        const token = response.data.result;
-        if (token !== undefined) {
-          console.log(token);
-          setZabbixToken(token);
-          getItems(token, api, props.editElement.elementName);
+        try {
+          const token = response.data.result;
+          if (token !== undefined) {
+            console.log(token);
+            setZabbixToken(token);
+            getItems(token, api, props.editElement.elementName);
+          }
+        } catch (e) {
+          console.log(e);
         }
-      }
-      catch(e){
-        console.log(e);
-      }
       });
     }
   }, []);
@@ -305,49 +304,44 @@ export default function FormDialog(props) {
                       label="Monitoring"
                     />
 
-            <FormGroup className={classes.formControl} row>
-                                <FormControlLabel
-                                  control={
-                                    <Switch
-                                      checked={showQrCode}
-                                      onChange={(event) => {
-                                        setShowQrCode(event.target.checked);
-                                      }}
-                                      name="checkedA"
-                                      color="primary"
-                                    />
-                                  }
-                                  label="QR-Code"
-                                />
-                
-
-                              </FormGroup>
-     
-
+                    <FormGroup className={classes.formControl} row>
+                      <FormControlLabel
+                        control={
+                          <Switch
+                            checked={showQrCode}
+                            onChange={(event) => {
+                              setShowQrCode(event.target.checked);
+                            }}
+                            name="checkedA"
+                            color="primary"
+                          />
+                        }
+                        label="QR-Code"
+                      />
+                    </FormGroup>
                   </FormGroup>
 
-                                    <FormGroup>
-                  {
-
-                  showQrCode?  <QRCode  value={"nmp-"+props.editElement.elementName}/> : <></>
-
-                  }
+                  <FormGroup>
+                    {showQrCode ? (
+                      <QRCode value={"nmp-" + props.editElement.elementName} />
+                    ) : (
+                      <></>
+                    )}
                   </FormGroup>
-                  <div style={{display:"flex"}}>
-                  {itemsValue.map((entry) => {
-                    return (
+                  <div style={{ display: "flex" }}>
+                    {itemsValue.map((entry) => {
+                      return (
+                        <div style={{ flexDirection: "row" }}>
+                          <MonitorCard
+                            key={entry.key}
+                            keyType={entry.key}
+                            value={entry.lastvalue}
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
 
-
-                      <div style={{flexDirection:"row"}}>
-                      <MonitorCard key={entry.key} keyType={entry.key} value={entry.lastvalue}/>
-                      </div>
-
-                    );
-                  })}
-      
-                 </div>
-              
-        
                   <Divider />
 
                   <Typography

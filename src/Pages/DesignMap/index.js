@@ -89,7 +89,7 @@ export default function PersistentDrawerLeft() {
   const [mapLevelType, setMapLevelType] = React.useState("Global");
   const [listJson, setListJson] = React.useState({});
   const [user, setUser] = React.useState({});
-  const [listFromDb, setListFromDb] = React.useState({});
+  const [apsFromDb, setApsFromDb] = React.useState([]);
 
   const users = useSelector((state) => state.user);
 
@@ -97,6 +97,11 @@ export default function PersistentDrawerLeft() {
 
   const getMap = async (mapId) => {
     const data = await apiBackend.get(`/maps/${mapId}`, {});
+    return data;
+  };
+
+  const getAPs = async (mapId) => {
+    const data = await apiBackend.get(`/aps/${mapId}`, {});
     return data;
   };
 
@@ -154,6 +159,14 @@ export default function PersistentDrawerLeft() {
           console.log(reply.data.img);
           setImgFromDatabase(reply.data.img);
           setMapVisible(true);
+
+          getAPs(message.id)
+            .then((reply) => {
+              setApsFromDb(reply.data.obj);
+            })
+            .catch((reply) => {
+              console.log(reply);
+            });
         })
         .catch((reply) => {
           console.log(reply);
@@ -228,7 +241,9 @@ export default function PersistentDrawerLeft() {
         >
           <div className={classes.drawerHeader} />
           {console.log(imgPath + imgFromDatabase)}
-          {mapVisible && <AppMap img={imgPath + imgFromDatabase} />}
+          {mapVisible && (
+            <AppMap apsFromDb={apsFromDb} img={imgPath + imgFromDatabase} />
+          )}
           <div style={{ backgroundColor: "`blue`" }}>
             {!mapVisible && (
               <ListMenu

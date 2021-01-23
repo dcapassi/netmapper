@@ -174,7 +174,7 @@ export default function FormDialog(props) {
     const integrationData = JSON.parse(localStorage.getItem("integration"));
 
     //Temporary!!!
-    setApListFromLocalStorage(JSON.parse(localStorage.getItem("venue1area1")));
+    //setApListFromLocalStorage(JSON.parse(localStorage.getItem("venue1area1")));
     //
 
     if (integrationData !== null) {

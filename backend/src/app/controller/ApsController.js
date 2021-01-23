@@ -84,7 +84,7 @@ class ApsController {
   } // fim do método store
 
   async update(req, res) {
-    //console.log(req.body);
+    console.log(req.body);
 
     /**********************************
      * Validação de entrada

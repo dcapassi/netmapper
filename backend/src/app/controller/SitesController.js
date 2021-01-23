@@ -80,7 +80,7 @@ class SitesController {
   } // fim do método store
 
   async update(req, res) {
-    //console.log(req.body);
+    console.log(req.body);
 
     /**********************************
      * Validação de entrada
@@ -110,7 +110,7 @@ class SitesController {
     const idToken = parseInt(res.conta);
     console.log(idRecebido);
     console.log(idToken);
-    
+
     if (siteExistente == false || idRecebido !== idToken) {
       return res.status(400).json({ error: "Conta não existente" });
     }

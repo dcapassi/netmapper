@@ -20,7 +20,7 @@ export default function FormDialog(props) {
   const [file, setFile] = React.useState("");
 
   const onChangeHandler = (event) => {
-    console.log(event.target.files[0]);
+    //console.log(event.target.files[0]);
     setFile(event.target.files[0]);
   };
 
@@ -35,12 +35,23 @@ export default function FormDialog(props) {
         },
       })
       .then(function (response) {
-        console.log(response.data);
-        if (Object.keys(response.data).length !== 0) {
-          console.log("ok");
-        } else {
-          console.log("nok");
-        }
+        //Criar lista de Aps vazia
+        const responseNewAPs = apiBackend
+          .post(
+            `/aps`,
+            { mapId: props.mapLevelId, dados: {obj:[]} },
+            {
+              headers: {
+                Authorization: `Bearer ${users.token}`,
+              },
+            }
+          )
+          .then(function (response) {
+            //console.log(response.data);
+          })
+          .catch(function (response) {
+            console.log(response);
+          });
       })
       .catch(function (response) {
         console.log(response);

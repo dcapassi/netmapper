@@ -116,7 +116,7 @@ function DrawCircle(props) {
       };
     });
     setApListWithChannel(newArrayWithChannel);
-    //console.log(newArrayWithChannel);
+    console.log(newArrayWithChannel);
   }, [props.scaleSettings, radiusPx]);
 */
 

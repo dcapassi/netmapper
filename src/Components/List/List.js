@@ -6,6 +6,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import TreeItem from "@material-ui/lab/TreeItem";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
+import { useDispatch } from "react-redux";
 
 const theme = createMuiTheme({
   typography: {
@@ -27,6 +28,11 @@ const useStyles = makeStyles({
 });
 
 export default function List(props) {
+  const dispatch = useDispatch();
+  function addLevel(levelObj) {
+    dispatch({ type: "@level/ADD_LEVEL", level: levelObj });
+  }
+
   const classes = useStyles();
 
   const renderTree = (nodes) => (
@@ -35,6 +41,10 @@ export default function List(props) {
       nodeId={nodes.id}
       label={nodes.name}
       onLabelClick={(event) => {
+        //Send Level information to the Dispatcher
+        console.log("Clicked!!!");
+        addLevel({ id: nodes.id, level: nodes.name, type: nodes.type });
+
         nodes.type === "floor"
           ? props.callBack({ id: nodes.id, level: nodes.name, type: "floor" })
           : props.callBack({

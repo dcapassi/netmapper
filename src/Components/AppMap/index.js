@@ -7,8 +7,13 @@ import { Container, MapContainer } from "./styles";
 import TopMenu from "../TopMenu";
 import SideMenu from "../SideMenu";
 import DeviceEditBox from "../DeviceEditBox/DeviceEditBox";
+import { useSelector } from "react-redux";
+import apiBackend from "../../API/backend/api";
 
 export default function AppMap(props) {
+  const level = useSelector((state) => state.level);
+  const users = useSelector((state) => state.user);
+
   //Reference passed to children to get the current map position.
   const refMap = useRef(null);
 
@@ -41,8 +46,6 @@ export default function AppMap(props) {
 
   const [apUpdatedList, setApUpdatedList] = useState([]);
   const [switchUpdatedList, setSwitchUpdatedList] = useState([]);
-
-  console.log("Look at me: " + props.apsFromDb);
 
   const closeBox = () => {
     setMode({
@@ -116,6 +119,17 @@ export default function AppMap(props) {
           ...menuVisible,
           visible: true,
         });
+
+        // Update the AP List
+        const responseNewAPs = apiBackend.put(
+          `/aps`,
+          { mapId: level.id, dados: { obj: apUpdatedList } },
+          {
+            headers: {
+              Authorization: `Bearer ${users.token}`,
+            },
+          }
+        );
       }
     }
     if (msg.scale) {
@@ -495,7 +509,6 @@ export default function AppMap(props) {
           />
         </svg>
         <div>
-          {console.log(props.img)}
           <img src={props.img} draggable="false" />
         </div>
       </MapContainer>

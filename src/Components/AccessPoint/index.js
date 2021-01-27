@@ -3,8 +3,13 @@ import AccessPoint from "./AccessPoint";
 import { zoomFitCalc } from "../../Utils/index";
 import { v4 } from "uuid";
 import { load } from "../../Data/InitialLoadTemp/aps";
+import { useSelector } from "react-redux";
+import apiBackend from "../../API/backend/api";
 
 function AccessPointContainer(props) {
+  const level = useSelector((state) => state.level);
+  const users = useSelector((state) => state.user);
+
   //To be received
   const MAP_HEIGHT = 860;
   const MAP_WIDTH = 1700;
@@ -13,13 +18,6 @@ function AccessPointContainer(props) {
   //Access Points Array
   //let loadFromFile = JSON.parse(localStorage.getItem("venue1area1"));
   const [arrayAps, setArrayAps] = useState(props.apsFromDb);
-  console.log("Olha aqui!!!");
-  console.log(props.apsFromDb);
-  console.log(props.apsFromDb.length !== 0);
-
-  useEffect(() => {
-    //localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
-  }, [arrayAps]);
 
   useEffect(() => {
     getEditFields(props.apConfigModified);
@@ -251,6 +249,18 @@ function AccessPointContainer(props) {
         };
         setArrayAps([...arrayAps, obj]);
         //localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
+
+        console.log(level);
+
+        const responseNewAPs = apiBackend.put(
+          `/aps`,
+          { mapId: level.id, dados: { obj: [...arrayAps, obj] } },
+          {
+            headers: {
+              Authorization: `Bearer ${users.token}`,
+            },
+          }
+        );
       } catch (error) {
         console.log(error);
       }

@@ -16,7 +16,7 @@ import ListMenu from "../ListMenu";
 import ListTree from "../../Components/List/List";
 import { list } from "../../Data/List/initialList";
 import GlobalStyle from "../../Styles/global";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import apiBackend from "../../API/backend/api.js";
 
 const drawerWidth = 240;
@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function PersistentDrawerLeft() {
+  const dispatch = useDispatch();
   const imgPath = "http://127.0.0.1:3399/files/";
   const classes = useStyles();
   const theme = useTheme();
@@ -89,9 +90,13 @@ export default function PersistentDrawerLeft() {
   const [mapLevelType, setMapLevelType] = React.useState("Global");
   const [listJson, setListJson] = React.useState({});
   const [user, setUser] = React.useState({});
-  const [apsFromDb, setApsFromDb] = React.useState([]);
-
   const users = useSelector((state) => state.user);
+  const aps = useSelector((state) => state.aps);
+  const [apsFromDb, setApsFromDb] = React.useState(aps);
+
+  function addAPs(arrayAPs) {
+    dispatch({ type: "@aps/ADD_APS", aps: arrayAPs });
+  }
 
   const [imgFromDatabase, setImgFromDatabase] = React.useState();
 
@@ -110,7 +115,6 @@ export default function PersistentDrawerLeft() {
     const data = apiBackend
       .get(`/sites/${users.conta}`, {})
       .then(function (response) {
-        console.log(response.data);
         if (Object.keys(response.data).length !== 0) {
           setListJson(response.data);
         } else {
@@ -135,7 +139,7 @@ export default function PersistentDrawerLeft() {
         }
       )
       .then(function (response) {
-        console.log(response);
+        //console.log(response);
       })
       .catch(function (response) {
         console.log(response);
@@ -156,13 +160,13 @@ export default function PersistentDrawerLeft() {
 
       getMap(message.id)
         .then((reply) => {
-          console.log(reply.data.img);
           setImgFromDatabase(reply.data.img);
-          setMapVisible(true);
 
           getAPs(message.id)
             .then((reply) => {
-              setApsFromDb(reply.data.obj);
+              addAPs(reply.data.obj);
+              setApsFromDb([...reply.data.obj]);
+              setMapVisible(true);
             })
             .catch((reply) => {
               console.log(reply);
@@ -240,7 +244,6 @@ export default function PersistentDrawerLeft() {
           })}
         >
           <div className={classes.drawerHeader} />
-          {console.log(imgPath + imgFromDatabase)}
           {mapVisible && (
             <AppMap apsFromDb={apsFromDb} img={imgPath + imgFromDatabase} />
           )}

@@ -30,7 +30,6 @@ class Login extends Component {
         history.push("/MenuPrincipal");
       })
       .catch(function (response) {
-        console.log("got hereee oddd!");
         console.log(response);
         //document.getElementById("mensagemFalhaAutenticacao").innerText = "Usuário ou senha incorretos";
       });

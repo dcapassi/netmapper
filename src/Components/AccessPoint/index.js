@@ -259,13 +259,12 @@ function AccessPointContainer(props) {
           initialY: calcInitialY,
           apSize: 30,
           label: true,
+          model: "Generic/Generic",
         };
         setArrayAps([...arrayAps, obj]);
         //localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
 
         console.log(level);
-
-        console.log("Got here!!!!!!");
 
         const responseNewAPs = apiBackend.put(
           `/aps`,

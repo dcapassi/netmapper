@@ -7,8 +7,9 @@ import Tab from "@material-ui/core/Tab";
 import Typography from "@material-ui/core/Typography";
 import Box from "@material-ui/core/Box";
 import Settings from "@material-ui/icons/Settings";
-import Dashboard from "@material-ui/icons/Dashboard";
+import DashboardIcon from "@material-ui/icons/Dashboard";
 import SettingsMenu from "./Settings";
+import Dashboard from "../../Components/Dashboard";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -68,12 +69,16 @@ export default function SimpleTabs(props) {
           indicatorColor="primary"
           centered
         >
-          <Tab label="Dashboard" icon={<Dashboard />} {...a11yProps(0)} />
+          <Tab label="Dashboard" icon={<DashboardIcon />} {...a11yProps(0)} />
           <Tab label="Settings" icon={<Settings />} {...a11yProps(1)} />
         </Tabs>
       </AppBar>
       <TabPanel value={value} index={0}>
-        Dashboard
+        <Dashboard
+          list={props.list}
+          mapLevelId={props.mapLevelId}
+          mapLevelName={props.mapLevelName}
+        />
       </TabPanel>
       <TabPanel value={value} index={1}>
         <SettingsMenu

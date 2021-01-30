@@ -68,9 +68,22 @@ function AccessPointContainer(props) {
           ipAddress: apObj.ipAddress,
           monitoring: apObj.monitoring,
         };
+
+        console.log(newArray);
+
+        const responseNewAPs = apiBackend.put(
+          `/aps`,
+          { mapId: level.id, dados: { obj: newArray } },
+          {
+            headers: {
+              Authorization: `Bearer ${users.token}`,
+            },
+          }
+        );
       } catch (error) {
         console.log(error);
       }
+
       setArrayAps(newArray);
     }
   };
@@ -251,6 +264,8 @@ function AccessPointContainer(props) {
         //localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
 
         console.log(level);
+
+        console.log("Got here!!!!!!");
 
         const responseNewAPs = apiBackend.put(
           `/aps`,

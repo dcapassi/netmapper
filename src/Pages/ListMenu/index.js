@@ -61,34 +61,67 @@ export default function SimpleTabs(props) {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
-        <Tabs
-          value={value}
-          onChange={handleChange}
-          aria-label="Menu Tabs"
-          indicatorColor="primary"
-          centered
-        >
-          <Tab label="Dashboard" icon={<DashboardIcon />} {...a11yProps(0)} />
-          <Tab label="Settings" icon={<Settings />} {...a11yProps(1)} />
-        </Tabs>
-      </AppBar>
-      <TabPanel value={value} index={0}>
-        <Dashboard
-          list={props.list}
-          mapLevelId={props.mapLevelId}
-          mapLevelName={props.mapLevelName}
-        />
-      </TabPanel>
-      <TabPanel value={value} index={1}>
-        <SettingsMenu
-          mapLevelName={props.mapLevelName}
-          mapLevelType={props.mapLevelType}
-          mapLevelId={props.mapLevelId}
-          list={props.list}
-          callBack={props.callBack}
-        />
-      </TabPanel>
+      {props.mapLevelType === "building" && (
+        <>
+          <AppBar position="static">
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="Menu Tabs"
+              indicatorColor="primary"
+              centered
+            >
+              <Tab
+                label="Dashboard"
+                icon={<DashboardIcon />}
+                {...a11yProps(0)}
+              />
+              <Tab label="Settings" icon={<Settings />} {...a11yProps(1)} />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
+            <Dashboard
+              list={props.list}
+              mapLevelId={props.mapLevelId}
+              mapLevelName={props.mapLevelName}
+            />
+          </TabPanel>
+          <TabPanel value={value} index={1}>
+            <SettingsMenu
+              mapLevelName={props.mapLevelName}
+              mapLevelType={props.mapLevelType}
+              mapLevelId={props.mapLevelId}
+              list={props.list}
+              callBack={props.callBack}
+            />
+          </TabPanel>
+        </>
+      )}
+
+      {props.mapLevelType !== "building" && (
+        <>
+          <AppBar position="static">
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="Menu Tabs"
+              indicatorColor="primary"
+              centered
+            >
+              <Tab label="Settings" icon={<Settings />} {...a11yProps(0)} />
+            </Tabs>
+          </AppBar>
+          <TabPanel value={value} index={0}>
+            <SettingsMenu
+              mapLevelName={props.mapLevelName}
+              mapLevelType={props.mapLevelType}
+              mapLevelId={props.mapLevelId}
+              list={props.list}
+              callBack={props.callBack}
+            />
+          </TabPanel>
+        </>
+      )}
     </div>
   );
 }

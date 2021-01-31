@@ -1,55 +1,74 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import apiBackend from "../../API/backend/api";
+import View from "./View";
+import { Pie } from "react-chartjs-2";
 
 // import { Container } from './styles';
 
 function Dashboard(props) {
+  const [dashboardData, setDashboardData] = useState([]);
+
+  const fetchApMapInfo = async (mapIds) => {
+    const requests = mapIds.map((mapId) => {
+      return getAPs(mapId).then((response) => {
+        return response.data.obj;
+      });
+    });
+    return Promise.all(requests);
+  };
+
   useEffect(() => {
-    /*     //Temporary for Tshoot only
-    console.log("Lista");
-    console.log(props.list);
-    console.log("Id:");
-    console.log(props.mapLevelId);
-    console.log("Name:");
-    console.log(props.mapLevelName); */
+    let mapList = [];
+    let nameList = [];
 
     try {
       let node = findNode(props.mapLevelId, props.list);
+      let objArray = [];
 
-      console.log("Id das Childs");
       node["children"].map((entry) => {
-        console.log(entry.id + " " + entry.name);
-
-        getAPs(entry.id)
-          .then((reply) => {
-            console.log(reply.data.obj);
-
-            let result = getUniqueEntries(reply.data.obj, "model");
-            let uniqueApsCounted = getUniqueApsCounted(result, reply.data.obj);
-            console.log(uniqueApsCounted);
-
-            let uniqueVendorList = getUniqueEntries(uniqueApsCounted, "vendor");
-            let uniqueVendorCounted = getUniqueItemsCounted(
-              uniqueVendorList,
-              reply.data.obj,
-              "model"
-            );
-            console.log(uniqueVendorCounted);
-
-            let countOutdoor = getOutdoorAps(reply.data.obj);
-            let apType = {
-              indoor: reply.data.obj.length - countOutdoor,
-              outdoor: countOutdoor,
-            };
-            console.log(apType);
-          })
-          .catch((reply) => {
-            console.log(reply);
-          });
+        mapList.push(entry.id);
+        nameList.push(entry.name);
       });
-    } catch {
-      console.log("erro mas segueiu o jogo");
-    }
+
+      fetchApMapInfo(mapList).then((list) => {
+        let indexCount = 0;
+        list.map((response) => {
+          let result = getUniqueEntries(response, "model");
+          let uniqueApsCounted = getUniqueApsCounted(result, response);
+
+          let uniqueVendorList = getUniqueEntries(uniqueApsCounted, "vendor");
+          let uniqueVendorCounted = getUniqueItemsCounted(
+            uniqueVendorList,
+            response,
+            "model"
+          );
+
+          let apsObj = {};
+          uniqueApsCounted.map((entry) => {
+            apsObj[entry.model] = entry.count;
+          });
+
+          let countOutdoor = getOutdoorAps(response);
+          let apType = {
+            indoor: response.length - countOutdoor,
+            outdoor: countOutdoor,
+          };
+
+          let obj = {
+            id: mapList[indexCount],
+            name: nameList[indexCount],
+            uniqueApsCounted: apsObj,
+            uniqueVendorCounted,
+            apType,
+          };
+
+          console.log(obj);
+          indexCount += 1;
+          objArray.push(obj);
+        });
+        setDashboardData([...objArray]);
+      });
+    } catch {}
   }, []);
 
   const getAPs = async (mapId) => {
@@ -140,7 +159,7 @@ function Dashboard(props) {
   }
 
   function getUniqueItemsCounted(uniqueList, fullList, type) {
-    let uniqueItemsCounted = [];
+    let uniqueItemsCounted = {};
     let uniqueAp;
 
     for (uniqueAp of uniqueList) {
@@ -154,15 +173,53 @@ function Dashboard(props) {
         }
       }
 
-      uniqueItemsCounted.push({
-        name: uniqueAp,
-        count,
-      });
+      uniqueItemsCounted[uniqueAp] = count;
     }
     return uniqueItemsCounted;
   }
 
-  return <div />;
+  const data = {
+    labels: ["Indoor", "Outdoor"],
+    datasets: [
+      {
+        data: [300, 50],
+        backgroundColor: ["#FF6384", "#36A2EB"],
+        hoverBackgroundColor: ["#FF6384", "#36A2EB"],
+      },
+    ],
+  };
+
+  let formatPieData = (obj) => {
+    let data = {
+      labels: Object.keys(obj),
+      datasets: [
+        {
+          data: Object.values(obj),
+          backgroundColor: ["#FF6384", "#36A2EB"],
+          hoverBackgroundColor: ["#FF6384", "#36A2EB"],
+        },
+      ],
+    };
+
+    return data;
+  };
+
+  let dataS = {
+    labels: ["Red", "Blue", "Yellow"],
+    datasets: [
+      {
+        data: [300, 50, 100],
+        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
+      },
+    ],
+  };
+
+  return (
+    <>
+      <View dashboardData={dashboardData} />
+    </>
+  );
 }
 
 export default Dashboard;

@@ -1,4 +1,6 @@
+import { useDispatch } from "react-redux";
 import React, { useEffect } from "react";
+import { useSelector } from "react-redux";
 import createZabbixApi from "../../../API/Zabbix/zabbixAPI";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
@@ -25,6 +27,7 @@ import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import Paper from "@material-ui/core/Paper";
 import TransferList from "./transferList";
+import apiBackend from "../../../API/backend/api";
 
 const useStyles = makeStyles((theme) => ({
   form: {
@@ -43,11 +46,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function FormDialog(props) {
+  const users = useSelector((state) => state.user);
   const [selectedApsTemplates, setSelectedApsTemplates] = React.useState([]);
   const [selectedSwtTemplates, setSelectedSwtTemplates] = React.useState([]);
   const [apListFromLocalStorage, setApListFromLocalStorage] = React.useState(
     []
   );
+  const dispatch = useDispatch();
   const classes = useStyles();
   const [zabbixAPI, setZabbixAPI] = React.useState(() => {});
   const [update, setUpdate] = React.useState({ udpate: false });
@@ -78,6 +83,10 @@ export default function FormDialog(props) {
     setOpen(true);
   };
 
+  function addIntegration(obj) {
+    dispatch({ type: "@integration/ADD_INTEGRATION", obj: obj });
+  }
+
   const handleClickCheck = () => {
     setOpenCheck(true);
     const api = createZabbixApi(ipAddress, port);
@@ -85,8 +94,12 @@ export default function FormDialog(props) {
     getToken(username, password, api)
       .then((response) => {
         const token = response.data.result;
+
         setIntLoading(false);
         if (token !== undefined) {
+          // Send the token and the integration data
+          addIntegration({ ipAddress, port, username, password, token });
+
           console.log(token);
           setZabbixToken(token);
           setZabbixIntegrationStatus(true);
@@ -155,29 +168,63 @@ export default function FormDialog(props) {
 
   const handleSubmit = () => {
     setOpen(false);
-    localStorage.setItem(
+    /*     localStorage.setItem(
       "integration",
       JSON.stringify({ ipAddress, port, username, password })
-    );
-    setZabbixIntegrationStatus(false);
-    //Temp
-    localStorage.setItem(
-      "zabbixInteration",
-      JSON.stringify({ integration: false })
-    );
+    ); */
 
-    setIntLoading(true);
-    setUpdate({ ...update, update: true });
+    //Save the JSON integration on the DB
+    const data = apiBackend
+      .put(
+        `/integration/${users.conta}`,
+        { dados: { ipAddress, port, username, password } },
+        {
+          headers: {
+            Authorization: `Bearer ${users.token}`,
+          },
+        }
+      )
+      .then(function (response) {
+        //console.log(response);
+        setZabbixIntegrationStatus(false);
+        //Temp
+        localStorage.setItem(
+          "zabbixInteration",
+          JSON.stringify({ integration: false })
+        );
+
+        setIntLoading(true);
+        setUpdate({ ...update, update: true });
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
   };
 
   useEffect(() => {
-    const integrationData = JSON.parse(localStorage.getItem("integration"));
+    //const integrationData = JSON.parse(localStorage.getItem("integration"));
 
-    //Temporary!!!
-    //setApListFromLocalStorage(JSON.parse(localStorage.getItem("venue1area1")));
-    //
+    const data = apiBackend
+      .get(`/integration/${users.conta}`, {})
+      .then(function (response) {
+        console.log(response.data);
+        if (response.data !== {}) {
+          console.log("got here!");
+          setIpAddress(response.data.ipAddress);
+          setPort(response.data.port);
+          setUsername(response.data.username);
+          setPassword(response.data.password);
 
-    if (integrationData !== null) {
+          setShowIntegration(true);
+        } else {
+          setShowIntegration(false);
+        }
+      })
+      .catch(function (response) {
+        console.log(response);
+      });
+
+    /* if (integrationData !== null) {
       //Update the input fields with the integration data
       setIpAddress(integrationData.ipAddress);
       setPort(integrationData.port);
@@ -187,7 +234,7 @@ export default function FormDialog(props) {
       setShowIntegration(true);
     } else {
       setShowIntegration(false);
-    }
+    } */
   }, [update]);
 
   useEffect(() => {

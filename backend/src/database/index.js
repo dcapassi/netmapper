@@ -4,10 +4,11 @@ import Sites from "../app/models/Sites";
 import Maps from "../app/models/Maps";
 import Switches from "../app/models/Switches";
 import Aps from "../app/models/Aps";
+import Integration from "../app/models/Integration";
 
 import databaseConfig from "../configs/databaseConfig";
 
-const models = [Usuarios, Sites, Maps, Switches, Aps];
+const models = [Usuarios, Sites, Maps, Switches, Aps, Integration];
 
 class Database {
   constructor() {

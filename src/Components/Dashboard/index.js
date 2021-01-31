@@ -178,42 +178,7 @@ function Dashboard(props) {
     return uniqueItemsCounted;
   }
 
-  const data = {
-    labels: ["Indoor", "Outdoor"],
-    datasets: [
-      {
-        data: [300, 50],
-        backgroundColor: ["#FF6384", "#36A2EB"],
-        hoverBackgroundColor: ["#FF6384", "#36A2EB"],
-      },
-    ],
-  };
 
-  let formatPieData = (obj) => {
-    let data = {
-      labels: Object.keys(obj),
-      datasets: [
-        {
-          data: Object.values(obj),
-          backgroundColor: ["#FF6384", "#36A2EB"],
-          hoverBackgroundColor: ["#FF6384", "#36A2EB"],
-        },
-      ],
-    };
-
-    return data;
-  };
-
-  let dataS = {
-    labels: ["Red", "Blue", "Yellow"],
-    datasets: [
-      {
-        data: [300, 50, 100],
-        backgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-        hoverBackgroundColor: ["#FF6384", "#36A2EB", "#FFCE56"],
-      },
-    ],
-  };
 
   return (
     <>

@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { Pie } from "react-chartjs-2";
 import { Bar } from "react-chartjs-2";
 import { v4 } from "uuid";
-import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
 import AppBar from "@material-ui/core/AppBar";
 import Tabs from "@material-ui/core/Tabs";
@@ -51,6 +50,8 @@ function View(props) {
   const [typeData, setTypeData] = useState([]);
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
+  let width = "33%";
+  let height = "90%";
   let count = -1;
   let index = -1;
 
@@ -62,22 +63,40 @@ function View(props) {
     console.log(props.dashboardData);
   }, [props.dashboardData]);
 
-  let formatPieData = (obj) => {
+  let formatPieData = (obj, label = "Data") => {
+    let colorArray = [];
+    let count = 0;
+    while (count < Object.keys(obj).length) {
+      colorArray.push(getRandomColor());
+      count++;
+    }
+
     let data;
     try {
       data = {
         labels: Object.keys(obj),
         datasets: [
           {
+            label: label,
             data: Object.values(obj),
-            backgroundColor: ["#FF6384", "#36A2EB"],
-            hoverBackgroundColor: ["#FF6384", "#36A2EB"],
+            backgroundColor: colorArray,
+            hoverBackgroundColor: colorArray,
           },
         ],
       };
     } catch {}
     return data;
   };
+
+  function getRandomColor() {
+    var letters = "0123456789ABCDEF";
+    var color = "#";
+    for (var i = 0; i < 3; i++) {
+      let value = letters[Math.floor(Math.random() * 16)];
+      color = color + value + value;
+    }
+    return color;
+  }
 
   let data = {
     labels: ["Red", "Blue", "Yellow"],
@@ -118,37 +137,66 @@ function View(props) {
             index = index + 1;
             return (
               <TabPanel value={value} index={index}>
+                <h3>
+                  APs on this Floor:{" "}
+                  {entry.apType["indoor"] + entry.apType["outdoor"]}
+                </h3>
+                <br />
                 <div style={{ display: "flex", flexDirection: "row" }}>
-                  <div
-                    style={{
-                      width: "400px",
-                      heigth: "450px",
-                    }}
-                  >
-                    <Pie key={v4()} data={formatPieData(entry.apType)} />
-                  </div>
-                  <br />
-                  <div
-                    style={{
-                      width: "250px",
-                      heigth: "400px",
-                    }}
-                  >
-                    <Bar
+                  <div style={{ width: width, height: height }}>
+                    <Pie
                       key={v4()}
-                      data={formatPieData(entry.uniqueVendorCounted)}
+                      data={formatPieData(entry.apType)}
+                      options={{
+                        maintainAspectRatio: false,
+                        title: {
+                          display: true,
+                          text: "Type",
+                          fontSize: 20,
+                        },
+                        legend: {
+                          display: true,
+                          position: "bottom",
+                        },
+                      }}
                     />
                   </div>
                   <br />
-                  <div
-                    style={{
-                      width: "250px",
-                      heigth: "400px",
-                    }}
-                  >
+                  <div style={{ width: width, height: height }}>
                     <Bar
                       key={v4()}
-                      data={formatPieData(entry.uniqueApsCounted)}
+                      data={formatPieData(entry.uniqueVendorCounted, "Count")}
+                      options={{
+                        maintainAspectRatio: false,
+                        title: {
+                          display: true,
+                          text: "Vendor",
+                          fontSize: 20,
+                        },
+                        legend: {
+                          display: false,
+                          position: "bottom",
+                        },
+                      }}
+                    />
+                  </div>
+                  <br />
+                  <div style={{ width: width, height: height }}>
+                    <Bar
+                      key={v4()}
+                      data={formatPieData(entry.uniqueApsCounted, "Count")}
+                      options={{
+                        maintainAspectRatio: false,
+                        title: {
+                          display: true,
+                          text: "Model",
+                          fontSize: 20,
+                        },
+                        legend: {
+                          display: false,
+                          position: "bottom",
+                        },
+                      }}
                     />
                   </div>
                 </div>
@@ -158,81 +206,7 @@ function View(props) {
         ) : (
           <></>
         )}
-
-        {/*    <TabPanel value={value} index={0}>
-          Item One
-        </TabPanel>
-        <TabPanel value={value} index={1}>
-          Item Two
-        </TabPanel>
-        <TabPanel value={value} index={2}>
-          Item Three
-        </TabPanel>
-        <TabPanel value={value} index={3}>
-          Item Four
-        </TabPanel>
-        <TabPanel value={value} index={4}>
-          Item Five
-        </TabPanel>
-        <TabPanel value={value} index={5}>
-          Item Six
-        </TabPanel>
-        <TabPanel value={value} index={6}>
-          Item Seven
-        </TabPanel> */}
       </div>
-
-      {/*  {props.dashboardData !== undefined ? (
-          props.dashboardData.map((entry) => {
-            return (
-              <>
-                <div key={v4()}>
-                  <strong
-                    style={{
-                      marginLeft: "100px",
-                    }}
-                  >
-                    {entry.name}
-                  </strong>
-                  <div
-                    style={{
-                      width: "400px",
-                      heigth: "450px",
-                    }}
-                  >
-                    <Pie key={v4()} data={formatPieData(entry.apType)} />
-                  </div>
-                  <br />
-                  <div
-                    style={{
-                      width: "250px",
-                      heigth: "400px",
-                    }}
-                  >
-                    <Bar
-                      key={v4()}
-                      data={formatPieData(entry.uniqueVendorCounted)}
-                    />
-                  </div>
-                  <br />
-                  <div
-                    style={{
-                      width: "250px",
-                      heigth: "400px",
-                    }}
-                  >
-                    <Bar
-                      key={v4()}
-                      data={formatPieData(entry.uniqueApsCounted)}
-                    />
-                  </div>
-                </div>
-              </>
-            );
-          })
-        ) : (
-          <></>
-        )} */}
     </>
   );
 }

@@ -6,6 +6,8 @@ import SessionController from "../src/app/controller/SessionController";
 import SitesController from "../src/app/controller/SitesController";
 import MapsController from "../src/app/controller/MapsController";
 import ApsController from "../src/app/controller/ApsController";
+import IntegrationController from "../src/app/controller/IntegrationController";
+
 //import SwitchesController from "../src/app/controller/MapsController";
 
 //Importação do Middleware para validação de Autenticação JWT
@@ -34,15 +36,24 @@ routes.get("/sites/:id", SitesController.show);
 routes.post("/sites", SitesController.store);
 routes.put("/sites/:id", authMiddleware, SitesController.update);
 
+//Rotas para o Controlador Sites
+routes.get("/integration/:id", IntegrationController.show);
+routes.post("/integration", IntegrationController.store);
+routes.put("/integration/:id", authMiddleware, IntegrationController.update);
+
 //Rotas para o Controlador Maps
 routes.get("/maps/:id", MapsController.show);
-routes.post("/maps/:id", authMiddleware, upload.single("map"), MapsController.store);
+routes.post(
+  "/maps/:id",
+  authMiddleware,
+  upload.single("map"),
+  MapsController.store
+);
 
 //Rotas para o Controlador Aps
 routes.get("/aps/:id", ApsController.show);
 routes.post("/aps", authMiddleware, ApsController.store);
 routes.put("/aps", authMiddleware, ApsController.update);
-
 
 //Middlware usage
 /*

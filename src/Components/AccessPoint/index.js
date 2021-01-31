@@ -5,10 +5,82 @@ import { v4 } from "uuid";
 import { load } from "../../Data/InitialLoadTemp/aps";
 import { useSelector } from "react-redux";
 import apiBackend from "../../API/backend/api";
+import createHostZabbix from "../../API/Zabbix/createHost";
+import getToken from "../../API/Zabbix/getToken";
+import createZabbixApi from "../../API/Zabbix/zabbixAPI";
 
+const { encryptAES128, decryptAES128 } = require("../../AES128");
+
+/*
+Example:
+nmp- (Prefix)
+0001238 -7 digits account Number
+-! Fixed
+018 - Account first, center and last digit
+
+
+*/
 function AccessPointContainer(props) {
   const level = useSelector((state) => state.level);
   const users = useSelector((state) => state.user);
+  const integration = useSelector((state) => state.integration);
+
+  console.log(integration);
+
+  const createHost = (
+    username,
+    password,
+    ipAddress,
+    port,
+    apName,
+    apIpAddress
+  ) => {
+    if (integration !== {}) {
+      const api = createZabbixApi(ipAddress, port);
+      getToken(username, password, api)
+        .then((response) => {
+          const token = response.data.result;
+          console.log("got a fuckin token" + token);
+
+          if (token !== undefined) {
+            createHostZabbix(token, api, ["10186"], "15", apName, apIpAddress)
+              .then((response) => {
+                console.log(response);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
+  const generateEncryptedId = (account) => {
+    const sizeOfAccountNumber = 7; // up to 9,999,999 Accounts
+    let accountString = account.toString();
+    let accountLen = accountString.length;
+    let charString = "";
+    for (let count = 0; count < sizeOfAccountNumber - accountLen; count++) {
+      charString += "0";
+    }
+    let accountFormated = charString + accountString;
+    const keyPlainText =
+      "nmp-" +
+      accountFormated +
+      "-!" +
+      accountFormated[0] +
+      accountFormated[3] +
+      accountFormated[6];
+    console.log(keyPlainText);
+    const plainText = v4().substring(0, 16);
+    console.log(plainText);
+    let encryptedText = encryptAES128(plainText, keyPlainText);
+    let hexEncrypted = encryptedText.toString(16);
+    return hexEncrypted;
+  };
 
   //To be received
   const MAP_HEIGHT = 860;
@@ -248,8 +320,9 @@ function AccessPointContainer(props) {
         props.zoomLevel.level - 1
       );
 
+      const generateKey = generateEncryptedId(users.conta);
+
       try {
-        const generateKey = v4();
         let obj = {
           key: generateKey,
           apName: generateKey.substring(0, 5),
@@ -265,6 +338,7 @@ function AccessPointContainer(props) {
         //localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
 
         console.log(level);
+        generateEncryptedId(users.conta);
 
         const responseNewAPs = apiBackend.put(
           `/aps`,
@@ -278,6 +352,18 @@ function AccessPointContainer(props) {
       } catch (error) {
         console.log(error);
       }
+
+      if (Object.keys(integration).length !== 0) {
+        createHost(
+          integration.obj.username,
+          integration.obj.password,
+          integration.obj.ipAddress,
+          integration.obj.port,
+          generateKey,
+          "127.0.0.1"
+        );
+      }
+      //Trying to add the host to Zabbix
     }
   }, [props.mapClickEvent]);
 

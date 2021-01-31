@@ -30,6 +30,7 @@ import getHost from "../../API/Zabbix/getHost";
 import getZabbixItems from "../../API/Zabbix/getItems";
 import qrcode from "qrcode.react";
 import MonitorCard from "../monitorCard";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -63,6 +64,7 @@ export default function FormDialog(props) {
   const [accessSwitch, setAccessSwitch] = React.useState("");
   const [selectedModel, setSelectedModel] = React.useState();
   const [monitoring, setMonitoring] = React.useState(false);
+  const integration = useSelector((state) => state.integration);
 
   const handleChange = (event) => {
     setMonitoring(event.target.checked);
@@ -151,33 +153,32 @@ export default function FormDialog(props) {
           setMonitoring(entry.monitoring);
         }
       });
-    if (zabbixIntegrationFromLocalStorage) {
+    if (Object.keys(integration).length !== 0) {
       const api = createZabbixApi(
-        zabbixIntegrationFromLocalStorage.ipAddress,
-        zabbixIntegrationFromLocalStorage.port
+        integration.obj.ipAddress,
+        integration.obj.port
       );
       setZabbixAPI(() => api);
 
-      getToken(
-        zabbixIntegrationFromLocalStorage.username,
-        zabbixIntegrationFromLocalStorage.password,
-        api
-      ).then((response) => {
-        try {
-          const token = response.data.result;
-          if (token !== undefined) {
-            console.log(token);
-            setZabbixToken(token);
-            getItems(token, api, props.editElement.elementName);
+      getToken(integration.obj.username, integration.obj.password, api).then(
+        (response) => {
+          try {
+            const token = response.data.result;
+            if (token !== undefined) {
+              console.log(token);
+              setZabbixToken(token);
+              getItems(token, api, props.editElement.elementKey);
+            }
+          } catch (e) {
+            console.log(e);
           }
-        } catch (e) {
-          console.log(e);
         }
-      });
+      );
     }
   }, []);
 
   const getItems = (token, api, name) => {
+    console.log("get item");
     getHost(token, api, name).then((result) => {
       let hostId = false;
       try {

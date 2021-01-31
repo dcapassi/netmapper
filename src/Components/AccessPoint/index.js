@@ -25,8 +25,6 @@ function AccessPointContainer(props) {
   const users = useSelector((state) => state.user);
   const integration = useSelector((state) => state.integration);
 
-  console.log(integration);
-
   const createHost = (
     username,
     password,
@@ -40,7 +38,6 @@ function AccessPointContainer(props) {
       getToken(username, password, api)
         .then((response) => {
           const token = response.data.result;
-          console.log("got a fuckin token" + token);
 
           if (token !== undefined) {
             createHostZabbix(token, api, ["10186"], "15", apName, apIpAddress)

@@ -13,6 +13,8 @@ async function getItems(token, zabbixAPI, hostId) {
     id: 1,
   };
 
+  console.log(obj);
+
   const response = await zabbixAPI
     .post("", obj, {
       headers: {

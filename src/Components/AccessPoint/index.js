@@ -9,7 +9,6 @@ import createHostZabbix from "../../API/Zabbix/createHost";
 import getToken from "../../API/Zabbix/getToken";
 import createZabbixApi from "../../API/Zabbix/zabbixAPI";
 
-const { encryptAES128, decryptAES128 } = require("../../AES128");
 
 /*
 Example:
@@ -17,7 +16,6 @@ nmp- (Prefix)
 0001238 -7 digits account Number
 -! Fixed
 018 - Account first, center and last digit
-
 
 */
 function AccessPointContainer(props) {
@@ -55,29 +53,7 @@ function AccessPointContainer(props) {
     }
   };
 
-  const generateEncryptedId = (account) => {
-    const sizeOfAccountNumber = 7; // up to 9,999,999 Accounts
-    let accountString = account.toString();
-    let accountLen = accountString.length;
-    let charString = "";
-    for (let count = 0; count < sizeOfAccountNumber - accountLen; count++) {
-      charString += "0";
-    }
-    let accountFormated = charString + accountString;
-    const keyPlainText =
-      "nmp-" +
-      accountFormated +
-      "-!" +
-      accountFormated[0] +
-      accountFormated[3] +
-      accountFormated[6];
-    console.log(keyPlainText);
-    const plainText = v4().substring(0, 16);
-    console.log(plainText);
-    let encryptedText = encryptAES128(plainText, keyPlainText);
-    let hexEncrypted = encryptedText.toString(16);
-    return hexEncrypted;
-  };
+  
 
   //To be received
   const MAP_HEIGHT = 860;
@@ -317,12 +293,13 @@ function AccessPointContainer(props) {
         props.zoomLevel.level - 1
       );
 
-      const generateKey = generateEncryptedId(users.conta);
+
+      let apKey = v4().substring(0, 16);
 
       try {
         let obj = {
-          key: generateKey,
-          apName: generateKey.substring(0, 5),
+          key: apKey,
+          apName: apKey.substring(0, 5),
           posX: newPosX,
           posY: newPosY,
           initialX: calcInitialX,
@@ -335,7 +312,6 @@ function AccessPointContainer(props) {
         //localStorage.setItem("venue1area1", JSON.stringify(arrayAps));
 
         console.log(level);
-        generateEncryptedId(users.conta);
 
         const responseNewAPs = apiBackend.put(
           `/aps`,
@@ -356,7 +332,7 @@ function AccessPointContainer(props) {
           integration.obj.password,
           integration.obj.ipAddress,
           integration.obj.port,
-          generateKey,
+          apKey,
           "127.0.0.1"
         );
       }

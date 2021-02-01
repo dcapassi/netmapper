@@ -46,7 +46,7 @@ class Login extends Component {
           <div className="Container">
             <h1>NetMapper</h1>
             <p>Monitor and see it.</p>
-            <form>
+            <form onSubmit={this.enviarCredenciais}>
               <input
                 autocomplete="off"
                 type="text"
@@ -62,12 +62,7 @@ class Login extends Component {
                 onChange={this.handleChange}
               ></input>
               <div id="mensagemFalhaAutenticacao"></div>
-              <input
-                type="submit"
-                id="loginBotao"
-                value="Acessar"
-                onClick={this.enviarCredenciais}
-              ></input>
+              <input type="submit" id="loginBotao" value="Acessar"></input>
 
               <a href="#">Esqueci minha senha</a>
               <a href="#">Não sou cadastrado</a>

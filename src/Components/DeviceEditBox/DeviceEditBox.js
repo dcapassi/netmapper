@@ -31,6 +31,7 @@ import getZabbixItems from "../../API/Zabbix/getItems";
 import qrcode from "qrcode.react";
 import MonitorCard from "../monitorCard";
 import { useSelector } from "react-redux";
+const { encryptAES128, decryptAES128 } = require("../../AES128");
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -65,6 +66,7 @@ export default function FormDialog(props) {
   const [selectedModel, setSelectedModel] = React.useState();
   const [monitoring, setMonitoring] = React.useState(false);
   const integration = useSelector((state) => state.integration);
+  const users = useSelector((state) => state.user);
 
   const handleChange = (event) => {
     setMonitoring(event.target.checked);
@@ -116,6 +118,31 @@ export default function FormDialog(props) {
     setOpen(false);
     props.closeBox();
   };
+
+  const generateEncryptedId = (account, apKey) => {
+    const sizeOfAccountNumber = 7; // up to 9,999,999 Accounts
+    let accountString = account.toString();
+    let accountLen = accountString.length;
+    let charString = "";
+    for (let count = 0; count < sizeOfAccountNumber - accountLen; count++) {
+      charString += "0";
+    }
+    let accountFormated = charString + accountString;
+    const keyPlainText =
+      "nmp-" +
+      accountFormated +
+      "-!" +
+      accountFormated[0] +
+      accountFormated[3] +
+      accountFormated[6];
+    console.log(keyPlainText);
+    const plainText = apKey;
+    let encryptedText = encryptAES128(plainText, keyPlainText);
+    let hexEncrypted = encryptedText.toString(16);
+    return hexEncrypted;
+  };
+
+  console.log(generateEncryptedId(users.conta, props.editElement.elementKey));
 
   const handleSubmit = () => {
     setOpen(false);
@@ -323,8 +350,24 @@ export default function FormDialog(props) {
                   </FormGroup>
 
                   <FormGroup>
+                    {/*
+                    Example:
+                    nmp- (Prefix)
+                    0001238 -7 digits account Number
+                    -! Fixed
+                    018 - Account first, center and last digit
+
+*/}
                     {showQrCode ? (
-                      <QRCode value={"nmp-" + props.editElement.elementName} />
+                      <QRCode
+                        value={
+                          "nmp-" +
+                          generateEncryptedId(
+                            users.conta,
+                            props.editElement.elementKey
+                          )
+                        }
+                      />
                     ) : (
                       <></>
                     )}

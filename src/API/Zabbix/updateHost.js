@@ -1,12 +1,12 @@
 import createZabbixApi from "./zabbixAPI";
 
-async function createHost(
+async function updateHost(
   token,
   zabbixAPI,
   templateList,
   hostGroup,
   hostName,
-  key,
+  hostId,
   ipAddress
 ) {
   let templateListArray = [];
@@ -17,11 +17,11 @@ async function createHost(
   console.log(templateListArray);
   const obj = {
     jsonrpc: "2.0",
-    method: "host.create",
+    method: "host.update",
     params: {
-      host: key,
+      hostid: hostId,
       name: hostName,
-      templates: templateListArray,
+      templates_clear: templateListArray,
       interfaces: [
         {
           type: 1,
@@ -44,11 +44,37 @@ async function createHost(
     id: 1,
   };
 
+  const obj2 = {
+    jsonrpc: "2.0",
+    method: "host.update",
+    params: {
+      hostid: hostId,
+      templates: templateListArray,
+    },
+    auth: token,
+    id: 1,
+  };
+
+  console.log(obj);
+
   const response = await zabbixAPI
     .post("", obj, {
       headers: {
         "Content-Type": "application/json",
       },
+    })
+    .then((response) => {
+      //Enable Templates
+
+      const responseTemplate = zabbixAPI
+        .post("", obj2, {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     })
     .catch((err) => {
       console.log(err);
@@ -56,4 +82,4 @@ async function createHost(
   return response;
 }
 
-export default createHost;
+export default updateHost;

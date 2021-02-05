@@ -9,10 +9,15 @@ import SideMenu from "../SideMenu";
 import DeviceEditBox from "../DeviceEditBox/DeviceEditBox";
 import { useSelector } from "react-redux";
 import apiBackend from "../../API/backend/api";
+import createZabbixApi from "../../API/Zabbix/zabbixAPI";
+import getToken from "../../API/Zabbix/getToken";
+import getHost from "../../API/Zabbix/getHost";
+import updateHost from "../../API/Zabbix/updateHost";
 
 export default function AppMap(props) {
   const level = useSelector((state) => state.level);
   const users = useSelector((state) => state.user);
+  const integration = useSelector((state) => state.integration);
 
   //Reference passed to children to get the current map position.
   const refMap = useRef(null);
@@ -29,11 +34,78 @@ export default function AppMap(props) {
   //Pass to the AccessPoint Controller that there was a change
   const [apConfigModified, setApConfigModified] = useState({});
 
+  const updateHostZabbix = (
+    username,
+    password,
+    ipAddress,
+    port,
+    key,
+    apName,
+    apIpAddress
+  ) => {
+    if (Object.keys(integration).length !== 0) {
+      const api = createZabbixApi(ipAddress, port);
+
+      console.log(username);
+      console.log(password);
+
+      getToken(username, password, api)
+        .then((response) => {
+          const token = response.data.result;
+
+          if (token !== undefined) {
+            getHost(token, api, key).then((result) => {
+              let hostId = false;
+              try {
+                hostId = result.data.result[0].hostid;
+              } catch (error) {
+                console.log(error);
+              }
+
+              updateHost(
+                token,
+                api,
+                ["10186"],
+                "15",
+                apName,
+                hostId,
+                apIpAddress
+              )
+                .then((response) => {
+                  console.log(response);
+                })
+                .catch((error) => {
+                  console.log(error);
+                });
+            });
+          }
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+    }
+  };
+
   const getEditFields = (obj) => {
     switch (editType) {
       case "ap":
         {
           setApConfigModified({ ...obj });
+          console.log("Buiaaatchaka");
+          console.log(obj);
+          if (Object.keys(integration).length !== 0) {
+            console.log(integration);
+            console.log(obj);
+            updateHostZabbix(
+              integration.obj.username,
+              integration.obj.password,
+              integration.obj.ipAddress,
+              integration.obj.port,
+              obj.targetElement,
+              obj.apName,
+              obj.ipAddress
+            );
+          }
         }
         break;
       default:

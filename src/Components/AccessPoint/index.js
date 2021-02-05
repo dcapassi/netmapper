@@ -9,7 +9,6 @@ import createHostZabbix from "../../API/Zabbix/createHost";
 import getToken from "../../API/Zabbix/getToken";
 import createZabbixApi from "../../API/Zabbix/zabbixAPI";
 
-
 /*
 Example:
 nmp- (Prefix)
@@ -28,6 +27,7 @@ function AccessPointContainer(props) {
     password,
     ipAddress,
     port,
+    key,
     apName,
     apIpAddress
   ) => {
@@ -38,7 +38,15 @@ function AccessPointContainer(props) {
           const token = response.data.result;
 
           if (token !== undefined) {
-            createHostZabbix(token, api, ["10186"], "15", apName, apIpAddress)
+            createHostZabbix(
+              token,
+              api,
+              ["10186"],
+              "15",
+              apName,
+              key,
+              apIpAddress
+            )
               .then((response) => {
                 console.log(response);
               })
@@ -52,8 +60,6 @@ function AccessPointContainer(props) {
         });
     }
   };
-
-  
 
   //To be received
   const MAP_HEIGHT = 860;
@@ -293,7 +299,6 @@ function AccessPointContainer(props) {
         props.zoomLevel.level - 1
       );
 
-
       let apKey = v4().substring(0, 16);
 
       try {
@@ -333,6 +338,7 @@ function AccessPointContainer(props) {
           integration.obj.ipAddress,
           integration.obj.port,
           apKey,
+          apKey.substring(0, 5),
           "127.0.0.1"
         );
       }

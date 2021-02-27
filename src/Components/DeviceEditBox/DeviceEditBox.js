@@ -142,6 +142,7 @@ export default function FormDialog(props) {
     return hexEncrypted;
   };
 
+  console.log(props.editElement.elementKey);
   console.log(generateEncryptedId(users.conta, props.editElement.elementKey));
 
   const handleSubmit = () => {
@@ -320,7 +321,7 @@ export default function FormDialog(props) {
                     />
                   </FormControl>
                   <FormGroup className={classes.formControl} row>
-                    <FormControlLabel
+                    {/*                <FormControlLabel
                       control={
                         <Switch
                           checked={monitoring}
@@ -330,7 +331,7 @@ export default function FormDialog(props) {
                         />
                       }
                       label="Monitoring"
-                    />
+                    /> */}
 
                     <FormGroup className={classes.formControl} row>
                       <FormControlLabel
@@ -359,31 +360,59 @@ export default function FormDialog(props) {
 
 */}
                     {showQrCode ? (
-                      <QRCode
-                        value={
-                          "nmp-" +
-                          generateEncryptedId(
-                            users.conta,
-                            props.editElement.elementKey
-                          )
-                        }
-                      />
+                      <>
+                        <div
+                          style={{
+                            display: "flex",
+                            marginTop: "25px",
+                            marginLeft: "200px",
+                            marginBottom: "25px",
+                          }}
+                        >
+                          <QRCode
+                            value={
+                              "nmp-" +
+                              generateEncryptedId(
+                                users.conta,
+                                props.editElement.elementKey
+                              )
+                            }
+                          />
+                        </div>
+                      </>
                     ) : (
                       <></>
                     )}
                   </FormGroup>
                   <div style={{ display: "flex" }}>
-                    {itemsValue.map((entry) => {
-                      return (
-                        <div style={{ flexDirection: "row" }}>
-                          <MonitorCard
-                            key={entry.key}
-                            keyType={entry.key}
-                            value={entry.lastvalue}
-                          />
-                        </div>
-                      );
-                    })}
+                    {true ? (
+                      itemsValue.map((entry) => {
+                        console.log(entry.key);
+                        console.log(itemsValue[1].lastvalue);
+                        console.log(entry.key != "icmppingsec");
+                        console.log(entry.key != "icmppingloss");
+
+                        if (
+                          itemsValue[1].lastvalue === "0" &&
+                          (entry.key === "icmppingsec" ||
+                            entry.key === "icmppingloss")
+                        ) {
+                          return <></>;
+                        } else {
+                          return (
+                            <div style={{ flexDirection: "row" }}>
+                              <MonitorCard
+                                key={entry.key}
+                                keyType={entry.key}
+                                value={entry.lastvalue}
+                              />
+                            </div>
+                          );
+                        }
+                      })
+                    ) : (
+                      <></>
+                    )}
                   </div>
 
                   <Divider />
@@ -436,7 +465,7 @@ export default function FormDialog(props) {
                   </FormControl>
                   <Divider />
 
-                  <FormControl className={classes.formControl}>
+                  {/*                   <FormControl className={classes.formControl}>
                     <InputLabel shrink id="switchLabel">
                       Access Switch
                     </InputLabel>
@@ -459,7 +488,7 @@ export default function FormDialog(props) {
                         </MenuItem>
                       ))}
                     </Select>
-                  </FormControl>
+                  </FormControl> */}
                 </>
               )}
             </form>

@@ -205,7 +205,11 @@ export default function FormDialog(props) {
     //const integrationData = JSON.parse(localStorage.getItem("integration"));
 
     const data = apiBackend
-      .get(`/integration/${users.conta}`, {})
+      .get(`/integration/${users.conta}`, {
+        headers: {
+          Authorization: `Bearer ${users.token}`,
+        },
+      })
       .then(function (response) {
         console.log(response.data);
         if (response.data !== {}) {
@@ -478,7 +482,7 @@ export default function FormDialog(props) {
                 </Button>
               </CardActions>
             </Card>
-            <Card variant="outlined">
+            {/* <Card variant="outlined">
               <CardContent>
                 <Typography variant="h5">{`Switch Templates`}</Typography>
                 <Typography variant="body1" color="textSecondary">
@@ -496,7 +500,7 @@ export default function FormDialog(props) {
                   Configure
                 </Button>
               </CardActions>
-            </Card>
+            </Card> */}
           </Paper>
         </DialogContent>
       </Dialog>
@@ -548,7 +552,7 @@ export default function FormDialog(props) {
       </Dialog>
 
       {/*Dialog - Add Switch Templates*/}
-      <Dialog
+      {/*       <Dialog
         fullScreen
         open={openTemplatesSwts}
         aria-labelledby="form-dialog-title"
@@ -591,7 +595,7 @@ export default function FormDialog(props) {
             templateList={templateList}
           />
         </DialogContent>
-      </Dialog>
+      </Dialog> */}
     </>
   );
 }

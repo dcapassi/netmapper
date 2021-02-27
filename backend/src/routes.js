@@ -1,5 +1,3 @@
-//const { Router } = require("express");
-//const CadastrosController = require("./src/app/controller/CadastrosController");
 import { Router } from "express";
 import CadastrosController from "../src/app/controller/CadastrosController";
 import SessionController from "../src/app/controller/SessionController";
@@ -7,8 +5,6 @@ import SitesController from "../src/app/controller/SitesController";
 import MapsController from "../src/app/controller/MapsController";
 import ApsController from "../src/app/controller/ApsController";
 import IntegrationController from "../src/app/controller/IntegrationController";
-
-//import SwitchesController from "../src/app/controller/MapsController";
 
 //Importação do Middleware para validação de Autenticação JWT
 import authMiddleware from "../src/app/middlewares/auth";
@@ -18,27 +14,28 @@ import authMiddlewareAdm from "../src/app/middlewares/authAdm";
 import multer from "multer";
 import uploadConfig from "./app/middlewares/multer";
 
+//Router
 const routes = new Router();
 const upload = multer(uploadConfig);
 
 //Rotas para o Controlador CadastrosController
 routes.get("/cadastros", authMiddlewareAdm, CadastrosController.index);
-routes.get("/cadastros/:id", CadastrosController.show);
-routes.post("/cadastros", CadastrosController.store);
-routes.put("/cadastros/:id", CadastrosController.update);
-routes.delete("/cadastros/:id", CadastrosController.delete);
+routes.get("/cadastros/:id", authMiddlewareAdm, CadastrosController.show);
+routes.post("/cadastros", authMiddlewareAdm, CadastrosController.store);
+routes.put("/cadastros/:id", authMiddlewareAdm, CadastrosController.update);
+routes.delete("/cadastros/:id", authMiddlewareAdm, CadastrosController.delete);
 
 //Rotas para o Controlador Sessão
 routes.post("/sessao", SessionController.show);
 
 //Rotas para o Controlador Sites
-routes.get("/sites/:id", SitesController.show);
-routes.post("/sites", SitesController.store);
-routes.put("/sites/:id", authMiddleware, SitesController.update);
+routes.get("/sites/:id", authMiddleware,SitesController.show);
+routes.post("/sites", authMiddleware,SitesController.store);
+routes.put("/sites/:id", authMiddleware,authMiddleware, SitesController.update);
 
 //Rotas para o Controlador Sites
-routes.get("/integration/:id", IntegrationController.show);
-routes.post("/integration", IntegrationController.store);
+routes.get("/integration/:id", authMiddleware, IntegrationController.show);
+routes.post("/integration", authMiddleware, IntegrationController.store);
 routes.put("/integration/:id", authMiddleware, IntegrationController.update);
 
 //Rotas para o Controlador Maps
@@ -54,11 +51,5 @@ routes.post(
 routes.get("/aps/:id", ApsController.show);
 routes.post("/aps", authMiddleware, ApsController.store);
 routes.put("/aps", authMiddleware, ApsController.update);
-
-//Middlware usage
-/*
-//Rotas para o Controlador SalasController
-routes.get("/something", authMiddlware, ControllerXPTO.index);
-*/
 
 export default routes;

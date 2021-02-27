@@ -26,7 +26,7 @@ function SwitchContainer(props) {
   const [arraySwitches, setArraySwitches] = useState(load);
 
   useEffect(() => {
-    localStorage.setItem("venue1area1_Switch", JSON.stringify(arraySwitches));
+    //localStorage.setItem("venue1area1_Switch", JSON.stringify(arraySwitches));
   }, [arraySwitches]);
 
   const [editElement, setEditElement] = useState({

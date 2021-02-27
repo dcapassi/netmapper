@@ -31,7 +31,8 @@ class Login extends Component {
       })
       .catch(function (response) {
         console.log(response);
-        //document.getElementById("mensagemFalhaAutenticacao").innerText = "Usuário ou senha incorretos";
+        document.getElementById("mensagemFalhaAutenticacao").innerText =
+          "Usuário ou senha incorretos";
       });
   };
 

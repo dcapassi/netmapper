@@ -1,4 +1,4 @@
-export const load = [
+/* export const load = [
   {
     switchName: "36972",
     posX: 73.01849365234375,
@@ -36,3 +36,5 @@ export const load = [
     customer: null,
   },
 ];
+ */
+export const load = [];

@@ -80,7 +80,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function PersistentDrawerLeft() {
   const dispatch = useDispatch();
-  const imgPath = "http://127.0.0.1:3399/files/";
+  const imgPath = "https://192.168.0.21:3399/files/";
   const classes = useStyles();
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -113,7 +113,11 @@ export default function PersistentDrawerLeft() {
   //Temp/*
   useEffect(() => {
     const data = apiBackend
-      .get(`/sites/${users.conta}`, {})
+      .get(`/sites/${users.conta}`, {
+        headers: {
+          Authorization: `Bearer ${users.token}`,
+        },
+      })
       .then(function (response) {
         if (Object.keys(response.data).length !== 0) {
           setListJson(response.data);

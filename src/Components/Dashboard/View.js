@@ -50,7 +50,7 @@ function View(props) {
   const [typeData, setTypeData] = useState([]);
   const classes = useStyles();
   const [value, setValue] = React.useState(0);
-  let width = "33%";
+  let width = "50%";
   let height = "90%";
   let count = -1;
   let index = -1;

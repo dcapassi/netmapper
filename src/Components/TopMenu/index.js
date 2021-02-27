@@ -21,14 +21,14 @@ function TopMenu(props) {
         <div className="addAp" onClick={() => props.menuAction("addAp")}>
           <FaWifi />
         </div>
-        <div
+        {/*         <div
           className="addSwitch"
           onClick={() => props.menuAction("addSwitch")}
         >
           <div id="switch">
             <BsArrowLeftRight />
           </div>
-        </div>
+        </div> */}
         <div
           className="measureDistance"
           onClick={() => props.menuAction("Ruler")}

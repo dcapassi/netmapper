@@ -1,14 +1,6 @@
 import createZabbixApi from "./zabbixAPI";
 
-async function createHost(
-  token,
-  zabbixAPI,
-  templateList,
-  hostGroup,
-  hostName,
-  key,
-  ipAddress
-) {
+async function createHost(token,zabbixAPI,templateList,hostGroup,hostName,key,ipAddress) {
   let templateListArray = [];
   templateList.map((entry) => {
     templateListArray.push({ templateid: entry });

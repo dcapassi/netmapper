@@ -24,7 +24,7 @@ function monitorCard(props) {
       ],
       icmppingsec: [
         "ICMP Packet Latency",
-        `${parseFloat(value).toFixed(2)} ms`,
+        `${parseFloat(value).toFixed(4)} ms`,
         parseFloat(value).toFixed(2) < 300 ? "blue" : "red",
       ],
     };
